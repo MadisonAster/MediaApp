@@ -1,0 +1,5 @@
+# Ignore all .pyc files in any directory
+*.pyc
+Thumbs.db
+.DS_Store
+Desktop.ini
