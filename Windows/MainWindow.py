@@ -1,24 +1,58 @@
+#===============================================================================
+# @Author: Thomas McVay
+# @Version: 0.1
+# @LastModified: 130511
+# @Description: 
+# @License:
+#    MediaApp Library - Python Package framework for developing robust Media 
+#                       Applications with PySide Library
+#    Copyright (C) 2013 Thomas McVay
+#    
+#    This library is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU Lesser General Public
+#    License version 2.1 as published by the Free Software Foundation;
+#    
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public
+#    License along with this library; if not, write to the Free Software
+#    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#
+#    See MediaApp_LGPL.txt in the root directory of this library for copy of
+#    GNU Lesser General Public License and other license details.
+#===============================================================================
+
 from PySide import QtGui, QtCore
 
-#TODO-004: cleanup this module later, it's pretty ugly
 class MainWindow(QtGui.QMainWindow):
-    #settings = QtCore.QSettings('NoBS', 'GUIStuff')
-    def __init__(self):
+    def __init__(self, CorePointer):
+        global Core
+        Core = CorePointer
+        Core.RegisterObject(self)
         super(MainWindow, self).__init__()
-        self.NodeList = []
-        self.widgetList = []
-    def getPrefs(self):
-        #TODO-001: call Core to get preferences, 
-        #maybe we should push this instead of pulling?
-        return {}
-    def initUI(self):
-        self.WindowFont = QtGui.QFont('Courier')
-        self.WindowFont.setPixelSize(16)
-        self.WindowFontMetrics = QtGui.QFontMetrics(self.WindowFont)
+        ################################
         
+        #Get LayoutSettings
+        self.defaultLayoutsPath = Core['AppDirectory']+'/'+'MainWindow_defaultLayouts.ini'
+        self.userLayoutsPath = Core['AppDataDirectory']+'/'+'MainWindow_userLayouts.ini'
+        self.layoutSettings = QtCore.QSettings(self.defaultLayoutsPath, QtCore.QSettings.IniFormat)
+        #if os.path.exists(self.userLayoutsPath):
+        #    self.layoutSettings = QtCore.QSettings(self.userLayoutsPath, QtCore.QSettings.IniFormat)
+        
+    def initUI(self):
+    
+        #CosmeticSettings
+        self.WindowFont = Core.AppPrefs['AppFont']
+        self.setWindowTitle(Core.AppSettings['AppTitle'])
+        self.setWindowIcon(QtGui.QIcon(Core.AppSettings['AppIcon']))   
         self.AllowNestedDocks
         self.ForceTabbedDocks
-        
+        self.setTabPosition(QtCore.Qt.AllDockWidgetAreas, QtGui.QTabWidget.North)
+        self.setTabShape(QtGui.QTabWidget.Triangular)
+        self.setDockNestingEnabled(True)
         
         #Menu Actions#
         exitAction = QtGui.QAction('Exit', self)
@@ -29,17 +63,12 @@ class MainWindow(QtGui.QMainWindow):
         restoreLayout = QtGui.QAction('Restore Layout 1', self)
         restoreLayout.setShortcut('Shift+F1')
         restoreLayout.setStatusTip('Restore Saved Layout')
-        #restoreLayout.triggered.connect(self.restoreState)
+        restoreLayout.triggered.connect(self.restoreLayoutN)
         
         saveLayout = QtGui.QAction('Save Layout 1', self)
         saveLayout.setShortcut('Ctrl+F1')
         saveLayout.setStatusTip('Save Layout')
-        saveLayout.triggered.connect(self.saveLayoutData)
-        
-        getSize = QtGui.QAction('Info Alert', self)
-        getSize.setStatusTip('Get vertical size')
-        getSize.triggered.connect(self.infoAlert)
-        #/Menu Actions#
+        saveLayout.triggered.connect(self.saveLayoutN)
         
         #Menu Bar#
         menubar = self.menuBar()
@@ -48,39 +77,36 @@ class MainWindow(QtGui.QMainWindow):
         layoutMenu = menubar.addMenu('&Layout')
         layoutMenu.addAction(restoreLayout)
         layoutMenu.addAction(saveLayout)
-        layoutMenu.addAction(getSize)
-        #MenuBar#
-        
-        #ToolBar#
-        toolbar = self.addToolBar('Exit')
-        toolbar.addAction(exitAction)
-        #/ToolBar#
-        
-        #Status Bar#
-        self.statusBar()
-        #/Status Bar#
-        
-        self.center()
-        self.setWindowTitle('MediaApp')
-        self.setWindowIcon(QtGui.QIcon('Toolbox.ico'))        
+             
         self.show()
-        self.resize(QtGui.QDesktopWidget().availableGeometry().width()/2, QtGui.QDesktopWidget().availableGeometry().height())
-        titleBarSize = self.frameGeometry().height()-QtGui.QDesktopWidget().availableGeometry().height()
-        sideBarSize = self.frameGeometry().width()-QtGui.QDesktopWidget().availableGeometry().width()/2
-        self.resize(QtGui.QDesktopWidget().availableGeometry().width()/2-sideBarSize, QtGui.QDesktopWidget().availableGeometry().height()-titleBarSize)
-        
-        
-    def allNodes(self):
-        return self.NodeList
-    def createNode(self, nodeName, nodeType, posX, posY):
-        self.NodeList.append([nodeName, eval(nodeType+'("'+nodeName+'", '+str(posX)+', '+str(posY)+')')])
-    def saveLayoutData(self, settings):
-            settings.setValue("windowState", self.saveState)
-    def changeTitle(self, state):
-        if state == QtCore.Qt.Checked:
-            self.setWindowTitle('Checkbox')
+        self.restoreLayoutN(1)
+    
+    def saveLayoutN(self, *args):
+        if len(args) == 1:
+            versionNum = int(args[0])
         else:
-            self.setWindowTitle('')
+            versionNum = int(self.sender().text()[-1])
+        print 'Saving Layout', versionNum
+        self.layoutSettings.setValue("geometry"+str(versionNum), self.saveGeometry())
+        self.layoutSettings.setValue("windowState"+str(versionNum), self.saveState())
+    def restoreLayoutN(self, *args):
+        if len(args) == 1:
+            versionNum = int(args[0])
+        else:
+            versionNum = int(self.sender().text()[-1])
+        print 'Restoring Layout', versionNum
+        self.restoreGeometry(self.layoutSettings.value("geometry"+str(versionNum)))
+        self.restoreState(self.layoutSettings.value("windowState"+str(versionNum)))
+    def dockThisWidget(self, widget, dockArea = QtCore.Qt.RightDockWidgetArea):
+        widgetName = widget.accessibleName()
+        if widgetName == '':
+            widgetName = type(widget).__name__
+        dockWidget = QtGui.QDockWidget()
+        dockWidget.setWidget(widget)
+        dockWidget.setObjectName(widgetName)
+        dockWidget.setWindowTitle(widgetName)
+        self.addDockWidget(dockArea, dockWidget)
+        
     def closeEvent(self, event):
         reply = QtGui.QMessageBox.question(self, 'Message', 
         'Are you sure you want to quit?', QtGui.QMessageBox.Yes |
@@ -89,22 +115,3 @@ class MainWindow(QtGui.QMainWindow):
             event.accept()
         else:
             event.ignore()
-    def infoAlert(self):
-        cp = self.frameGeometry().width()
-        ca = QtGui.QDesktopWidget().availableGeometry().height()
-        ca = str(ca)
-        cp = str(cp)
-        titleBarSize = 47
-        QtGui.QMessageBox.information(self, 'Message', cp)
-    def center(self):
-        qr = self.frameGeometry()
-        cenX = self.frameGeometry().width()/2
-        cenY = self.frameGeometry().height()/2
-        #cp = QtGui.QDesktopWidget().screenGeometry().center()
-        cp = QtCore.QPoint(cenX, cenY)
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-    def toNode(self, nodeName):
-        for a in self.NodeList:
-            if nodeName == a[0]:
-                return a[1]

@@ -25,4 +25,13 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from Methods import *
+from PySide import QtGui, QtCore
+
+class StrKnob(object):
+    def __init__(self, a):
+        self.setValue(a)
+    def setValue(self, a):
+        self.knobValue = str(a)
+    def getValue(self):
+        return self.knobValue
+       
