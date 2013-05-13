@@ -25,4 +25,29 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from Methods import *
+from NodeConstructor import *
+
+from KnobTypes import *
+
+class Clip(NodeConstructor):
+    def __init__(self, CorePointer):
+        global Core
+        Core = CorePointer
+        self['ClassName'] = StrKnob('Clip')
+        self['nodeName'] = StrKnob(Core.getIncrementedName('Clip'))
+        super(Clip, self).__init__(CorePointer)
+        ################################
+    
+    def nodeShape(self):
+        self.polyShape = [[0,0],[70,0],[70,16],[0,16]]
+        self.color1 = QtGui.QColor(238,238,238)
+        self.color2 = QtGui.QColor(122,122,122)
+        
+    #def node(self):
+    #    return self.NodeType
+    #def setNodeType(self, shape):
+    #    self.nodeType = shape
+    #def setRandomNodeType(self):
+    #    self.setNodeType(random.randint(1, 7))
+        
+        

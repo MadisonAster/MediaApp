@@ -25,4 +25,8 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from Methods import *
+from ArrayKnob import *
+from BoolKnob import *
+from FloatKnob import *
+from IntKnob import *
+from StrKnob import *

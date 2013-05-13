@@ -13,25 +13,23 @@
 #    Lesser General Public License for more details.
 #===============================================================================
 
-{
-#HMMM think about how root will be displayed
-'ProjectPath' : '',
-'GraphXPos' : 0,
-'GraphYPos' : 0,
+from PySide import QtGui, QtCore
+import sys
+import cmd
+import pdb
 
-'GraphWidget-startGraphX' : 0,
-'GraphWidget-startGraphY' : 0,
-'GraphWidget-startGraphXS' : 0,
-'GraphWidget-startGraphYS' : 0,
+import MediaApp
 
-'ViewerWidget-startGraphX' : 0,
-'ViewerWidget-startGraphY' : 0,
-'ViewerWidget-startGraphXS' : 0,
-'ViewerWidget-startGraphYS' : 0,
 
-'Timeline-startGraphX' : 0,
-'Timeline-startGraphY' : 0,
-'Timeline-startGraphXS' : 0,
-'Timeline-startGraphYS' : 0,
+def main():
+    MediaApp.run()
 
-}
+    pNode = MediaApp.Core.createNode('Clip')
+    pNode['xpos'].setValue(0)
+    pNode['ypos'].setValue(0)
+
+    #sys.exit(MediaApp.Core.App.exec_())
+    #MediaApp.Core.App.exec_()
+    
+if __name__ == '__main__':
+    main()
