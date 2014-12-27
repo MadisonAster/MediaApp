@@ -18,7 +18,10 @@ import sys
 import cmd
 import pdb
 
-import MediaApp
+try:
+    import MediaApp
+except:
+    import __init__ as MediaApp
 
 
 def main():
