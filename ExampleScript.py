@@ -18,21 +18,17 @@ import sys
 import cmd
 import pdb
 
-try:
-    import MediaApp
-except:
-    import __init__ as MediaApp
-
+import __init__ as MyApp
 
 def main():
-    MediaApp.run()
+    MyApp.run()
 
-    pNode = MediaApp.Core.createNode('Clip')
+    pNode = MyApp.Core.createNode('Clip')
     pNode['xpos'].setValue(0)
     pNode['ypos'].setValue(0)
 
-    #sys.exit(MediaApp.Core.App.exec_())
-    #MediaApp.Core.App.exec_()
+    #sys.exit(MyApp.Core.App.exec_())
+    #MyApp.Core.App.exec_()
     
 if __name__ == '__main__':
     main()
