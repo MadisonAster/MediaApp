@@ -59,7 +59,7 @@ class Core(dict):
         self.ctypesMagic()
         
     def setPaths(self):
-        self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',1)[0]
+        self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',2)[0]
         self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0]
         
         #See if app specific pref files exist, otherwise use defaults in core directory
@@ -75,7 +75,7 @@ class Core(dict):
             self['AppDirectory'] = self['CoreDirectory']
         self['AppDataDirectory'] = os.getenv('APPDATA')+'/MediaApp/'+self['AppDirectory'].rsplit('/',1)[1]
             
-    
+        
     def ctypesMagic(self):
         #Windows Taskbar icon work around
         winAppID = self.AppSettings['AppID']
