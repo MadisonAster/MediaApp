@@ -27,10 +27,12 @@
 
 from PySide import QtGui, QtCore
 
-class IntKnob(object):
-    def __init__(self, a):
-        self.setValue(a)
-    def setValue(self, a):
-        self.knobValue = int(a)
+class IntKnob(QtGui.QLineEdit):
+    def __init__(self, value, name = 'IntKnob'):
+        super(IntKnob, self).__init__()
+        self.name = name
+        self.setValue(value)
+    def setValue(self, value):
+        self.setText(str(value))
     def getValue(self):
-        return self.knobValue
+        return int(float(self.text()))

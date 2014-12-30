@@ -107,6 +107,9 @@ class MainWindow(QtGui.QMainWindow):
         dockWidget.setWindowTitle(widgetName)
         self.addDockWidget(dockArea, dockWidget)
         
+        # A little funky to do this here, re-evaluate
+        Core.RegisterObject(widget)
+        
     def closeEvent(self, event):
         reply = QtGui.QMessageBox.question(self, 'Message', 
         'Are you sure you want to quit?', QtGui.QMessageBox.Yes |

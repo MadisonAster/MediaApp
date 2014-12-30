@@ -74,6 +74,7 @@ class GraphWidget(QtGui.QWidget):
         self.curGraphYS = Core.AppAttributes[self.className+'-startGraphYS']
         
         #Go
+        self.setFocusPolicy(Core.AppSettings['FocusPolicy'])
         self.initUI()
         
     def initUI(self):
@@ -92,6 +93,20 @@ class GraphWidget(QtGui.QWidget):
         self.setMode()
         self.grabValues()
         self.update()
+        
+    def mouseDoubleClickEvent(self, event):
+        dx = event.x()
+        dy = event.y()
+        
+        for node in Core.allNodes():
+            if node.fallsAround(dx, dy):
+                Core.PropertiesBin.dockThisWidget(node)
+                
+    def keyPressEvent(self, event):
+        if event.key() == 16777220:                                 #Enter
+            for node in Core.selectedNodes():
+                Core.PropertiesBin.dockThisWidget(node)
+    
     def mouseReleaseEvent(self, event):
         self.endMouseX = event.pos().x()
         self.endMouseY = event.pos().y()

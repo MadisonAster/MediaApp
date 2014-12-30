@@ -27,10 +27,19 @@
 
 from PySide import QtGui, QtCore
 
-class BoolKnob(object):
-    def __init__(self, a):
-        self.setValue(a)
-    def setValue(self, a):
-        self.knobValue = bool(a)
+class BoolKnob(QtGui.QCheckBox):
+    def __init__(self, value, name = 'BoolKnob'):
+        super(BoolKnob, self).__init__()
+        self.name = name
+        self.setValue(value)
+    def setValue(self, value):
+        if value == True:
+            self.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.setCheckState(QtCore.Qt.Unchecked)
     def getValue(self):
-        return self.knobValue
+        value = self.checkState()
+        if value == QtCore.Qt.Checked:
+            return True
+        if value == QtCore.Qt.Unchecked:
+            return False
