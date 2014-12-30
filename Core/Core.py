@@ -141,7 +141,7 @@ class Core(dict):
         if filePath == None:
             filePath = self.AppAttributes['ProjectPath']
         str_AppAttributes = pprint.pformat(self.AppAttributes)
-        str_Nodes = pprint.pformat(self.AppAttributes)
+        str_Nodes = pprint.pformat(self.Nodes)
         with open(filePath,'w') as file:
             file.write('\n#AppAttributes\n')
             file.write(str_AppAttributes)
