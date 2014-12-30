@@ -26,8 +26,9 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+from KnobConstructor import *
 
-class StrKnob(QtGui.QLineEdit):
+class StrKnob(QtGui.QLineEdit, Knob):
     def __init__(self, value, name = 'StrKnob'):
         super(StrKnob, self).__init__()
         self.name = name
