@@ -38,13 +38,13 @@ class Clip(Node):
         self['ClassName'] = 'Clip'
         self.setName(Core.getIncrementedName('Clip'))
         
-        self['file'] = FileKnob('C:/')
+        self['file'] = FileKnob('')
         
         self.attachKnobs()
         ################################
     
     def nodeShape(self):
-        self.polyShape = [[0,0],[70,0],[70,16],[0,16]]
+        self.polyShape = [[0,0],[70,0],[70,24],[0,24]]
         self.color1 = QtGui.QColor(238,238,238)
         self.color2 = QtGui.QColor(122,122,122)
         

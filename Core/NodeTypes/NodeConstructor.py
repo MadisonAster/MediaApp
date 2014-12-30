@@ -163,7 +163,7 @@ class NodeConstructor(object):
         textLines = math.ceil(textHeight/float(Metrics.lineSpacing()))
         stretchHeight = textLines*(Metrics.lineSpacing()/self.nodeRectangle.height())
 
-        self.shapeTransform.scale(1,stretchHeight)
+        #self.shapeTransform.scale(1,stretchHeight)
         self.scaledPolyShape = self.shapeTransform.map(self.polyShape)
         
         self.getPos()   

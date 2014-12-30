@@ -36,4 +36,36 @@ class Timeline(GraphWidget):
         ################################
     def paintExtra(self, painter):
         #Draw cti and zti here!
-        pass
+
+        pen = Core.AppPrefs[self.className+'-ztiPen']
+        pen.setCosmetic(True)
+        painter.setPen(pen)
+        painter.drawLine(Core.AppAttributes['ztiPos'],0, Core.AppAttributes['ztiPos'],24*10)
+        
+        
+        pen = Core.AppPrefs[self.className+'-ctiPen']
+        pen.setCosmetic(True)
+        painter.setPen(pen)
+        painter.drawLine(Core.AppAttributes['ctiTop'][0],Core.AppAttributes['ctiTop'][1], Core.AppAttributes['ctiBot'][0],Core.AppAttributes['ctiBot'][1])
+        
+    def keyPressEvent(self, event):
+        print event.key()
+        if event.key() == 16777220:                                 #Enter
+            for node in Core.selectedNodes():
+                Core.PropertiesBin.dockThisWidget(node)    
+        if event.key() == 16777234: #Left 
+            Core.AppAttributes['ctiTop'][0] = Core.AppAttributes['ctiTop'][0]-1
+            Core.AppAttributes['ctiBot'][0] = Core.AppAttributes['ctiTop'][0]
+        if event.key() == 16777236: #Right
+            Core.AppAttributes['ctiTop'][0] = Core.AppAttributes['ctiTop'][0]+1
+            Core.AppAttributes['ctiBot'][0] = Core.AppAttributes['ctiTop'][0]
+
+        self.repaint()
+        
+        
+        
+        
+        
+        
+        
+        
