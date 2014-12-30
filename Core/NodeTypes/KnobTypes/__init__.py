@@ -27,6 +27,7 @@
 
 from ArrayKnob import *
 from BoolKnob import *
+from FileKnob import *
 from FloatKnob import *
 from IntKnob import *
 from StrKnob import *

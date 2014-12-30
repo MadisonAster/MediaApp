@@ -28,14 +28,41 @@
 from PySide import QtGui, QtCore
 import KnobConstructor
 
-class IntKnob(KnobConstructor.Knob, QtGui.QLineEdit):
-    def __init__(self, value, name = 'IntKnob'):
-        super(IntKnob, self).__init__()
+class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
+    urlDropped = QtCore.Signal()
+    def __init__(self, value, name = 'StrKnob'):
+        super(FileKnob, self).__init__()
         self.knobLayout.addWidget(self)
-        
         self.name.setText(name)
         self.setValue(value)
+        
+        self.setAcceptDrops(True)
+         
+        self.browseButton = QtGui.QPushButton('Browse', self)
+        self.browseButton.clicked[bool].connect(self.fileBrowse)
+        self.knobLayout.addWidget(self.browseButton)
+        
     def setValue(self, value):
-        self.setText(str(value))
+        self.setText(value)
     def getValue(self):
-        return int(float(self.text()))
+        return self.text()
+    
+    def dragEnterEvent(self, e):
+        if e.mimeData().hasUrls():
+            e.accept()
+        else:
+            e.ignore() 
+    def dropEvent(self, e):
+        self.setText(e.mimeData().urls()[0].path().lstrip('/'))
+        self.urlDropped.emit()        
+    
+    def fileBrowse(self):
+        path = QtGui.QFileDialog.getExistingDirectory(self, "Open File", self.text())
+        if path:
+            self.setText(path.replace('\\','/'))
+        
+        
+        
+        
+        
+       

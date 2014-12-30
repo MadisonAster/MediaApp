@@ -35,10 +35,10 @@ class Clip(Node):
         Core = CorePointer
         super(Clip, self).__init__(CorePointer)
         
-        self['ClassName'] = StrKnob('Clip')
+        self['ClassName'] = 'Clip'
         self.setName(Core.getIncrementedName('Clip'))
         
-        self['file'] = StrKnob('')
+        self['file'] = FileKnob('C:/')
         
         self.attachKnobs()
         ################################

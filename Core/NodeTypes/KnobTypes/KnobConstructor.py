@@ -40,6 +40,7 @@ class KnobLabel(QtGui.QLabel):
 class Knob(object):
     def __init__(self):
         self.name = KnobLabel()
+        super(Knob, self).__init__()
         
         self.setToolTip('Here lies a tooltip, barren and empty')
         self.setHidden(False)
