@@ -33,6 +33,8 @@ class StrKnob(QtGui.QLineEdit, Knob):
         super(StrKnob, self).__init__()
         self.name = name
         self.setValue(value)
+        
+        self.knobLayout.addWidget(self)
     def setValue(self, value):
         self.setText(value)
     def getValue(self):

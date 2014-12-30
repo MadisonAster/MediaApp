@@ -248,8 +248,9 @@ class NodeConstructor(object):
         #    self.widget().panelLayout.removeWidget(widget)
         for knob in self:
             if knob not in self.widget().panelLayout.findChildren(object):
-                self.widget().panelLayout.addWidget(QtGui.QLabel(knob.name))
-                self.widget().panelLayout.addWidget(knob)
+                #self.widget().panelLayout.addWidget(knob.name)
+                #self.widget().panelLayout.addWidget(knob)
+                self.widget().panelLayout.addLayout(knobLayout)
        
 class Node(NodeConstructor, PropertiesDockWidget):
     def __init__(self, CorePointer):
