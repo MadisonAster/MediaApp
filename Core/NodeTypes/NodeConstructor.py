@@ -87,7 +87,7 @@ class NodeConstructor(object):
         self['ypos'] = IntKnob(Core.AppAttributes['GraphYPos'])
         self['selected'] = BoolKnob(False)
         
-        self['ClassName'] = StrKnob('Clip')
+        self['ClassName'] = StrKnob('Node')
         self['nodeName'] = StrKnob('Node000')
         
         self.shapeTransform = QtGui.QTransform()
@@ -100,19 +100,23 @@ class NodeConstructor(object):
         return len(self.knobs)
     def __getitem__(self, key):
         for knob in self.knobs:
-            if knob.name == key:
+            if knob.name.text() == key:
                 return knob
         else:
             return None
     def __delitem__(self, key):
         for i, knob in enumerate(self.knobs):
-            if knob.name == key:
+            if knob.name.text() == key:
                 del self.knobs[i]
     def __setitem__(self, key, value):
-        if self[key] != None:
-            del self[key]
-        value.name = key    
-        self.knobs.append(value)
+        if 'knob' in type(value).__name__.lower():
+            if self[key] != None:
+                del self[key]       #BUG widgets don't get destroyed when we do a simple delete
+            #Node subclass has assigned knob the name key, so we tell the knob that here.   
+            value.name.setText(key)
+            self.knobs.append(value)
+        else:
+            self[key].setValue(value)
     def __iter__(self):
         for knob in self.knobs:
             yield knob
@@ -240,7 +244,7 @@ class NodeConstructor(object):
         painter.drawText(self.mappedNodeRect,QtCore.Qt.TextWrapAnywhere,self['nodeName'].getValue())
     
     def setName(self, value):
-        self['nodeName'] = StrKnob(value)
+        self['nodeName'].setText(value)
         self.setObjectName(value)
         self.setWindowTitle(value)
     def attachKnobs(self):
@@ -250,7 +254,7 @@ class NodeConstructor(object):
             if knob not in self.widget().panelLayout.findChildren(object):
                 #self.widget().panelLayout.addWidget(knob.name)
                 #self.widget().panelLayout.addWidget(knob)
-                self.widget().panelLayout.addLayout(knobLayout)
+                self.widget().panelLayout.addLayout(knob.knobLayout)
        
 class Node(NodeConstructor, PropertiesDockWidget):
     def __init__(self, CorePointer):

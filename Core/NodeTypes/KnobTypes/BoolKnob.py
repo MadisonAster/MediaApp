@@ -26,11 +26,14 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+import KnobConstructor
 
-class BoolKnob(QtGui.QCheckBox):
+class BoolKnob(KnobConstructor.Knob, QtGui.QCheckBox):
     def __init__(self, value, name = 'BoolKnob'):
         super(BoolKnob, self).__init__()
-        self.name = name
+        self.knobLayout.addWidget(self)
+        
+        self.name.setText(name)
         self.setValue(value)
     def setValue(self, value):
         if value == True:
