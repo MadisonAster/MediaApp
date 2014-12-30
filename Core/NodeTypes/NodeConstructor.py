@@ -30,20 +30,96 @@ import math
 
 from KnobTypes import *
 
-class NodeConstructor(dict):
+
+class PropertiesWidget(QtGui.QWidget):
+    def __init__(self):
+        #global Core
+        #Core = CorePointer
+        super(PropertiesWidget, self).__init__()
+        #self.setAccessibleName('PropertiesWidget')   #override visible name here or elsewhere
+        ##################################
+        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Fixed)
+        #QtGui.QSizePolicy.MinimumExpanding
+        #self.setMaximumSize(200,200)
+        
+        self.panelLayout = QtGui.QVBoxLayout()
+        self.setLayout(self.panelLayout)
+        
+        
+        
+        #cb1 = QtGui.QPushButton("One",self)
+        #cb2 = QtGui.QPushButton("Two",self)
+        #self.panelLayout.addWidget(cb1)
+        #self.panelLayout.addWidget(cb2)
+        
+        
+    def addKnob(widget):
+        self.panelLayout.addWidget(widget)
+    def sizeHint(self):
+        return QtCore.QSize(100,400)
+    
+
+class PropertiesDockWidget(QtGui.QDockWidget):
     def __init__(self, CorePointer):
         global Core
         Core = CorePointer
-        super(NodeConstructor, self).__init__()
+        super(PropertiesDockWidget, self).__init__()
+        ##################################
+        self.setWidget(PropertiesWidget())
+        
+        #self.visibilityChanged.triggered.connect(self.unDock)
+        self.toggleViewAction().triggered.connect(self.unDock)
+    def unDock(self):
+        #TODO get this signal working
+        print 'yay'
+        Core.PropertiesBin.removeDockWidget(self)
+        
+class NodeConstructor(object):
+    def __init__(self, CorePointer):
+        global Core
+        Core = CorePointer
+        super(NodeConstructor, self).__init__(CorePointer)
         ################################
+        
+        self.knobs = []
         
         self['xpos'] = IntKnob(Core.AppAttributes['GraphXPos'])
         self['ypos'] = IntKnob(Core.AppAttributes['GraphYPos'])
         self['selected'] = BoolKnob(False)
         
+        self['ClassName'] = StrKnob('Clip')
+        self['nodeName'] = StrKnob('Node000')
+        
         self.shapeTransform = QtGui.QTransform()
         self.nodeShape()
         self.mapNodeShape()
+        
+        #self.properties = PropertiesWidget(Core)
+    
+    def __len__(self):
+        return len(self.knobs)
+    def __getitem__(self, key):
+        for knob in self.knobs:
+            if knob.name == key:
+                return knob
+        else:
+            return None
+    def __delitem__(self, key):
+        for i, knob in enumerate(self.knobs):
+            if knob.name == key:
+                del self.knobs[i]
+    def __setitem__(self, key, value):
+        if self[key] != None:
+            del self[key]
+        value.name = key    
+        self.knobs.append(value)
+    def __iter__(self):
+        for knob in self.knobs:
+            yield knob
+    def __reversed__(self):
+        return reversed(self.knobs)
+        
+        
     def name(self):
         return self['nodeName'].getValue()
     def toKnob(self, a):
@@ -162,3 +238,26 @@ class NodeConstructor(dict):
             painter.setPen(Core.AppPrefs['GraphWidget-nodeSelectPen'])
             painter.drawConvexPolygon(self.mappedSelectShape)
         painter.drawText(self.mappedNodeRect,QtCore.Qt.TextWrapAnywhere,self['nodeName'].getValue())
+    
+    def setName(self, value):
+        self['nodeName'] = StrKnob(value)
+        self.setObjectName(value)
+        self.setWindowTitle(value)
+    def attachKnobs(self):
+        #for widget in self.widget().panelLayout.findChildren(object):
+        #    self.widget().panelLayout.removeWidget(widget)
+        for knob in self:
+            if knob not in self.widget().panelLayout.findChildren(object):
+                self.widget().panelLayout.addWidget(QtGui.QLabel(knob.name))
+                self.widget().panelLayout.addWidget(knob)
+       
+class Node(NodeConstructor, PropertiesDockWidget):
+    def __init__(self, CorePointer):
+        super(Node, self).__init__(CorePointer)   
+        
+        #widgetName = widget.accessibleName()
+        #widgetName = widget['nodeName'].getValue()
+        #if widgetName == '':
+        #    widgetName = type(widget).__name__
+        
+        

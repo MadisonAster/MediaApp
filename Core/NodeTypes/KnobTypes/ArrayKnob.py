@@ -27,8 +27,10 @@
 
 from PySide import QtGui, QtCore
 
-class ArrayKnob(object):
-    def __init__(self, a):
+class ArrayKnob(QtGui.QLineEdit):
+    def __init__(self, a, name = 'ArrayKnob'):
+        super(ArrayKnob, self).__init__()
+        self.name = name
         self.setValue(a)
     def setValue(self, a):
         if type(a) != list:

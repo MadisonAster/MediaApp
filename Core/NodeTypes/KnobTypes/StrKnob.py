@@ -27,11 +27,13 @@
 
 from PySide import QtGui, QtCore
 
-class StrKnob(object):
-    def __init__(self, a):
-        self.setValue(a)
-    def setValue(self, a):
-        self.knobValue = str(a)
+class StrKnob(QtGui.QLineEdit):
+    def __init__(self, value, name = 'StrKnob'):
+        super(StrKnob, self).__init__()
+        self.name = name
+        self.setValue(value)
+    def setValue(self, value):
+        self.setText(value)
     def getValue(self):
-        return self.knobValue
+        return self.text()
        

@@ -29,13 +29,18 @@ from NodeConstructor import *
 
 from KnobTypes import *
 
-class Clip(NodeConstructor):
+class Clip(Node):
     def __init__(self, CorePointer):
         global Core
         Core = CorePointer
-        self['ClassName'] = StrKnob('Clip')
-        self['nodeName'] = StrKnob(Core.getIncrementedName('Clip'))
         super(Clip, self).__init__(CorePointer)
+        
+        self['ClassName'] = StrKnob('Clip')
+        self.setName(Core.getIncrementedName('Clip'))
+        
+        self['file'] = StrKnob('')
+        
+        self.attachKnobs()
         ################################
     
     def nodeShape(self):
