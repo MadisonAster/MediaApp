@@ -14,6 +14,9 @@
 #===============================================================================
 
 {
+#'*NWSTORAGE' : 'C:/',
+'*NWSTORAGE' : os.getenv('*NWSTORAGE'),
+
 'AppFont' : QtGui.QFont('Times', 10, QtGui.QFont.Bold),
 'NodeNamePadding' : 3,
 

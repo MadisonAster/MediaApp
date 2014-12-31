@@ -38,7 +38,7 @@ class Clip(Node):
         self['ClassName'] = 'Clip'
         self.setName(Core.getIncrementedName('Clip'))
         
-        self['file'] = FileKnob('')
+        self['file'] = FileKnob('*NWSTORAGE/', CorePointer)
         
         self.attachKnobs()
         ################################
