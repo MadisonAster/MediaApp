@@ -44,7 +44,7 @@ class Clip(Node):
         ################################
     
     def nodeShape(self):
-        self.polyShape = [[0,0],[70,0],[70,24],[0,24]]
+        self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
         self.color1 = QtGui.QColor(238,238,238)
         self.color2 = QtGui.QColor(122,122,122)
         

@@ -34,6 +34,10 @@ class Timeline(GraphWidget):
         Core = CorePointer
         super(Timeline, self).__init__(CorePointer)
         ################################
+        
+        #TODO: Test to see if using this duplicate dictionary is actually faster than Core.getChildrenOf(self)
+        self.Nodes = {}
+        
     def paintExtra(self, painter):
         #Draw cti and zti here!
 
@@ -61,7 +65,10 @@ class Timeline(GraphWidget):
             Core.AppAttributes['ctiBot'][0] = Core.AppAttributes['ctiTop'][0]
 
         self.repaint()
-        
+    def createNode(self, nodeType):
+        node = Core.createNode(nodeType, parent = self)
+        self.Nodes[node.name()] = node
+        return node
         
         
         

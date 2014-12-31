@@ -151,10 +151,11 @@ class GraphWidget(QtGui.QWidget):
         self.endModeX = self.startModeX
         self.endModeY = self.startModeY
         
+        
         self.dragStartPositions = []
         for node in Core.selectedNodes():
             self.dragStartPositions.append([node,node['xpos'].getValue(),node['ypos'].getValue()])
-            
+        
     def mouseMoveEvent(self, event):
         self.curMouseX = event.pos().x()
         self.curMouseY = event.pos().y()
@@ -217,7 +218,7 @@ class GraphWidget(QtGui.QWidget):
                 node.toKnob('selected').setValue(False)
     def dragEvent(self):
         for node in self.dragStartPositions:
-            xpos = round((node[2]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
+            xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
             ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)*self.YPixelsPerUnit
             node[0]['xpos'].setValue(xpos)
             node[0]['ypos'].setValue(ypos)
@@ -241,12 +242,10 @@ class GraphWidget(QtGui.QWidget):
         self.paintGrid(painter)
         
         #DrawNodes
-        
-        painter.setPen(Core.AppPrefs[self.className+'-nodeTrimPen'])
         painter.setFont(Core.AppPrefs['AppFont'])
         for node in Core.allNodes():
             node.drawNode(painter)
-            painter.setTransform(self.graphTrans)
+            #painter.setTransform(self.graphTrans)
             
         #DrawExtra
         self.paintExtra(painter)
