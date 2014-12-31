@@ -121,11 +121,18 @@ class Core(dict):
         pass
     
    
-    def createNode(self, nodeType):
+    def createNode(self, nodeType, parent = None):
         node = eval('NodeTypes.'+nodeType+'(self)')
+        node.setParent(parent)
         self.Nodes[node.name()] = node
         return node
-        
+    def getChildrenOf(self, parent):
+        returnList = []
+        for node in self.Nodes:
+            if node.parent == parent:
+                returnList.append(node)
+        return returnList
+    
     def allNodes(self):
         returnList = []
         for nodeName in self.Nodes:

@@ -94,8 +94,9 @@ class NodeConstructor(object):
         self.nodeShape()
         self.mapNodeShape()
         
-        #self.properties = PropertiesWidget(Core)
-    
+        #Doesn't really need to be initialized, but here for reference
+        #self.parent = None
+        
     def __len__(self):
         return len(self.knobs)
     def __getitem__(self, key):
@@ -132,6 +133,8 @@ class NodeConstructor(object):
     def nodeShape(self):
         #Override Me!
         self.polyShape = [[0,0],[70,0],[74,8],[70,16],[0,16]]
+        
+        #FLAW: add this to appPrefs somehow
         self.color1 = QtGui.QColor(238,238,238)
         self.color2 = QtGui.QColor(122,122,122)
         
@@ -168,20 +171,20 @@ class NodeConstructor(object):
         
         self.getPos()   
     def getPos(self):
-        X = self['xpos'].getValue()
-        Y = self['ypos'].getValue()
+        self.lastX = self['xpos'].getValue()
+        self.lastY = self['ypos'].getValue()
         
-        self.mappedPolyShape = self.scaledPolyShape.translated(X,Y)
-        self.mappedSelectShape = self.shapeTransform.map(self.selectShape).translated(X,Y)
-        self.mappedNodeRect = self.shapeTransform.mapRect(self.nodeRectangle).translated(X,Y)
+        self.mappedPolyShape = self.scaledPolyShape.translated(self.lastX,self.lastY)
+        self.mappedSelectShape = self.shapeTransform.map(self.selectShape).translated(self.lastX,self.lastY)
+        self.mappedNodeRect = self.shapeTransform.mapRect(self.nodeRectangle).translated(self.lastX,self.lastY)
 
         nodeRectX = self.shapeTransform.mapRect(self.nodeRectangle).x()
         nodeRectY = self.shapeTransform.mapRect(self.nodeRectangle).y()
         nodeRectH = self.shapeTransform.mapRect(self.nodeRectangle).height()
-        self.nodeGradient.setStart(nodeRectX+X,nodeRectY+Y)
         
-        
-        self.nodeGradient.setFinalStop(nodeRectX+X,nodeRectH-nodeRectY+Y)
+        #FLAW: add this to appPrefs somehow
+        self.nodeGradient.setStart(nodeRectX+self.lastX,nodeRectY+self.lastY)
+        self.nodeGradient.setFinalStop(nodeRectX+self.lastX,nodeRectH-nodeRectY+self.lastY)
         self.gradientBrush = QtGui.QBrush(self.nodeGradient)
         
     def coordListRect(self, coordList):
@@ -234,15 +237,31 @@ class NodeConstructor(object):
     def fallsAround(self, X, Y):
         return self.mappedNodeRect.contains(X,Y)
     
-    def drawNode(self, painter):   
+    def drawNode(self, painter):
+        #FLAW: maybe there is a better way here than to constantly check to see if the node changes pos
+        if self.lastX != self['xpos'].getValue() or self.lastY != self['ypos'].getValue():
+            self.getPos()
+        
+        #LAYER1: NodeShape/Gradient
         painter.setBrush(self.gradientBrush)
+        painter.setPen(Core.AppPrefs[self.parent.className+'-nodeTrimPen'])
         painter.drawConvexPolygon(self.mappedPolyShape)
-        if self.toKnob('selected').getValue() == True:  
-            painter.setBrush(Core.AppPrefs['GraphWidget-nodeSelectColor'])
-            painter.setPen(Core.AppPrefs['GraphWidget-nodeSelectPen'])
+        
+        #LAYER2: NodeSelectShape
+        if self.toKnob('selected').getValue() == True:
+            painter.setBrush(Core.AppPrefs[self.parent.className+'-nodeSelectColor'])
+            painter.setPen(Core.AppPrefs[self.parent.className+'-nodeSelectPen'])
             painter.drawConvexPolygon(self.mappedSelectShape)
+        
+        #LAYER3: NodeText
         painter.drawText(self.mappedNodeRect,QtCore.Qt.TextWrapAnywhere,self['nodeName'].getValue())
     
+        #LAYER4: Node Channels
+        
+        #LAYER5: Node Thumbnail
+        
+        #LAYER6: Node Input Paths
+        
     def setName(self, value):
         self['nodeName'].setText(value)
         self.setObjectName(value)
@@ -255,7 +274,8 @@ class NodeConstructor(object):
                 #self.widget().panelLayout.addWidget(knob.name)
                 #self.widget().panelLayout.addWidget(knob)
                 self.widget().panelLayout.addLayout(knob.knobLayout)
-       
+    def setParent(self, value):
+        self.parent = value
 class Node(NodeConstructor, PropertiesDockWidget):
     def __init__(self, CorePointer):
         super(Node, self).__init__(CorePointer)   

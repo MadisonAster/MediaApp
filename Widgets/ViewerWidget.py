@@ -217,7 +217,9 @@ class ViewerWidget(QtGui.QWidget):
         pen = Core.AppPrefs[self.className+'-ResBoxPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
-        painter.drawRect(imageRect)
+        
+        #BUG: Diagonal line gets drawn here when zoomed in just the right way
+        painter.drawRect(QtCore.QRect(-1,-1,width+2,height+2))
         
         #DrawBoundingBox
         
