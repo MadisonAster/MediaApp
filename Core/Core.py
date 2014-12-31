@@ -26,7 +26,10 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
-import os
+import imageio
+import visvis
+
+import os, gc
 import sys
 import pprint
 import ctypes
@@ -57,7 +60,25 @@ class Core(dict):
         self.Nodes = {}
         
         self.ctypesMagic()
+        self.setCurrentImage()
+    def setCurrentImage(self):
+        #im = imageio.imread('coins.png')
+        #im = visvis.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png') 
+        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png')
+
+        #self.imageString1 = im.tobytes()
+        self.imageString = im.tostring()
+
+        height, width, dim = im.shape
+        bytesPerLine = dim * width
         
+        myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)  
+        #myImage = QtGui.QImage.fromData(self.imageString)
+        #print myImage.byteCount()
+        self.currentImage = myImage
+    def getImage(self):
+        return self.currentImage
+
     def setPaths(self):
         self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',2)[0]
         self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0]

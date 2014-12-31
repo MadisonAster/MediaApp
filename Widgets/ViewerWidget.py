@@ -88,6 +88,8 @@ class ViewerWidget(QtGui.QWidget):
         #self.statusBar()
         #/Status Bar#
         
+        
+        
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()
@@ -199,17 +201,28 @@ class ViewerWidget(QtGui.QWidget):
         self.graphTrans.translate(self.curGraphX, self.curGraphY)
         self.graphTrans.scale(self.curGraphXS+1, self.curGraphYS+1)
         painter.setTransform(self.graphTrans)
-
+        
+        
+        image = Core.getImage()
+        
+        width = image.width()
+        #width = image.shape[1]
+        height = image.height()
+        #height = image.shape[0]
+        #print width, height
+        imageRect = QtCore.QRect(0,0,width,height)
+        
         #DrawResolutionBox
         painter.setBrush(Core.AppPrefs[self.className+'-ResBoxColor'])
         pen = Core.AppPrefs[self.className+'-ResBoxPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
-        painter.drawRect(0, 0, 800, 600)
+        painter.drawRect(imageRect)
         
         #DrawBoundingBox
         
         #DrawImage
+        painter.drawImage(imageRect, image)
         
         #DrawMarq
         if self.modes.getCurrentMode() == 'marqMode':
