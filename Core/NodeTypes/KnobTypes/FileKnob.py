@@ -30,8 +30,14 @@ import KnobConstructor
 
 class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
     urlDropped = QtCore.Signal()
-    def __init__(self, value, name = 'StrKnob'):
+    def __init__(self, value, CorePointer, name = 'StrKnob'):
+        global Core
+        Core = CorePointer
+        #super(FileKnob, self).__init__(CorePointer)
         super(FileKnob, self).__init__()
+        #######################################
+        
+        
         self.knobLayout.addWidget(self)
         self.name.setText(name)
         self.setValue(value)
@@ -56,10 +62,27 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         self.setText(e.mimeData().urls()[0].path().lstrip('/'))
         self.urlDropped.emit()        
     
+    def unTranslatePath(self, path):
+        path = path.replace('\\','/')
+        for key in Core.AppPrefs['GLOBALS']:
+            print key
+            print Core.AppPrefs[key]
+            repVal = Core.AppPrefs[key].replace('\\','/').rstrip('/')
+            path = path.replace(key, repVal)
+        return path
+        
+    def TranslatePath(self, path):
+        path = path.replace('\\','/')
+        for key in Core.AppPrefs['GLOBALS']:
+            repVal = Core.AppPrefs[key].replace('\\','/').rstrip('/')
+            path = path.replace(repVal, key)
+        return path
+        
     def fileBrowse(self):
-        path = QtGui.QFileDialog.getExistingDirectory(self, "Open File", self.text())
+        path = QtGui.QFileDialog.getExistingDirectory(self, "Open File", self.unTranslatePath(self.text()))
         if path:
-            self.setText(path.replace('\\','/'))
+            path = self.TranslatePath(path)
+            self.setText(path)
         
         
         

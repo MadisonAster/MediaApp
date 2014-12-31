@@ -37,6 +37,8 @@ import ctypes
 
 import NodeTypes
 
+
+#MAJOR FLAW: get rid of all these stupid CorePointers, make Core an importable singleton
 class Core(dict):
     def __init__(self, argString = ''):
         super(Core, self).__init__()
@@ -46,9 +48,15 @@ class Core(dict):
         
         self.setPaths()
         
+        
+        
         self.AppAttributes = self.parseFile(self['AppAttributes'])
-        self.AppPrefs = self.parseFile(self['AppPrefs'])
         self.AppSettings = self.parseFile(self['AppSettings'])
+        try:
+            self.AppPrefs = self.parseFile(self['UserAppPrefs'])
+        except:
+            self.AppPrefs = self.parseFile(self['AppPrefs'])
+            
         self.setImpliedAppAttributes()
         self.setImpliedAppPrefs()
         self.setImpliedAppSettings()
@@ -83,6 +91,7 @@ class Core(dict):
         self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',2)[0]
         self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0]
         
+        
         #See if app specific pref files exist, otherwise use defaults in core directory
         foundCount = 0
         for fileName in ['AppAttributes.py', 'AppPrefs.py', 'AppSettings.py']:
@@ -95,7 +104,7 @@ class Core(dict):
         if foundCount == 0:
             self['AppDirectory'] = self['CoreDirectory']
         self['AppDataDirectory'] = os.getenv('APPDATA')+'/MediaApp/'+self['AppDirectory'].rsplit('/',1)[1]
-            
+        self['UserAppPrefs'] = self['AppDataDirectory']+'/'+'UserAppPrefs.py'
         
     def ctypesMagic(self):
         #Windows Taskbar icon work around
@@ -116,6 +125,13 @@ class Core(dict):
         pass
     def setImpliedAppPrefs(self):
         self.AppPrefs['AppFontMetrics'] = QtGui.QFontMetrics(self.AppPrefs['AppFont'])
+        
+        globalList = []
+        for key in self.AppPrefs:
+            if '*' in key:
+                globalList.append(key)
+        self.AppPrefs['GLOBALS'] = globalList
+        
         
     def setImpliedAppSettings(self):
         pass
