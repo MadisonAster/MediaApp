@@ -43,6 +43,8 @@ class Core(dict):
     def __init__(self, argString = ''):
         super(Core, self).__init__()
         ##################################
+        
+        QtGui.QApplication.setColorSpec(QtGui.QApplication.ManyColor)
         self.App = QtGui.QApplication(argString)
         
         
@@ -69,21 +71,37 @@ class Core(dict):
         
         self.ctypesMagic()
         self.setCurrentImage()
+    
+    
     def setCurrentImage(self):
         #im = imageio.imread('coins.png')
-        #im = visvis.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png') 
-        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png')
+        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png') 
+        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.086770.tif')
 
+        im = imageio.core.util.image_as_uint8(im)
         #self.imageString1 = im.tobytes()
         self.imageString = im.tostring()
-
-        height, width, dim = im.shape
-        bytesPerLine = dim * width
         
-        myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)  
+        #TEST: I don't think this will add any overhead, take it out if it does
+        im = im.swapaxes(0, 1)
+        width, height, channels = im.shape
+        #height, width, channels = im.shape
+        
+        print im[100][200][1]
+        
+        bytesPerLine = channels * width
+        
+        print 'bits', im.itemsize*8*channels
+        
+        if channels == 4:
+            myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
+        elif channels == 3:
+            myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
         #myImage = QtGui.QImage.fromData(self.imageString)
         #print myImage.byteCount()
         self.currentImage = myImage
+        
+    
     def getImage(self):
         return self.currentImage
 

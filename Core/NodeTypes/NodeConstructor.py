@@ -235,6 +235,10 @@ class NodeConstructor(object):
         height = rectLowHigh[1][1]-rectLowHigh[0][1]
         return QtCore.QRectF(lowX, lowY, width, height)
     def fallsAround(self, X, Y):
+        if X == None:
+            X = self.mappedNodeRect.left()
+        if Y == None:
+            Y = self.mappedNodeRect.top()
         return self.mappedNodeRect.contains(X,Y)
     
     def drawNode(self, painter):
