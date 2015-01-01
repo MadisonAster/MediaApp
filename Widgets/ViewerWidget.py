@@ -73,11 +73,16 @@ class ViewerWidget(QtGui.QWidget):
         
         #Go
         self.initUI()
+
+        
+    
         
     def initUI(self):
         self.setMinimumSize(0, 0)
         self.setGeometry(0, 0, 0, 0)
         self.setMouseTracking(True)
+        
+        
         
         #ToolBar#
         #toolbar = self.addToolBar('Exit')
@@ -212,19 +217,18 @@ class ViewerWidget(QtGui.QWidget):
         #print width, height
         imageRect = QtCore.QRect(0,0,width,height)
         
+        #DrawImage
+        painter.drawImage(imageRect, image)
+        
         #DrawResolutionBox
         painter.setBrush(Core.AppPrefs[self.className+'-ResBoxColor'])
         pen = Core.AppPrefs[self.className+'-ResBoxPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
-        
         #BUG: Diagonal line gets drawn here when zoomed in just the right way
         painter.drawRect(QtCore.QRect(-1,-1,width+2,height+2))
         
         #DrawBoundingBox
-        
-        #DrawImage
-        painter.drawImage(imageRect, image)
         
         #DrawMarq
         if self.modes.getCurrentMode() == 'marqMode':
@@ -236,7 +240,7 @@ class ViewerWidget(QtGui.QWidget):
             pen = Core.AppPrefs[self.className+'-marqOutlinePen']
             pen.setCosmetic(True)
             painter.setPen(pen)
-            painter.drawRect(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0]) 
+            painter.drawRect(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0])
         
         #Finished
         painter.end()

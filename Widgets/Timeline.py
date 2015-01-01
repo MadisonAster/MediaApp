@@ -35,7 +35,7 @@ class Timeline(GraphWidget):
         super(Timeline, self).__init__(CorePointer)
         ################################
         
-        #TODO: Test to see if using this duplicate dictionary is actually faster than Core.getChildrenOf(self)
+        #TEST: see if using this duplicate dictionary is actually faster than Core.getChildrenOf(self)
         self.Nodes = {}
         
     def paintExtra(self, painter):
@@ -69,7 +69,26 @@ class Timeline(GraphWidget):
         node = Core.createNode(nodeType, parent = self)
         self.Nodes[node.name()] = node
         return node
+    
+    def getTopNodeForCurrentFrame(self):
+        nodeStack = self.getNodesAtPos(Core.AppAttributes['GraphXPos'])
         
+        returnNode = None
+        for node in nodeStack:
+            if returnNode is None:
+                returnNode = node
+            elif node['ypos'].getValue() > returnNode['ypos'].getValue() and Core.AppSettings[self.className+'-YInverted'] is True:
+                returnNode = node
+            elif node['ypos'].getValue() < returnNode['ypos'].getValue() and Core.AppSettings[self.className+'-YInverted'] is False:
+                returnNode = node
+        return returnNode
+        
+    def getNodesAtPos(XPos):
+        nodeStack = []
+        for node in Core.getChildrenOf(self):
+            if node.fallsAround(XPos, None):
+                nodeStack.append(node)
+        return nodeStack
         
         
         
