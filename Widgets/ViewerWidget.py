@@ -26,6 +26,9 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+
+from NodeConstructor import *
+
 class modeList(list):
     def __init__(self, *args):
         super(modeList, self).__init__(*args)
@@ -42,6 +45,7 @@ class modeList(list):
                 if mode == arg:
                     self.currentMode = i
         
+#class ViewerWidget(QtGui.QWidget, Node):
 class ViewerWidget(QtGui.QWidget):
     def __init__(self, CorePointer):
         global Core
@@ -208,17 +212,9 @@ class ViewerWidget(QtGui.QWidget):
         painter.setTransform(self.graphTrans)
         
         
-        image = Core.getImage()
-        
-        width = image.width()
-        #width = image.shape[1]
-        height = image.height()
-        #height = image.shape[0]
-        #print width, height
-        imageRect = QtCore.QRect(0,0,width,height)
-        
         #DrawImage
-        painter.drawImage(imageRect, image)
+        image = self.getInput().getImage()
+        painter.drawImage(QtCore.QRect(0,0,image.width(),image.height()), image)
         
         #DrawResolutionBox
         painter.setBrush(Core.AppPrefs[self.className+'-ResBoxColor'])

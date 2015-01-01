@@ -97,6 +97,28 @@ class NodeConstructor(object):
         #Doesn't really need to be initialized, but here for reference
         #self.parent = None
         
+        
+        
+        
+        self.setInput(0, object)
+        
+        
+        self.inputPaths = [None]
+        self.currentInput = 0
+
+    def setInput(self, index, object):
+        self.inputPaths[index] = object
+    def setCurrentInputIndex(self, index):
+        self.currentInput = index
+    def getInput(self, *args):
+        if len(args) < 1:
+            return self.inputPaths[self.getCurrentInputIndex()]
+        else:
+            return self.inputPaths[args[0]]
+    def getCurrentInputIndex(self):
+        return self.currentInput
+        
+        
     def __len__(self):
         return len(self.knobs)
     def __getitem__(self, key):
@@ -280,6 +302,44 @@ class NodeConstructor(object):
                 self.widget().panelLayout.addLayout(knob.knobLayout)
     def setParent(self, value):
         self.parent = value
+        
+    def setCurrentImage(self):
+        #im = imageio.imread('coins.png')
+        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png') 
+        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.086770.tif')
+
+        im = imageio.core.util.image_as_uint8(im)
+        #self.imageString1 = im.tobytes()
+        self.imageString = im.tostring()
+        
+        #TEST: I don't think this will add any overhead, take it out if it does
+        im = im.swapaxes(0, 1)
+        width, height, channels = im.shape
+        #height, width, channels = im.shape
+        
+        print im[100][200][1]
+        
+        bytesPerLine = channels * width
+        
+        print 'bits', im.itemsize*8*channels
+        
+        if channels == 4:
+            myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
+        elif channels == 3:
+            myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
+        #myImage = QtGui.QImage.fromData(self.imageString)
+        #print myImage.byteCount()
+        self.currentImage = myImage
+    def getImage(self):
+        self.frameCache = self.generateImage()
+        return self.frameCache
+    def generateImage(self):
+        #Override this method!
+        width = Core.AppAttributes['ResolutionWidth']
+        height = Core.AppAttributes['ResolutionHeight']
+        image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
+        return image
+        
 class Node(NodeConstructor, PropertiesDockWidget):
     def __init__(self, CorePointer):
         super(Node, self).__init__(CorePointer)   

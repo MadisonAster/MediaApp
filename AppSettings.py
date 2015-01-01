@@ -49,6 +49,7 @@
 
 'Timeline-XPixelsPerUnit' : 10,
 'Timeline-YPixelsPerUnit' : 24,
+'Timeline-YInverted' : False,
 'Timeline-PaintXGridLines' : False,
 'Timeline-PaintYGridLines' : False,
 }
