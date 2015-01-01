@@ -38,7 +38,15 @@ class Clip(Node):
         self['ClassName'] = 'Clip'
         self.setName(Core.getIncrementedName('Clip'))
         
-        self['file'] = FileKnob('*NWSTORAGE/', CorePointer)
+        #FLAW: move parent kw setting to KnobConstructor
+        self['file'] = FileKnob('*NWSTORAGE/', CorePointer, parent = self)
+        self['firstFrame'] = IntKnob(0)
+        self['lastFrame'] = IntKnob(0)
+        self['startAt'] = IntKnob(0)
+        
+        #TODO: add PulldownKnob
+        #self['before'] = PulldownKnob()
+        #self['after'] = PulldownKnob()
         
         self.attachKnobs()
         ################################
@@ -47,6 +55,29 @@ class Clip(Node):
         self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
         self.color1 = QtGui.QColor(238,238,238)
         self.color2 = QtGui.QColor(122,122,122)
+        
+    def generateImage(self):
+        
+        #image = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png') 
+        #image = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.086770.tif')
+
+        image = imageio.imread(self['file'].getEvaluatedPath())
+        image = imageio.core.util.image_as_uint8(image)
+        #self.imageString = image.tobytes()
+        self.imageString = image.tostring()
+        
+        #TEST: I don't think this will add any overhead, take it out if it does
+        image = image.swapaxes(0, 1)
+        width, height, channels = image.shape
+        #height, width, channels = image.shape
+        
+        bytesPerLine = channels * width
+        if channels == 4:
+            QImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
+        elif channels == 3:
+            QImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
+        
+        return QImage
         
     #def node(self):
     #    return self.NodeType

@@ -18,6 +18,13 @@
 'ProjectPath' : '',
 'GraphXPos' : 0,
 'GraphYPos' : 0,
+'ctiTop' : [0,-240],
+'ctiBot' : [0,480],
+'ztiPos' : 0,
+'FPS' : 23.98,
+
+'ResolutionWidth' : 800,
+'ResolutionHeight' : 600,
 
 'GraphWidget-startGraphX' : 0,
 'GraphWidget-startGraphY' : 0,

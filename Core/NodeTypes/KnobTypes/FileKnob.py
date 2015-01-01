@@ -30,13 +30,14 @@ import KnobConstructor
 
 class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
     urlDropped = QtCore.Signal()
-    def __init__(self, value, CorePointer, name = 'StrKnob'):
+    def __init__(self, value, CorePointer, parent = None, name = 'StrKnob'):
         global Core
         Core = CorePointer
         #super(FileKnob, self).__init__(CorePointer)
         super(FileKnob, self).__init__()
         #######################################
         
+        self.parent = parent
         
         self.knobLayout.addWidget(self)
         self.name.setText(name)
@@ -84,6 +85,30 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
             path = self.TranslatePath(path)
             self.setText(path)
         
+    def getEvaluatedPath(self):
+        currentFrame = Core.getCurrentFrame()
+        startAt = self.parent['startAt'].getValue()
+        offset = currentFrame-startAt
+        
+        firstFrame = self.parent['firstFrame'].getValue()
+        lastFrame = self.parent['lastFrame'].getValue()
+        length = lastFrame-firstFrame
+        
+        
+        if offset < 0:
+            before = self.parent['before'].getValue()
+            return 'before'
+        elif offset > length:
+            after = self.parent['after'].getValue()
+            return 'after'
+        else:
+            frame = firstFrame+offset
+            
+            
+        #TODO fix this
+        text = self.text().replace('######', str(frame).zfill(6))
+        
+        return text
         
         
         

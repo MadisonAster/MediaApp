@@ -150,7 +150,6 @@ class Core(dict):
                 globalList.append(key)
         self.AppPrefs['GLOBALS'] = globalList
         
-        
     def setImpliedAppSettings(self):
         pass
     
@@ -160,6 +159,7 @@ class Core(dict):
         node.setParent(parent)
         self.Nodes[node.name()] = node
         return node
+        
     def getChildrenOf(self, parent):
         returnList = []
         for node in self.Nodes:
@@ -222,3 +222,5 @@ class Core(dict):
         
         self.AppAttributes = eval(str_AppAttributes)
         self.Nodes = eval(str_Nodes)
+    def getCurrentFrame(self):
+        return self.AppAttributes['ctiTop'][0]
