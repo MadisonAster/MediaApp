@@ -1,8 +1,6 @@
 #===============================================================================
 # @Author: Thomas McVay
-# @Version: 0.1
-# @LastModified: 130511
-# @Description: 
+# @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
 #                       Applications with PySide Library
@@ -21,7 +19,7 @@
 #    License along with this library; if not, write to the Free Software
 #    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
-#    See MediaApp_LGPL.txt in the root directory of this library for copy of
+#    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 import os
