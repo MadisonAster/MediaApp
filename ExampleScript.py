@@ -1,6 +1,6 @@
 #===============================================================================
 # @License: 
-#    This example file is public domain. See MediaApp_LGPL.txt ADDENDUM.
+#    This example file is public domain. See ADDENDUM section in LICENSE.
 #    You may do the following things with this file without restrictions or conditions:
 #        1. Modify it.
 #        2. Remove or modify this section to your liking.
