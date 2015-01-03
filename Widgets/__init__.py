@@ -25,8 +25,10 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
+#from GraphWidget import *
+
+from NodeGraph import *
 from BrowserBin import *
-from GraphWidget import *
 from PropertiesBin import *
-from Timeline import *
+from TimelineWidget import *
 from ViewerWidget import *

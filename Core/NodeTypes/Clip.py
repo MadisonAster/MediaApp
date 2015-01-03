@@ -24,32 +24,42 @@
 #    See MediaApp_LGPL.txt in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
+import os
+
+from PySide import QtGui, QtCore
+import imageio
 
 from NodeConstructor import *
 
 from KnobTypes import *
 
-class Clip(Node):
+class Clip(ImageNode, AudioNode):
     def __init__(self, CorePointer):
         global Core
         Core = CorePointer
         super(Clip, self).__init__(CorePointer)
-        
         self['ClassName'] = 'Clip'
         self.setName(Core.getIncrementedName('Clip'))
+        ################################
         
         #FLAW: move parent kw setting to KnobConstructor
-        self['file'] = FileKnob('*NWSTORAGE/', CorePointer, parent = self)
-        self['firstFrame'] = IntKnob(0)
-        self['lastFrame'] = IntKnob(0)
+        defaultPath = '*NWSTORAGE/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png'
+        defaultPath = '*NWSTORAGE/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.######.tif'
+        #defaultPath = '*NWSTORAGE/'
+        self['file'] = FileKnob(defaultPath, CorePointer, parent = self)
+        self['firstFrame'] = IntKnob(86770)
+        self['lastFrame'] = IntKnob(86785)
         self['startAt'] = IntKnob(0)
         
-        #TODO: add PulldownKnob
+        self['before'] = StrKnob('black')
+        self['after'] = StrKnob('bounce')
+        
+        #TODO: create PulldownKnob
         #self['before'] = PulldownKnob()
         #self['after'] = PulldownKnob()
         
         self.attachKnobs()
-        ################################
+        
     
     def nodeShape(self):
         self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
@@ -57,33 +67,29 @@ class Clip(Node):
         self.color2 = QtGui.QColor(122,122,122)
         
     def generateImage(self):
-        
-        #image = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png') 
-        #image = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.086770.tif')
-
-        image = imageio.imread(self['file'].getEvaluatedPath())
-        image = imageio.core.util.image_as_uint8(image)
-        #self.imageString = image.tobytes()
-        self.imageString = image.tostring()
-        
-        #TEST: I don't think this will add any overhead, take it out if it does
-        image = image.swapaxes(0, 1)
-        width, height, channels = image.shape
-        #height, width, channels = image.shape
-        
-        bytesPerLine = channels * width
-        if channels == 4:
-            QImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
-        elif channels == 3:
-            QImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
-        
-        return QImage
-        
-    #def node(self):
-    #    return self.NodeType
-    #def setNodeType(self, shape):
-    #    self.nodeType = shape
-    #def setRandomNodeType(self):
-    #    self.setNodeType(random.randint(1, 7))
-        
+        imagePath = self['file'].getEvaluatedPath()
+        if os.path.isfile(imagePath):
+            image = imageio.imread(imagePath)
+            image = imageio.core.util.image_as_uint8(image)
+            #self.imageString = image.tobytes()
+            self.imageString = image.tostring()
+            
+            #TEST: I don't think this will add any overhead, take it out if it does
+            image = image.swapaxes(0, 1)
+            width, height, channels = image.shape
+            #height, width, channels = image.shape
+            
+            bytesPerLine = channels * width
+            if channels == 4:
+                QImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
+            elif channels == 3:
+                QImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
+            
+            return QImage
+        else:
+            #Generate Black QImage
+            width = Core.AppAttributes['ResolutionWidth']
+            height = Core.AppAttributes['ResolutionHeight']
+            image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
+            return image
         

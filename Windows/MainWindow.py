@@ -107,7 +107,7 @@ class MainWindow(QtGui.QMainWindow):
         dockWidget.setWindowTitle(widgetName)
         self.addDockWidget(dockArea, dockWidget)
         
-        # A little funky to do this here, re-evaluate
+        #FLAW: A little funky to do this here, re-evaluate
         Core.RegisterObject(widget)
         
     def closeEvent(self, event):

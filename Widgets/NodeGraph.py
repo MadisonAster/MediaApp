@@ -25,6 +25,22 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from Clip import *
-from ViewerNode import *
-from TimelineNode import *
+from PySide import QtGui, QtCore
+
+from GraphWidget import *
+class NodeGraph(GraphWidget):
+    def __init__(self, CorePointer):
+        global Core
+        Core = CorePointer
+        super(NodeGraph, self).__init__(CorePointer)
+        ################################
+
+    def keyPressEvent(self, event):
+        print event.key()
+
+        
+        
+        
+        
+        
+        

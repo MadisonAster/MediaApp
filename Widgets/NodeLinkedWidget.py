@@ -25,6 +25,23 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from Clip import *
-from ViewerNode import *
-from TimelineNode import *
+from PySide import QtGui, QtCore
+
+class NodeLinkedWidget(object):
+    def __init__(self, CorePointer):
+        global Core
+        Core = CorePointer
+        super(NodeLinkedWidget, self).__init__()
+        ################################
+
+    def setInput(self, index, object):
+        self.node.inputPaths[index] = object
+    def setCurrentInputIndex(self, index):
+        self.node.currentInput = index
+    def getInput(self, *args):
+        if len(args) < 1:
+            return self.node.inputPaths[self.getCurrentInputIndex()]
+        else:
+            return self.node.inputPaths[args[0]]
+    def getCurrentInputIndex(self):
+        return self.node.currentInput

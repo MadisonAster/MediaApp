@@ -26,8 +26,7 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
-
-from NodeConstructor import *
+from NodeLinkedWidget import *
 
 class modeList(list):
     def __init__(self, *args):
@@ -45,8 +44,7 @@ class modeList(list):
                 if mode == arg:
                     self.currentMode = i
         
-#class ViewerWidget(QtGui.QWidget, Node):
-class ViewerWidget(QtGui.QWidget):
+class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
     def __init__(self, CorePointer):
         global Core
         Core = CorePointer
@@ -75,30 +73,13 @@ class ViewerWidget(QtGui.QWidget):
         self.curGraphXS = Core.AppAttributes[self.className+'-startGraphXS']
         self.curGraphYS = Core.AppAttributes[self.className+'-startGraphYS']
         
-        #Go
-        self.initUI()
-
+        self.node = Core.NodeGraph.createNode('ViewerNode')
+        self.node.setViewerWidget(self)
         
-    
-        
-    def initUI(self):
         self.setMinimumSize(0, 0)
         self.setGeometry(0, 0, 0, 0)
         self.setMouseTracking(True)
-        
-        
-        
-        #ToolBar#
-        #toolbar = self.addToolBar('Exit')
-        #toolbar.addAction(exitAction)
-        #/ToolBar#
-        
-        #Status Bar#
-        #self.statusBar()
-        #/Status Bar#
-        
-        
-        
+
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()
@@ -213,7 +194,7 @@ class ViewerWidget(QtGui.QWidget):
         
         
         #DrawImage
-        image = self.getInput().getImage()
+        image = self.node.getImage()
         painter.drawImage(QtCore.QRect(0,0,image.width(),image.height()), image)
         
         #DrawResolutionBox
@@ -222,7 +203,7 @@ class ViewerWidget(QtGui.QWidget):
         pen.setCosmetic(True)
         painter.setPen(pen)
         #BUG: Diagonal line gets drawn here when zoomed in just the right way
-        painter.drawRect(QtCore.QRect(-1,-1,width+2,height+2))
+        painter.drawRect(QtCore.QRect(-1,-1,image.width()+2,image.height()+2))
         
         #DrawBoundingBox
         
