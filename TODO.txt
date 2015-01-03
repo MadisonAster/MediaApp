@@ -1,6 +1,4 @@
 ######HIGH PRIORITY######
-#Fix fileKnob dropLine
-
 Add Preferences window
 
 Fix Core namespace issue
