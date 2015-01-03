@@ -66,8 +66,6 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
     def unTranslatePath(self, path):
         path = path.replace('\\','/')
         for key in Core.AppPrefs['GLOBALS']:
-            print key
-            print Core.AppPrefs[key]
             repVal = Core.AppPrefs[key].replace('\\','/').rstrip('/')
             path = path.replace(key, repVal)
         return path
@@ -95,18 +93,37 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         length = lastFrame-firstFrame
         
         
-        if offset < 0:
-            before = self.parent['before'].getValue()
-            return 'before'
-        elif offset > length:
-            after = self.parent['after'].getValue()
-            return 'after'
+        ####Get Frame Value####
+        #TEST: loop and bounce
+        if offset < 0 or offset > length:
+            if offset < 0:
+                knob = 'before'
+            else:
+                knob = 'after'
+            knobVal = self.parent[knob].getValue()
+            
+            if knobVal == 'hold':
+                if knob == 'before':
+                    frame = self.parent['firstFrame'].getValue()
+                elif knob == 'after':
+                    frame = self.parent['lastFrame'].getValue()
+            elif knobVal == 'loop':
+                frame = firstFrame+(offset % (length+1))
+            elif knobVal == 'bounce':
+                if int(offset/(length+1)) % 2 == 1:
+                    frame = firstFrame-((offset+1) % (-length-1))
+                elif int(offset/(length+1)) % 2 == 0:
+                    frame = firstFrame+(offset % (length+1))        
+            elif knobVal == 'black':
+                return self.unTranslatePath('*BLACK')
         else:
             frame = firstFrame+offset
-            
-            
+        ####################
+
+        
         #TODO fix this
         text = self.text().replace('######', str(frame).zfill(6))
+        text = self.unTranslatePath(text)
         
         return text
         

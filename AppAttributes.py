@@ -26,19 +26,19 @@
 'ResolutionWidth' : 800,
 'ResolutionHeight' : 600,
 
-'GraphWidget-startGraphX' : 0,
-'GraphWidget-startGraphY' : 0,
-'GraphWidget-startGraphXS' : 0,
-'GraphWidget-startGraphYS' : 0,
+'NodeGraph-startGraphX' : 0,
+'NodeGraph-startGraphY' : 0,
+'NodeGraph-startGraphXS' : 0,
+'NodeGraph-startGraphYS' : 0,
 
 'ViewerWidget-startGraphX' : 0,
 'ViewerWidget-startGraphY' : 0,
 'ViewerWidget-startGraphXS' : 0,
 'ViewerWidget-startGraphYS' : 0,
 
-'Timeline-startGraphX' : 0,
-'Timeline-startGraphY' : 0,
-'Timeline-startGraphXS' : 0,
-'Timeline-startGraphYS' : 0,
+'TimelineWidget-startGraphX' : 0,
+'TimelineWidget-startGraphY' : 0,
+'TimelineWidget-startGraphXS' : 0,
+'TimelineWidget-startGraphYS' : 0,
 
 }

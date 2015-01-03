@@ -101,10 +101,6 @@ class Core(dict):
         #print myImage.byteCount()
         self.currentImage = myImage
         
-    
-    def getImage(self):
-        return self.currentImage
-
     def setPaths(self):
         self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',2)[0]
         self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0]

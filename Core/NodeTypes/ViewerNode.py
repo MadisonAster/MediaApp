@@ -25,6 +25,32 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from Clip import *
-from ViewerNode import *
-from TimelineNode import *
+from NodeConstructor import *
+from KnobTypes import *
+
+class ViewerNode(ImageNode):
+    def __init__(self, CorePointer):
+        global Core
+        Core = CorePointer
+        super(ViewerNode, self).__init__(CorePointer)
+        self['ClassName'] = 'ViewerNode'
+        self.setName(Core.getIncrementedName('ViewerNode'))
+        ################################
+        
+        self.ViewerWidget = None
+        
+        #TODO: create ImageMath package, tie these to some math
+        self['gain'] = FloatKnob(0)
+        self['gamma'] = FloatKnob(0)
+
+        self.attachKnobs()
+    
+    def nodeShape(self):
+        self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
+        self.color1 = QtGui.QColor(180,50,238)
+        self.color2 = QtGui.QColor(122,122,122)
+
+    def setViewerWidget(self, widget):
+        self.ViewerWidget = widget
+        
+        

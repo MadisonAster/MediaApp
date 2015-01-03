@@ -70,7 +70,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         #self.visibilityChanged.triggered.connect(self.unDock)
         self.toggleViewAction().triggered.connect(self.unDock)
     def unDock(self):
-        #TODO get this signal working
+        #FLAW: get this signal working
         print 'yay'
         Core.PropertiesBin.removeDockWidget(self)
         
@@ -98,13 +98,9 @@ class NodeConstructor(object):
         #self.parent = None
         
         
-        
-        
-        self.setInput(0, object)
-        
-        
         self.inputPaths = [None]
-        self.currentInput = 0
+        self.setCurrentInputIndex(0)
+        
 
     def setInput(self, index, object):
         self.inputPaths[index] = object
@@ -268,6 +264,18 @@ class NodeConstructor(object):
         if self.lastX != self['xpos'].getValue() or self.lastY != self['ypos'].getValue():
             self.getPos()
         
+        #LAYER0: Node Input Paths
+        pinPointX = self.mappedNodeRect.center().x()
+        pinPointY = self.mappedNodeRect.top()
+        for node in self.inputPaths:
+            if node is not None:
+                painter.setPen(Core.AppPrefs[self.parent.className+'-pathPen01'])
+                fromPointX = node.mappedNodeRect.center().x()
+                fromPointY = node.mappedNodeRect.bottom()
+                
+                #TODO: change this to QtGui.QGraphicsLineItem
+                painter.drawLine(fromPointX,fromPointY, pinPointX,pinPointY)
+                
         #LAYER1: NodeShape/Gradient
         painter.setBrush(self.gradientBrush)
         painter.setPen(Core.AppPrefs[self.parent.className+'-nodeTrimPen'])
@@ -286,8 +294,8 @@ class NodeConstructor(object):
         
         #LAYER5: Node Thumbnail
         
-        #LAYER6: Node Input Paths
         
+                
     def setName(self, value):
         self['nodeName'].setText(value)
         self.setObjectName(value)
@@ -302,51 +310,42 @@ class NodeConstructor(object):
                 self.widget().panelLayout.addLayout(knob.knobLayout)
     def setParent(self, value):
         self.parent = value
-        
-    def setCurrentImage(self):
-        #im = imageio.imread('coins.png')
-        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png') 
-        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.086770.tif')
 
-        im = imageio.core.util.image_as_uint8(im)
-        #self.imageString1 = im.tobytes()
-        self.imageString = im.tostring()
-        
-        #TEST: I don't think this will add any overhead, take it out if it does
-        im = im.swapaxes(0, 1)
-        width, height, channels = im.shape
-        #height, width, channels = im.shape
-        
-        print im[100][200][1]
-        
-        bytesPerLine = channels * width
-        
-        print 'bits', im.itemsize*8*channels
-        
-        if channels == 4:
-            myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
-        elif channels == 3:
-            myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
-        #myImage = QtGui.QImage.fromData(self.imageString)
-        #print myImage.byteCount()
-        self.currentImage = myImage
-    def getImage(self):
-        self.frameCache = self.generateImage()
-        return self.frameCache
-    def generateImage(self):
-        #Override this method!
-        width = Core.AppAttributes['ResolutionWidth']
-        height = Core.AppAttributes['ResolutionHeight']
-        image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
-        return image
         
 class Node(NodeConstructor, PropertiesDockWidget):
     def __init__(self, CorePointer):
         super(Node, self).__init__(CorePointer)   
+
+class ImageNode(Node):
+    def __init__(self, CorePointer):
+        super(ImageNode, self).__init__(CorePointer)
         
-        #widgetName = widget.accessibleName()
-        #widgetName = widget['nodeName'].getValue()
-        #if widgetName == '':
-        #    widgetName = type(widget).__name__
+    def getImage(self):
+        self.frameCache = self.generateImage()
+        return self.frameCache
         
+    def generateImage(self, inputNode = None):
+        #Override this method
+        if inputNode is None:
+            inputNode = self.getInput()
+        if inputNode is None:
+            #Generate Black QImage
+            width = Core.AppAttributes['ResolutionWidth']
+            height = Core.AppAttributes['ResolutionHeight']
+            image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
+            return image
+        else:
+            #Simple PassThrough
+            #return self.getImage()
+            return inputNode.getImage()
+            
+class AudioNode(Node):
+    def __init__(self, CorePointer):
+        super(AudioNode, self).__init__(CorePointer)
+class GeometryNode(Node):
+    def __init__(self, CorePointer):
+        super(GeometryNode, self).__init__(CorePointer)
+class ArrayDataNode(Node):
+    def __init__(self, CorePointer):
+        super(ArrayDataNode, self).__init__(CorePointer)
         

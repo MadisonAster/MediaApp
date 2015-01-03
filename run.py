@@ -31,12 +31,12 @@ MainWindow = MediaApp.Windows.createWindow(Core)
 BrowserBin = MediaApp.Widgets.BrowserBin(Core)
 PropertiesBin = MediaApp.Widgets.PropertiesBin(Core)
 ViewerWidget = MediaApp.Widgets.ViewerWidget(Core)
-Timeline = MediaApp.Widgets.Timeline(Core)
+TimelineWidget = MediaApp.Widgets.TimelineWidget(Core)
 
 MainWindow.dockThisWidget(BrowserBin)
 MainWindow.dockThisWidget(PropertiesBin)
 MainWindow.dockThisWidget(ViewerWidget)
-MainWindow.dockThisWidget(Timeline)
+MainWindow.dockThisWidget(TimelineWidget)
  
 def run():
     def cmdThreadCall():

@@ -73,6 +73,9 @@ class GraphWidget(QtGui.QWidget):
         self.curGraphXS = Core.AppAttributes[self.className+'-startGraphXS']
         self.curGraphYS = Core.AppAttributes[self.className+'-startGraphYS']
         
+        #TEST: see if using this duplicate dictionary is actually faster than Core.getChildrenOf(self)
+        self.Nodes = {}
+        
         #Go
         self.setFocusPolicy(Core.AppSettings['FocusPolicy'])
         self.initUI()
@@ -81,6 +84,22 @@ class GraphWidget(QtGui.QWidget):
         self.setMinimumSize(0, 0)
         self.setGeometry(0, 0, 0, 0)
         self.setMouseTracking(True)
+    
+    def createNode(self, nodeType):
+        node = Core.createNode(nodeType, parent = self)
+        self.Nodes[node.name()] = node
+        return node
+    def allNodes(self):
+        returnList = []
+        for nodeName in self.Nodes:
+            returnList.append(self.Nodes[nodeName])
+        return returnList
+    def selectedNodes(self):
+        returnList = []
+        for nodeName in self.Nodes:
+            if self.Nodes[nodeName]['selected'].getValue() == True:
+                returnList.append(self.Nodes[nodeName])
+        return returnList    
         
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
@@ -98,13 +117,13 @@ class GraphWidget(QtGui.QWidget):
         dx = event.x()
         dy = event.y()
         
-        for node in Core.allNodes():
+        for node in self.allNodes():
             if node.fallsAround(dx, dy):
                 Core.PropertiesBin.dockThisWidget(node)
                 
     def keyPressEvent(self, event):
         if event.key() == 16777220:                                 #Enter
-            for node in Core.selectedNodes():
+            for node in self.selectedNodes():
                 Core.PropertiesBin.dockThisWidget(node)
     
     def mouseReleaseEvent(self, event):
@@ -131,11 +150,11 @@ class GraphWidget(QtGui.QWidget):
         elif self.middleClick == True and self.leftClick == False:
             self.modes.setCurrentMode('panMode')
         elif self.middleClick == False and self.leftClick == True:
-            for node in Core.allNodes():  #TODO-005: change Core.Nodes to an ordered dict so that nodes will be looped top to bottom here
+            for node in self.allNodes():  #TODO-005: change Core.Nodes to an ordered dict so that nodes will be looped top to bottom here
                 if node.fallsAround(self.startModeX, self.startModeY):
                     self.modes.setCurrentMode('dragMode')
                     if node['selected'].getValue() != True:
-                        for node2 in Core.selectedNodes():
+                        for node2 in self.selectedNodes():
                             node2['selected'].setValue(False)
                         node['selected'].setValue(True)
                     break
@@ -153,7 +172,7 @@ class GraphWidget(QtGui.QWidget):
         
         
         self.dragStartPositions = []
-        for node in Core.selectedNodes():
+        for node in self.selectedNodes():
             self.dragStartPositions.append([node,node['xpos'].getValue(),node['ypos'].getValue()])
         
     def mouseMoveEvent(self, event):
@@ -211,7 +230,7 @@ class GraphWidget(QtGui.QWidget):
         marqY = [self.startModeY, self.endModeY]
         
         marqRect = QtCore.QRectF(self.startModeX, self.startModeY, self.endModeX-self.startModeX, self.endModeY-self.startModeY)
-        for node in Core.allNodes():
+        for node in self.allNodes():
             if marqRect.contains(node.mappedNodeRect):
                 node.toKnob('selected').setValue(True)
             else:
@@ -223,6 +242,10 @@ class GraphWidget(QtGui.QWidget):
             node[0]['xpos'].setValue(xpos)
             node[0]['ypos'].setValue(ypos)
             node[0].getPos()
+        self.dragEventExtra()
+    def dragEventExtra(self):
+        #Override this method
+        pass
                     
     def paintEvent(self, a):
         painter = QtGui.QPainter(self)
@@ -243,7 +266,7 @@ class GraphWidget(QtGui.QWidget):
         
         #DrawNodes
         painter.setFont(Core.AppPrefs['AppFont'])
-        for node in Core.allNodes():
+        for node in self.allNodes():
             node.drawNode(painter)
             #painter.setTransform(self.graphTrans)
             
