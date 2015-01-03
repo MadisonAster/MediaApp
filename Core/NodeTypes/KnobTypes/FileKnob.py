@@ -63,7 +63,16 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
     def dropEvent(self, event):
         eventText = event.mimeData().urls()[0].path().lstrip('/')
         self.setText(self.TranslatePath(eventText))
-        self.urlDropped.emit()        
+        self.urlDropped.emit()  
+    
+    @QtCore.Slot()
+    def copy(self):
+        print 'hello carl'
+        unTranslatedText = self.unTranslatePath(self.getValue())
+        Core.App.clipboard().setText('hello carl')
+        
+    def paste(self):
+        self.setValue(self.TranslatePath(Core.App.clipboard().text()))
     
     def unTranslatePath(self, path):
         path = path.replace('\\','/')

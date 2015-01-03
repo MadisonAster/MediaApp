@@ -6,18 +6,16 @@ Fix Core namespace issue
 Add Caching functions to Nodes and to Timeline
 
 
-
 Bundle Dependencies with program as submodules in ./Dependencies Package
 Add option to extract source of dependencies
 Add license viewer window for dependencies
 
-#Investigate fileKnob clipboard event autoTranslate/unTranslate
+
 
 Add drag event functions to Node Paths
 
 Get Touch Events working
 
-figure out color flipping issue in imageio
 
 ######MED PRIORITY######
 
@@ -43,6 +41,9 @@ lrectwrite
 bitblit
 
 
+figure out color flipping issue in imageio
+
+fileKnob Override QKeyEvent and QMenu to provide customized copy paste functionality  
 
 
 ######VERY LOW PRIORITY######
