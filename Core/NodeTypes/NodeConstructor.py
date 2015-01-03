@@ -49,8 +49,7 @@ class PropertiesWidget(QtGui.QWidget):
         #cb2 = QtGui.QPushButton("Two",self)
         #self.panelLayout.addWidget(cb1)
         #self.panelLayout.addWidget(cb2)
-        
-        
+  
     def addKnob(widget):
         self.panelLayout.addWidget(widget)
     def sizeHint(self):
@@ -67,6 +66,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         
         #self.visibilityChanged.triggered.connect(self.unDock)
         self.toggleViewAction().triggered.connect(self.unDock)
+        self.setAcceptDrops(True)
     def unDock(self):
         #FLAW: get this signal working
         print 'yay'

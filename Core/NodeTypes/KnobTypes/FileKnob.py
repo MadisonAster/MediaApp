@@ -26,9 +26,11 @@
 from PySide import QtGui, QtCore
 import KnobConstructor
 
+
+
 class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
     urlDropped = QtCore.Signal()
-    def __init__(self, value, CorePointer, parent = None, name = 'StrKnob'):
+    def __init__(self, value, CorePointer, parent = None, name = 'FileKnob'):
         global Core
         Core = CorePointer
         #super(FileKnob, self).__init__(CorePointer)
@@ -36,12 +38,13 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         #######################################
         
         self.parent = parent
+        self.setAcceptDrops(True)
         
         self.knobLayout.addWidget(self)
         self.name.setText(name)
         self.setValue(value)
         
-        self.setAcceptDrops(True)
+        
          
         self.browseButton = QtGui.QPushButton('Browse', self)
         self.browseButton.clicked[bool].connect(self.fileBrowse)
@@ -52,13 +55,14 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
     def getValue(self):
         return self.text()
     
-    def dragEnterEvent(self, e):
-        if e.mimeData().hasUrls():
-            e.accept()
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
         else:
-            e.ignore() 
-    def dropEvent(self, e):
-        self.setText(e.mimeData().urls()[0].path().lstrip('/'))
+            event.ignore() 
+    def dropEvent(self, event):
+        eventText = event.mimeData().urls()[0].path().lstrip('/')
+        self.setText(self.TranslatePath(eventText))
         self.urlDropped.emit()        
     
     def unTranslatePath(self, path):
