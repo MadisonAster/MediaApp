@@ -1,6 +1,4 @@
 ######HIGH PRIORITY######
-fix type() pattern to type(values) is list:
-Create DropDown Knob
 #Fix fileKnob dropLine
 
 Add Preferences window
