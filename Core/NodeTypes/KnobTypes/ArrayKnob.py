@@ -27,16 +27,16 @@ from PySide import QtGui, QtCore
 import KnobConstructor
 
 class ArrayKnob(KnobConstructor.Knob, QtGui.QLineEdit):
-    def __init__(self, a, name = 'ArrayKnob'):
+    def __init__(self, value, name = 'ArrayKnob'):
         super(ArrayKnob, self).__init__()
         self.knobLayout.addWidget(self)
         
         self.name.setText(name)
-        self.setValue(a)
-    def setValue(self, a):
-        if type(a) != list:
+        self.setValue(value)
+    def setValue(self, value):
+        if type(value) is not list:
             raise TypeError
         else:
-            self.knobValue = a
+            self.knobValue = value
     def getValue(self):
         return self.knobValue

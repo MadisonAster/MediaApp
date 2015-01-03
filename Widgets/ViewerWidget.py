@@ -35,9 +35,9 @@ class modeList(list):
     def getCurrentModeIndex(self):
         return self.currentMode
     def setCurrentMode(self, arg):
-        if type(arg) == int:
+        if type(arg) is int:
             self.currentMode = i
-        elif type(arg) == str:
+        elif type(arg) is str:
             for i, mode in enumerate(self):
                 if mode == arg:
                     self.currentMode = i
