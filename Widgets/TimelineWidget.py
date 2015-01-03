@@ -66,7 +66,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         painter.drawLine(Core.AppAttributes['ctiTop'][0],Core.AppAttributes['ctiTop'][1], Core.AppAttributes['ctiBot'][0],Core.AppAttributes['ctiBot'][1])
         
     def keyPressEvent(self, event):
-        print event.key()
+        #print event.key()
         if event.key() == 16777220:                                 #Enter
             for node in Core.selectedNodes():
                 Core.PropertiesBin.dockThisWidget(node)    

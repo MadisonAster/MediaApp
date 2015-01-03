@@ -24,22 +24,35 @@
 #===============================================================================
 
 import os
+import hashlib
+
 LibDir = __file__.replace('\\','/').rsplit('/',1)[0]
+LicenseFound = False
+CoreRun = False
+if os.path.isfile(LibDir+'/LICENSE') and not os.path.exists(LibDir+'/MediaApp'):
+    with open(LibDir+'/LICENSE', 'rb') as licenseFile:
+        licenseHash = hashlib.sha256(licenseFile.read()).hexdigest()
+    if licenseHash == 'fc90421b0c8175781a7744dd573e032924a2c70dc02f7c6f49b0a8705e580c3f':
+        CoreRun = True
+        LicenseFound = True
+elif os.path.isfile(LibDir+'/MediaApp/LICENSE'):
+    with open(LibDir+'/MediaApp/LICENSE', 'rb') as licenseFile:
+        licenseHash = hashlib.sha256(licenseFile.read()).hexdigest()
+    if licenseHash == 'fc90421b0c8175781a7744dd573e032924a2c70dc02f7c6f49b0a8705e580c3f':
+        LicenseFound = True
 
-#MediaApp Imports if this is MediaApp Library
-if os.path.isfile(LibDir+'/MediaApp_LGPL.txt') and not os.path.exists(LibDir+'/MediaApp'):    
-    import Widgets
-    import Windows
-    #import FileManager
-    #import Timer
-    #import TCP
-    #import Phonon
-    from Core import *
-elif os.path.isfile(LibDir+'/MediaApp/MediaApp_LGPL.txt'):
-    import MediaApp
-
-
-#Only import run.py globals if Parent Directory has no run.py
-if not os.path.isfile(LibDir.rsplit('/',1)[0]+'/'+'run.py'):
-    from run import *
+if LicenseFound is True:
+    #MediaApp Imports if this is MediaApp Library
+    if CoreRun is True:    
+        import Widgets
+        import Windows
+        #import FileManager
+        #import Timer
+        #import TCP
+        from Core import *
+    else:
+        import MediaApp
+    #Only import run.py globals if Parent Directory has no run.py
+    if not os.path.isfile(LibDir.rsplit('/',1)[0]+'/'+'run.py'):
+        from run import *
     

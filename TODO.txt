@@ -1,11 +1,15 @@
 ######HIGH PRIORITY######
-
+fix type() pattern to type(values) is list:
 Create DropDown Knob
 #Fix fileKnob dropLine
 
+Add Preferences window
+
+Fix Core namespace issue
+
 Add Caching functions to Nodes and to Timeline
 
-Add Preferences window
+
 
 Bundle Dependencies with program as submodules in ./Dependencies Package
 Add option to extract source of dependencies
