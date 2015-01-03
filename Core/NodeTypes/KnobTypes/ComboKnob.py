@@ -23,10 +23,24 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from ArrayKnob import *
-from BoolKnob import *
-from ComboKnob import *
-from FileKnob import *
-from FloatKnob import *
-from IntKnob import *
-from StrKnob import *
+from PySide import QtGui, QtCore
+import KnobConstructor
+
+class ComboKnob(KnobConstructor.Knob, QtGui.QComboBox):
+    def __init__(self, values, name = 'ComboKnob'):
+        super(ComboKnob, self).__init__()
+        self.knobLayout.addWidget(self)
+        
+        self.name.setText(name)
+        
+        if type(values) is list:
+            self.addItems(values)
+        
+        
+    def setValue(self, value):
+        if type(value) is str:
+            value = self.findText(value)
+        self.setCurrentIndex(value)
+    def getValue(self):
+        return self.currentText()
+        

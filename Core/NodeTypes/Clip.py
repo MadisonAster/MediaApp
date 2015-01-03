@@ -49,12 +49,8 @@ class Clip(ImageNode, AudioNode):
         self['lastFrame'] = IntKnob(86785)
         self['startAt'] = IntKnob(0)
         
-        self['before'] = StrKnob('black')
-        self['after'] = StrKnob('bounce')
-        
-        #TODO: create PulldownKnob
-        #self['before'] = PulldownKnob()
-        #self['after'] = PulldownKnob()
+        self['before'] = ComboKnob(['hold', 'loop', 'bounce', 'black'])
+        self['after'] = ComboKnob(['hold', 'loop', 'bounce', 'black'])
         
         self.attachKnobs()
         
