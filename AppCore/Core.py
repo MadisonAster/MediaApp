@@ -59,6 +59,8 @@ class Core(dict):
         self.App.setPalette(self.getPalette('App'))
         
         
+        self.App.setStyleSheet(self.generateStyleSheet())
+        
         self.Nodes = {}
         
         self.ctypesMagic()
@@ -208,7 +210,39 @@ class Core(dict):
         palette.setColor(QtGui.QPalette.Link, self.AppPrefs[widgetName+'-Link'])
         palette.setColor(QtGui.QPalette.LinkVisited, self.AppPrefs[widgetName+'-LinkVisited'])
         return palette
-
+    def generateStyleSheet(self):
+        palette = self.App.palette()
+        Window = palette.window().color().name()
+        WindowText = palette.windowText().color().name()
+        Base = palette.base().color().name()
+        AlternateBase = palette.alternateBase().color().name()
+        ToolTipBase = palette.toolTipBase().color().name()
+        ToolTipText = palette.toolTipText().color().name()
+        Text = palette.text().color().name()
+        Button = palette.button().color().name()
+        ButtonText = palette.buttonText().color().name()
+        BrightText = palette.brightText().color().name()
+        Light = palette.light().color().name()
+        Midlight = palette.midlight().color().name()
+        Dark = palette.dark().color().name()
+        Mid = palette.mid().color().name()
+        Shadow = palette.shadow().color().name()
+        Highlight = palette.highlight().color().name()
+        HighlightedText = palette.highlightedText().color().name()
+        Link = palette.link().color().name()
+        LinkVisited = palette.linkVisited().color().name()
+        
+        stylesheet = 'QPushButton {background: '+Button+'; color: '+ButtonText+';}\n'
+        stylesheet += 'QLineEdit {background: '+Mid+'; color: '+ButtonText+'; border: '+Shadow+';}\n'
+        stylesheet += 'QComboBox {background: '+Button+'; color: '+ButtonText+'; border: '+Shadow+';}\n'
+        stylesheet += 'QDockWidget {border: '+Shadow+';}\n'
+        stylesheet += 'QDockWidget::title {background: '+Dark+';}\n'
+        stylesheet += 'QMessageBox {background: '+Window+'; color: '+WindowText+';}\n'
+        stylesheet += 'QMenuBar {background: '+Window+'; color: '+WindowText+';}\n'
+        stylesheet += 'QMenuBar::item {background: '+Window+';}\n'
+        stylesheet += 'QMenu {background: '+Window+'; color: '+WindowText+';}\n'
+        
+        return stylesheet
 #Importable Singleton Magic
 Core.instance = Core() 
 import sys
