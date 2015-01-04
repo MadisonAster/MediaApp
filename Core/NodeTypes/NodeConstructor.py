@@ -56,6 +56,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         super(PropertiesDockWidget, self).__init__()
         ##################################
         self.setWidget(PropertiesWidget())
+        self.widget().setPalette(Core.App.palette())
         
         #self.visibilityChanged.triggered.connect(self.unDock)
         #self.toggleViewAction().triggered.connect(self.unDock)

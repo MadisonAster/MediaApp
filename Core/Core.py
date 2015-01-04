@@ -46,6 +46,7 @@ class Core(dict):
         self.App = QtGui.QApplication(argString)
         
         
+        
         self.setPaths()
         
         
@@ -65,39 +66,12 @@ class Core(dict):
         #self.AppPrefs = Settings that change on a per user basis, colors, fonts, app particulars, etc
         #self.AppSettings = Settings that change on per app basis, graph functions, widgets, font availability, preferences window etc
         
+        self.App.setPalette(self.getPalette('App'))
+        
+        
         self.Nodes = {}
         
         self.ctypesMagic()
-        self.setCurrentImage()
-    
-    
-    def setCurrentImage(self):
-        #im = imageio.imread('coins.png')
-        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png') 
-        im = imageio.imread('C:/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.086770.tif')
-
-        im = imageio.core.util.image_as_uint8(im)
-        #self.imageString1 = im.tobytes()
-        self.imageString = im.tostring()
-        
-        #TEST: I don't think this will add any overhead, take it out if it does
-        im = im.swapaxes(0, 1)
-        width, height, channels = im.shape
-        #height, width, channels = im.shape
-        
-        print im[100][200][1]
-        
-        bytesPerLine = channels * width
-        
-        print 'bits', im.itemsize*8*channels
-        
-        if channels == 4:
-            myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
-        elif channels == 3:
-            myImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
-        #myImage = QtGui.QImage.fromData(self.imageString)
-        #print myImage.byteCount()
-        self.currentImage = myImage
         
     def setPaths(self):
         self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',2)[0]
@@ -218,3 +192,28 @@ class Core(dict):
         self.Nodes = eval(str_Nodes)
     def getCurrentFrame(self):
         return self.AppAttributes['ctiTop'][0]
+        
+    def getPalette(self, widgetName):
+        palette = QtGui.QPalette()
+        palette.setColor(QtGui.QPalette.Window, self.AppPrefs[widgetName+'-Window'])
+        #palette.setColor(QtGui.QPalette.Background, self.AppPrefs[widgetName+'-Background']) IGNORED
+        palette.setColor(QtGui.QPalette.WindowText, self.AppPrefs[widgetName+'-WindowText'])
+        #palette.setColor(QtGui.QPalette.Foreground, self.AppPrefs[widgetName+'-Foreground']) IGNORED
+        palette.setColor(QtGui.QPalette.Base, self.AppPrefs[widgetName+'-Base'])
+        palette.setColor(QtGui.QPalette.AlternateBase, self.AppPrefs[widgetName+'-AlternateBase'])
+        palette.setColor(QtGui.QPalette.ToolTipBase, self.AppPrefs[widgetName+'-ToolTipBase'])
+        palette.setColor(QtGui.QPalette.ToolTipText, self.AppPrefs[widgetName+'-ToolTipText'])
+        palette.setColor(QtGui.QPalette.Text, self.AppPrefs[widgetName+'-Text'])
+        palette.setColor(QtGui.QPalette.Button, self.AppPrefs[widgetName+'-Button'])
+        palette.setColor(QtGui.QPalette.ButtonText, self.AppPrefs[widgetName+'-ButtonText'])
+        palette.setColor(QtGui.QPalette.BrightText, self.AppPrefs[widgetName+'-BrightText'])
+        palette.setColor(QtGui.QPalette.Light, self.AppPrefs[widgetName+'-Light'])
+        palette.setColor(QtGui.QPalette.Midlight, self.AppPrefs[widgetName+'-Midlight'])
+        palette.setColor(QtGui.QPalette.Dark, self.AppPrefs[widgetName+'-Dark'])
+        palette.setColor(QtGui.QPalette.Mid, self.AppPrefs[widgetName+'-Mid'])
+        palette.setColor(QtGui.QPalette.Shadow, self.AppPrefs[widgetName+'-Shadow'])
+        palette.setColor(QtGui.QPalette.Highlight, self.AppPrefs[widgetName+'-Highlight'])
+        palette.setColor(QtGui.QPalette.HighlightedText, self.AppPrefs[widgetName+'-HighlightedText'])
+        palette.setColor(QtGui.QPalette.Link, self.AppPrefs[widgetName+'-Link'])
+        palette.setColor(QtGui.QPalette.LinkVisited, self.AppPrefs[widgetName+'-LinkVisited'])
+        return palette
