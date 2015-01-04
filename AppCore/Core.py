@@ -241,6 +241,16 @@ class Core(dict):
         stylesheet += 'QMenuBar {background: '+Window+'; color: '+WindowText+';}\n'
         stylesheet += 'QMenuBar::item {background: '+Window+';}\n'
         stylesheet += 'QMenu {background: '+Window+'; color: '+WindowText+';}\n'
+        stylesheet += 'QScrollBar:vertical {background: '+Window+'; border: 1px inset;}\n'
+        stylesheet += 'QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {background: none;}\n'
+        stylesheet += 'QScrollBar::handle:vertical {background: '+Button+'; margin: 24px 0 24px 0;}\n'
+        #stylesheet += 'QScrollBar::up-arrow:vertical {background: '+Button+';}\n'
+        #stylesheet += 'QScrollBar::add-line:vertical {subcontrol-origin: margin;}\n'
+        #stylesheet += 'QScrollBar::add-line:vertical {height: 22px; subcontrol-position: bottom; subcontrol-origin: margin; border: 2px solid black;}\n'
+        #stylesheet += 'QScrollBar::down-arrow:vertical {width: 10px; height: 5px; background: '+Button+'; color: '+ButtonText+';}\n'
+        
+        
+        #stylesheet += "QScrollBar::add-line:vertical { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0  rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),  stop:1 rgb(32, 47, 130)); height: px; subcontrol-position: bottom; subcontrol-origin: margin;}"
         
         return stylesheet
 #Importable Singleton Magic

@@ -38,7 +38,7 @@
 'App-Dark' : QtGui.QColor(35,35,35),
 'App-Mid' : QtGui.QColor(75,75,75),
 'App-Shadow' : QtGui.QColor(10,10,10),
-'App-Highlight' : QtGui.QColor(50,50,50),
+'App-Highlight' : QtGui.QColor(150,150,150),
 'App-HighlightedText' : QtGui.QColor(50,50,50),
 'App-Link' : QtGui.QColor(50,50,50),
 'App-LinkVisited' : QtGui.QColor(50,50,50),
