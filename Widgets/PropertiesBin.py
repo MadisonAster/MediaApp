@@ -29,12 +29,15 @@ class PropertiesBin(QtGui.QScrollArea):
     def __init__(self, CorePointer):
         global Core
         Core = CorePointer
+        self.className = self.__class__.__name__
         super(PropertiesBin, self).__init__()
-        #self.setBackgroundRole(QtGui.QPalette.Dark)
+        ##################################
+        #self.setPalette(Core.getPalette(self.className))
+        #self.setBackgroundRole(self.palette().Base)
+        
         self.setWidgetResizable(True)
         
         self.DockingBin = DockingBin(CorePointer)
-        #self.DockingBin = TestWidget()
         self.DockingBin.show()
         self.setWidget(self.DockingBin)
         
@@ -107,6 +110,9 @@ class DockingBin(QtGui.QMainWindow):
         #toolbar.addAction(exitAction)
         #/ToolBar#
     def sizeHint(self):
+        #WORKAROUND: adding together the height of all the docked widgets manually here
+        #QtGui.QScrollArea does not appear to care what size policy you set, it always treats
+        #the sizeHint you return here as QtGui.QSizePolicy.Fixed
         XHint, YHint = 200, 200
         for child in self.findChildren(QtGui.QDockWidget):
             if child.isVisible() is True:

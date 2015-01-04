@@ -47,6 +47,7 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         
          
         self.browseButton = QtGui.QPushButton('Browse', self)
+        self.browseButton.setAutoFillBackground(True)
         self.browseButton.clicked[bool].connect(self.fileBrowse)
         self.knobLayout.addWidget(self.browseButton)
         

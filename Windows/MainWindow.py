@@ -43,6 +43,7 @@ class MainWindow(QtGui.QMainWindow):
     def initUI(self):
     
         #CosmeticSettings
+        self.setPalette(Core.App.palette())
         self.WindowFont = Core.AppPrefs['AppFont']
         self.setWindowTitle(Core.AppSettings['AppTitle'])
         self.setWindowIcon(QtGui.QIcon(Core.AppSettings['AppIcon']))   
