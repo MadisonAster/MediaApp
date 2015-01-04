@@ -24,16 +24,16 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
-from NodeLinkedWidget import *
 
+import AppCore
+from NodeLinkedWidget import *
 from GraphWidget import *
+
 class TimelineWidget(GraphWidget, NodeLinkedWidget):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
-        super(TimelineWidget, self).__init__(CorePointer)
+    def __init__(self):
+        super(TimelineWidget, self).__init__()
         ################################
-        self.node = Core.NodeGraph.createNode('TimelineNode')
+        self.node = AppCore.NodeGraph.createNode('TimelineNode')
         self.node.setTimelineWidget(self)
         
     #def dragEvent(self):
@@ -49,54 +49,54 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
             xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
             ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)*self.YPixelsPerUnit
             node[0]['startAt'].setValue(xpos)
-        Core.ViewerWidget.repaint()
+        AppCore.ViewerWidget.repaint()
             
     def paintExtra(self, painter):
         #Draw cti and zti here!
 
-        pen = Core.AppPrefs[self.className+'-ztiPen']
+        pen = AppCore.AppPrefs[self.className+'-ztiPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
-        painter.drawLine(Core.AppAttributes['ztiPos'],0, Core.AppAttributes['ztiPos'],24*10)
+        painter.drawLine(AppCore.AppAttributes['ztiPos'],0, AppCore.AppAttributes['ztiPos'],24*10)
         
         
-        pen = Core.AppPrefs[self.className+'-ctiPen']
+        pen = AppCore.AppPrefs[self.className+'-ctiPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
-        painter.drawLine(Core.AppAttributes['ctiTop'][0],Core.AppAttributes['ctiTop'][1], Core.AppAttributes['ctiBot'][0],Core.AppAttributes['ctiBot'][1])
+        painter.drawLine(AppCore.AppAttributes['ctiTop'][0],AppCore.AppAttributes['ctiTop'][1], AppCore.AppAttributes['ctiBot'][0],AppCore.AppAttributes['ctiBot'][1])
         
     def keyPressEvent(self, event):
         #print event.key()
         if event.key() == 16777220:                                 #Enter
-            for node in Core.selectedNodes():
-                Core.PropertiesBin.dockThisWidget(node)    
+            for node in AppCore.selectedNodes():
+                AppCore.PropertiesBin.dockThisWidget(node)    
         if event.key() == 16777234: #Left 
-            Core.AppAttributes['ctiTop'][0] = Core.AppAttributes['ctiTop'][0]-1
-            Core.AppAttributes['ctiBot'][0] = Core.AppAttributes['ctiTop'][0]
-            Core.ViewerWidget.repaint()
+            AppCore.AppAttributes['ctiTop'][0] = AppCore.AppAttributes['ctiTop'][0]-1
+            AppCore.AppAttributes['ctiBot'][0] = AppCore.AppAttributes['ctiTop'][0]
+            AppCore.ViewerWidget.repaint()
         if event.key() == 16777236: #Right
-            Core.AppAttributes['ctiTop'][0] = Core.AppAttributes['ctiTop'][0]+1
-            Core.AppAttributes['ctiBot'][0] = Core.AppAttributes['ctiTop'][0]
-            Core.ViewerWidget.repaint()
+            AppCore.AppAttributes['ctiTop'][0] = AppCore.AppAttributes['ctiTop'][0]+1
+            AppCore.AppAttributes['ctiBot'][0] = AppCore.AppAttributes['ctiTop'][0]
+            AppCore.ViewerWidget.repaint()
 
         self.repaint()
     
     def getTopNodeForCurrentFrame(self):
-        nodeStack = self.getNodesAtPos(Core.getCurrentFrame())
+        nodeStack = self.getNodesAtPos(AppCore.getCurrentFrame())
         
         returnNode = None
         for node in nodeStack:
             if returnNode is None:
                 returnNode = node
-            elif node['ypos'].getValue() > returnNode['ypos'].getValue() and Core.AppSettings[self.className+'-YInverted'] is True:
+            elif node['ypos'].getValue() > returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is True:
                 returnNode = node
-            elif node['ypos'].getValue() < returnNode['ypos'].getValue() and Core.AppSettings[self.className+'-YInverted'] is False:
+            elif node['ypos'].getValue() < returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is False:
                 returnNode = node
         return returnNode
         
     def getNodesAtPos(self, XPos):
         nodeStack = []
-        #for node in Core.getChildrenOf(self):
+        #for node in AppCore.getChildrenOf(self):
         for node in self.allNodes():
             if node.fallsAround(XPos, None):
                 nodeStack.append(node)

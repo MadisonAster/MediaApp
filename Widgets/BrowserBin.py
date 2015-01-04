@@ -24,11 +24,10 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+import AppCore
 
 class BrowserBin(QtGui.QWidget):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
+    def __init__(self):
         super(BrowserBin, self).__init__()
         #self.setAccessibleName('BrowserBin')  #override visible name here
         ##################################

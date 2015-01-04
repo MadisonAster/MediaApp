@@ -3,9 +3,6 @@ Add Toolbar to Properties Bin
 
 Add Preferences window
 
-Fix Core namespace issue
-
-
 Add Caching functions to Nodes and to Timeline
 #Node dragging being slowed down by viewer update call
 

@@ -23,20 +23,36 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
-import KnobConstructor
+import AppCore
+from NodeConstructor import *
+from KnobTypes import *
 
-class StrKnob(KnobConstructor.Knob, QtGui.QLineEdit):
-    def __init__(self, value, name = 'StrKnob'):
-        super(StrKnob, self).__init__()
-        self.knobLayout.addWidget(self)
+class TimelineNode(ImageNode, AudioNode):
+    def __init__(self):
+        super(TimelineNode, self).__init__()
+        self['ClassName'] = 'TimelineNode'
+        self.setName(AppCore.getIncrementedName('TimelineNode'))
+        ################################
         
-        self.name.setText(name)
-        self.setValue(value)
+        self.TimelineWidget = None
         
+        #TODO: create ImageMath package, tie these to some math
+        self['zti'] = IntKnob(0)
+        self['cti'] = IntKnob(0)
+
+        self.attachKnobs()
         
-    def setValue(self, value):
-        self.setText(value)
-    def getValue(self):
-        return self.text()
-       
+    
+    def nodeShape(self):
+        self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
+        self.color1 = QtGui.QColor(180,50,238)
+        self.color2 = QtGui.QColor(122,122,122)
+
+    def setTimelineWidget(self, widget):
+        self.TimelineWidget = widget
+    
+    
+    def getImage(self):
+        inputNode = self.TimelineWidget.getTopNodeForCurrentFrame()
+        self.frameCache = self.generateImage(inputNode = inputNode)
+        return self.frameCache

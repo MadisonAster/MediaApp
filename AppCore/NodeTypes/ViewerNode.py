@@ -23,37 +23,31 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
+import AppCore
 from NodeConstructor import *
 from KnobTypes import *
 
-class TimelineNode(ImageNode, AudioNode):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
-        super(TimelineNode, self).__init__(CorePointer)
-        self['ClassName'] = 'TimelineNode'
-        self.setName(Core.getIncrementedName('TimelineNode'))
+class ViewerNode(ImageNode):
+    def __init__(self):
+        super(ViewerNode, self).__init__()
+        self['ClassName'] = 'ViewerNode'
+        self.setName(AppCore.getIncrementedName('ViewerNode'))
         ################################
         
-        self.TimelineWidget = None
+        self.ViewerWidget = None
         
         #TODO: create ImageMath package, tie these to some math
-        self['zti'] = IntKnob(0)
-        self['cti'] = IntKnob(0)
+        self['gain'] = FloatKnob(0)
+        self['gamma'] = FloatKnob(0)
 
         self.attachKnobs()
-        
     
     def nodeShape(self):
         self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
         self.color1 = QtGui.QColor(180,50,238)
         self.color2 = QtGui.QColor(122,122,122)
 
-    def setTimelineWidget(self, widget):
-        self.TimelineWidget = widget
-    
-    
-    def getImage(self):
-        inputNode = self.TimelineWidget.getTopNodeForCurrentFrame()
-        self.frameCache = self.generateImage(inputNode = inputNode)
-        return self.frameCache
+    def setViewerWidget(self, widget):
+        self.ViewerWidget = widget
+        
+        

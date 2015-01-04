@@ -21,6 +21,28 @@
 'AppFont' : QtGui.QFont('Times', 10, QtGui.QFont.Bold),
 'NodeNamePadding' : 3,
 
+'App-Window' : QtGui.QColor(50,50,50),
+#'App-Background' : QtGui.QColor(0,50,0), IGNORED
+'App-WindowText' : QtGui.QColor(255,255,255),
+#'App-Foreground' : QtGui.QColor(0,50,0), IGNORED
+'App-Base' : QtGui.QColor(50,50,50),
+'App-AlternateBase' : QtGui.QColor(50,50,50),
+'App-ToolTipBase' : QtGui.QColor(50,50,50),
+'App-ToolTipText' : QtGui.QColor(50,50,50),
+'App-Text' : QtGui.QColor(0,0,0),
+'App-Button' : QtGui.QColor(75,75,75),
+'App-ButtonText' : QtGui.QColor(0,0,0),
+'App-BrightText' : QtGui.QColor(255,255,255),
+'App-Light' : QtGui.QColor(100,100,100),
+'App-Midlight' : QtGui.QColor(50,0,0),
+'App-Dark' : QtGui.QColor(25,25,25),
+'App-Mid' : QtGui.QColor(75,75,75),
+'App-Shadow' : QtGui.QColor(50,50,50),
+'App-Highlight' : QtGui.QColor(50,50,50),
+'App-HighlightedText' : QtGui.QColor(50,50,50),
+'App-Link' : QtGui.QColor(50,50,50),
+'App-LinkVisited' : QtGui.QColor(50,50,50),
+
 'NodeGraph-bgColor' : QtGui.QColor(50,50,50),
 'NodeGraph-nodeTrimPen' : QtGui.QPen(QtGui.QColor(0,0,0), .5),
 'NodeGraph-marqBoxColor' : QtGui.QColor(255,255,255,25),

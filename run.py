@@ -14,7 +14,6 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
-#import sys
 import cmd
 import threading
 
@@ -22,27 +21,30 @@ try:
     import MediaApp
 except:
     import __init__ as MediaApp
+import AppCore
 
-
-Core = MediaApp.Core()
 Cmd = cmd.Cmd()
-MainWindow = MediaApp.Windows.createWindow(Core)
+MainWindow = MediaApp.Windows.MainWindow()
 
-BrowserBin = MediaApp.Widgets.BrowserBin(Core)
-PropertiesBin = MediaApp.Widgets.PropertiesBin(Core)
-ViewerWidget = MediaApp.Widgets.ViewerWidget(Core)
-TimelineWidget = MediaApp.Widgets.TimelineWidget(Core)
+#Required for ViewerNode
+NodeGraph = MediaApp.Widgets.NodeGraph()
+MainWindow.dockThisWidget(NodeGraph)
+
+BrowserBin = MediaApp.Widgets.BrowserBin()
+PropertiesBin = MediaApp.Widgets.PropertiesBin()
+ViewerWidget = MediaApp.Widgets.ViewerWidget()
 
 MainWindow.dockThisWidget(BrowserBin)
 MainWindow.dockThisWidget(PropertiesBin)
 MainWindow.dockThisWidget(ViewerWidget)
 MainWindow.dockThisWidget(TimelineWidget)
- 
+
+
 def run():
     def cmdThreadCall():
         Cmd.cmdloop()
     def appThreadCall():
-        Core.App.exec_()
+        AppCore.App.exec_()
         
     MainWindow.initUI()
     MainWindow.show()

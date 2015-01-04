@@ -25,7 +25,6 @@
 
 from PySide import QtGui, QtCore
 import imageio
-import visvis
 
 import os, gc
 import sys
@@ -33,23 +32,14 @@ import pprint
 import ctypes
 
 
-import NodeTypes
-
-
-#MAJOR FLAW: get rid of all these stupid CorePointers, make Core an importable singleton
 class Core(dict):
     def __init__(self, argString = ''):
         super(Core, self).__init__()
-        ##################################
         
-        QtGui.QApplication.setColorSpec(QtGui.QApplication.ManyColor)
+        #QtGui.QApplication.setColorSpec(QtGui.QApplication.ManyColor)
         self.App = QtGui.QApplication(argString)
         
-        
-        
         self.setPaths()
-        
-        
         
         self.AppAttributes = self.parseFile(self['AppAttributes'])
         self.AppSettings = self.parseFile(self['AppSettings'])
@@ -123,7 +113,8 @@ class Core(dict):
     
    
     def createNode(self, nodeType, parent = None):
-        node = eval('NodeTypes.'+nodeType+'(self)')
+        evalString = 'NodeTypes.'+nodeType+'()'
+        node = eval(evalString)
         node.setParent(parent)
         self.Nodes[node.name()] = node
         return node
@@ -217,3 +208,11 @@ class Core(dict):
         palette.setColor(QtGui.QPalette.Link, self.AppPrefs[widgetName+'-Link'])
         palette.setColor(QtGui.QPalette.LinkVisited, self.AppPrefs[widgetName+'-LinkVisited'])
         return palette
+
+#Importable Singleton Magic
+Core.instance = Core() 
+import sys
+_ref = sys.modules[__name__]  # Reference to current module so it's not deleted
+sys.modules['AppCore'] = Core.instance
+
+import NodeTypes
