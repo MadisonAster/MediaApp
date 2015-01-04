@@ -1,9 +1,13 @@
 ######HIGH PRIORITY######
+Add Toolbar to Properties Bin
+
 Add Preferences window
 
 Fix Core namespace issue
 
+
 Add Caching functions to Nodes and to Timeline
+#Node dragging being slowed down by viewer update call
 
 
 Bundle Dependencies with program as submodules in ./Dependencies Package
@@ -23,7 +27,7 @@ Start Adding Toolbars, Node Performance overlays option in NodeGraph
 
 
 
-fix properties bin adding order, maybe it's a simple switch to Bottom section?
+
 #fix marquee float bug
 Fix zooming math so that it doesn't slow down as you zoom in
 

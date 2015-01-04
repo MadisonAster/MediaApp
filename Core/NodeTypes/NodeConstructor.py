@@ -42,13 +42,6 @@ class PropertiesWidget(QtGui.QWidget):
         
         self.panelLayout = QtGui.QVBoxLayout()
         self.setLayout(self.panelLayout)
-        
-        
-        
-        #cb1 = QtGui.QPushButton("One",self)
-        #cb2 = QtGui.QPushButton("Two",self)
-        #self.panelLayout.addWidget(cb1)
-        #self.panelLayout.addWidget(cb2)
   
     def addKnob(widget):
         self.panelLayout.addWidget(widget)
@@ -65,12 +58,19 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.setWidget(PropertiesWidget())
         
         #self.visibilityChanged.triggered.connect(self.unDock)
-        self.toggleViewAction().triggered.connect(self.unDock)
+        #self.toggleViewAction().triggered.connect(self.unDock)
         self.setAcceptDrops(True)
-    def unDock(self):
-        #FLAW: get this signal working
-        print 'yay'
-        Core.PropertiesBin.removeDockWidget(self)
+        
+        
+        self.setAllowedAreas(False)
+        self.setAllowedAreas(QtCore.Qt.TopDockWidgetArea)
+        
+        
+        
+        #Parent child relationship workaround
+        self.docked = False
+    def closeEvent(self, event):
+        Core.PropertiesBin.unDockThisWidget(self)
         
 class NodeConstructor(object):
     def __init__(self, CorePointer):
