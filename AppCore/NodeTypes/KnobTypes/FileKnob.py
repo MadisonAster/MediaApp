@@ -24,16 +24,15 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+
+import AppCore
 import KnobConstructor
 
 
 
 class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
     urlDropped = QtCore.Signal()
-    def __init__(self, value, CorePointer, parent = None, name = 'FileKnob'):
-        global Core
-        Core = CorePointer
-        #super(FileKnob, self).__init__(CorePointer)
+    def __init__(self, value, parent = None, name = 'FileKnob'):
         super(FileKnob, self).__init__()
         #######################################
         
@@ -70,22 +69,22 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
     def copy(self):
         print 'hello carl'
         unTranslatedText = self.unTranslatePath(self.getValue())
-        Core.App.clipboard().setText('hello carl')
+        AppCore.App.clipboard().setText('hello carl')
         
     def paste(self):
-        self.setValue(self.TranslatePath(Core.App.clipboard().text()))
+        self.setValue(self.TranslatePath(AppCore.App.clipboard().text()))
     
     def unTranslatePath(self, path):
         path = path.replace('\\','/')
-        for key in Core.AppPrefs['GLOBALS']:
-            repVal = Core.AppPrefs[key].replace('\\','/').rstrip('/')
+        for key in AppCore.AppPrefs['GLOBALS']:
+            repVal = AppCore.AppPrefs[key].replace('\\','/').rstrip('/')
             path = path.replace(key, repVal)
         return path
         
     def TranslatePath(self, path):
         path = path.replace('\\','/')
-        for key in Core.AppPrefs['GLOBALS']:
-            repVal = Core.AppPrefs[key].replace('\\','/').rstrip('/')
+        for key in AppCore.AppPrefs['GLOBALS']:
+            repVal = AppCore.AppPrefs[key].replace('\\','/').rstrip('/')
             path = path.replace(repVal, key)
         return path
         
@@ -96,7 +95,7 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
             self.setText(path)
         
     def getEvaluatedPath(self):
-        currentFrame = Core.getCurrentFrame()
+        currentFrame = AppCore.getCurrentFrame()
         startAt = self.parent['startAt'].getValue()
         offset = currentFrame-startAt
         

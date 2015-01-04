@@ -25,9 +25,8 @@
 
 from MainWindow import *
 
-def createWindow(Core):
-    window = MainWindow(Core)
-    Core.RegisterObject(window)
+def createWindow():
+    window = MainWindow()
     return window
 def destroyWindow(window):
     window.destroy()

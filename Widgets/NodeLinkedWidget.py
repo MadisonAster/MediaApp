@@ -26,9 +26,7 @@
 from PySide import QtGui, QtCore
 
 class NodeLinkedWidget(object):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
+    def __init__(self):
         super(NodeLinkedWidget, self).__init__()
         ################################
 

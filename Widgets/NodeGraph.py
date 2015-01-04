@@ -25,12 +25,12 @@
 
 from PySide import QtGui, QtCore
 
+import AppCore
 from GraphWidget import *
+
 class NodeGraph(GraphWidget):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
-        super(NodeGraph, self).__init__(CorePointer)
+    def __init__(self):
+        super(NodeGraph, self).__init__()
         ################################
 
     def keyPressEvent(self, event):

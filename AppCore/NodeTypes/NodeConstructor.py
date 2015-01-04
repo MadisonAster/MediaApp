@@ -26,13 +26,12 @@
 from PySide import QtGui, QtCore
 import math
 
+import AppCore
 from KnobTypes import *
 
 
 class PropertiesWidget(QtGui.QWidget):
     def __init__(self):
-        #global Core
-        #Core = CorePointer
         super(PropertiesWidget, self).__init__()
         #self.setAccessibleName('PropertiesWidget')   #override visible name here or elsewhere
         ##################################
@@ -50,13 +49,11 @@ class PropertiesWidget(QtGui.QWidget):
     
 
 class PropertiesDockWidget(QtGui.QDockWidget):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
+    def __init__(self):
         super(PropertiesDockWidget, self).__init__()
         ##################################
         self.setWidget(PropertiesWidget())
-        self.widget().setPalette(Core.App.palette())
+        self.widget().setPalette(AppCore.App.palette())
         
         #self.visibilityChanged.triggered.connect(self.unDock)
         #self.toggleViewAction().triggered.connect(self.unDock)
@@ -71,19 +68,17 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         #Parent child relationship workaround
         self.docked = False
     def closeEvent(self, event):
-        Core.PropertiesBin.unDockThisWidget(self)
+        AppCore.PropertiesBin.unDockThisWidget(self)
         
 class NodeConstructor(object):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
-        super(NodeConstructor, self).__init__(CorePointer)
+    def __init__(self):
+        super(NodeConstructor, self).__init__()
         ################################
         
         self.knobs = []
         
-        self['xpos'] = IntKnob(Core.AppAttributes['GraphXPos'])
-        self['ypos'] = IntKnob(Core.AppAttributes['GraphYPos'])
+        self['xpos'] = IntKnob(AppCore.AppAttributes['GraphXPos'])
+        self['ypos'] = IntKnob(AppCore.AppAttributes['GraphYPos'])
         self['selected'] = BoolKnob(False)
         
         self['ClassName'] = StrKnob('Node')
@@ -178,7 +173,7 @@ class NodeConstructor(object):
         self.gradientBrush = QtGui.QBrush(self.nodeGradient)
         
         
-        Metrics = Core.AppPrefs['AppFontMetrics']
+        Metrics = AppCore.AppPrefs['AppFontMetrics']
         textHeight = Metrics.boundingRect(self.nodeRectangle.toRect(), QtCore.Qt.TextWrapAnywhere, self['nodeName'].getValue()).height()
         textLines = math.ceil(textHeight/float(Metrics.lineSpacing()))
         stretchHeight = textLines*(Metrics.lineSpacing()/self.nodeRectangle.height())
@@ -268,7 +263,7 @@ class NodeConstructor(object):
         pinPointY = self.mappedNodeRect.top()
         for node in self.inputPaths:
             if node is not None:
-                painter.setPen(Core.AppPrefs[self.parent.className+'-pathPen01'])
+                painter.setPen(AppCore.AppPrefs[self.parent.className+'-pathPen01'])
                 fromPointX = node.mappedNodeRect.center().x()
                 fromPointY = node.mappedNodeRect.bottom()
                 
@@ -277,13 +272,13 @@ class NodeConstructor(object):
                 
         #LAYER1: NodeShape/Gradient
         painter.setBrush(self.gradientBrush)
-        painter.setPen(Core.AppPrefs[self.parent.className+'-nodeTrimPen'])
+        painter.setPen(AppCore.AppPrefs[self.parent.className+'-nodeTrimPen'])
         painter.drawConvexPolygon(self.mappedPolyShape)
         
         #LAYER2: NodeSelectShape
         if self.toKnob('selected').getValue() == True:
-            painter.setBrush(Core.AppPrefs[self.parent.className+'-nodeSelectColor'])
-            painter.setPen(Core.AppPrefs[self.parent.className+'-nodeSelectPen'])
+            painter.setBrush(AppCore.AppPrefs[self.parent.className+'-nodeSelectColor'])
+            painter.setPen(AppCore.AppPrefs[self.parent.className+'-nodeSelectPen'])
             painter.drawConvexPolygon(self.mappedSelectShape)
         
         #LAYER3: NodeText
@@ -312,12 +307,12 @@ class NodeConstructor(object):
 
         
 class Node(NodeConstructor, PropertiesDockWidget):
-    def __init__(self, CorePointer):
-        super(Node, self).__init__(CorePointer)   
+    def __init__(self):
+        super(Node, self).__init__()   
 
 class ImageNode(Node):
-    def __init__(self, CorePointer):
-        super(ImageNode, self).__init__(CorePointer)
+    def __init__(self):
+        super(ImageNode, self).__init__()
         
     def getImage(self):
         self.frameCache = self.generateImage()
@@ -329,8 +324,8 @@ class ImageNode(Node):
             inputNode = self.getInput()
         if inputNode is None:
             #Generate Black QImage
-            width = Core.AppAttributes['ResolutionWidth']
-            height = Core.AppAttributes['ResolutionHeight']
+            width = AppCore.AppAttributes['ResolutionWidth']
+            height = AppCore.AppAttributes['ResolutionHeight']
             image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
             return image
         else:
@@ -339,12 +334,12 @@ class ImageNode(Node):
             return inputNode.getImage()
             
 class AudioNode(Node):
-    def __init__(self, CorePointer):
-        super(AudioNode, self).__init__(CorePointer)
+    def __init__(self):
+        super(AudioNode, self).__init__()
 class GeometryNode(Node):
-    def __init__(self, CorePointer):
-        super(GeometryNode, self).__init__(CorePointer)
+    def __init__(self):
+        super(GeometryNode, self).__init__()
 class ArrayDataNode(Node):
-    def __init__(self, CorePointer):
-        super(ArrayDataNode, self).__init__(CorePointer)
+    def __init__(self):
+        super(ArrayDataNode, self).__init__()
         

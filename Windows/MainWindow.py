@@ -24,18 +24,17 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+import AppCore
 
 class MainWindow(QtGui.QMainWindow):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
-        Core.RegisterObject(self)
+    def __init__(self):
+        AppCore.RegisterObject(self)
         super(MainWindow, self).__init__()
         ################################
         
         #Get LayoutSettings
-        self.defaultLayoutsPath = Core['AppDirectory']+'/'+'MainWindow_defaultLayouts.ini'
-        self.userLayoutsPath = Core['AppDataDirectory']+'/'+'MainWindow_userLayouts.ini'
+        self.defaultLayoutsPath = AppCore['AppDirectory']+'/'+'MainWindow_defaultLayouts.ini'
+        self.userLayoutsPath = AppCore['AppDataDirectory']+'/'+'MainWindow_userLayouts.ini'
         self.layoutSettings = QtCore.QSettings(self.defaultLayoutsPath, QtCore.QSettings.IniFormat)
         #if os.path.exists(self.userLayoutsPath):
         #    self.layoutSettings = QtCore.QSettings(self.userLayoutsPath, QtCore.QSettings.IniFormat)
@@ -43,10 +42,10 @@ class MainWindow(QtGui.QMainWindow):
     def initUI(self):
     
         #CosmeticSettings
-        self.setPalette(Core.App.palette())
-        self.WindowFont = Core.AppPrefs['AppFont']
-        self.setWindowTitle(Core.AppSettings['AppTitle'])
-        self.setWindowIcon(QtGui.QIcon(Core.AppSettings['AppIcon']))   
+        self.setPalette(AppCore.App.palette())
+        self.WindowFont = AppCore.AppPrefs['AppFont']
+        self.setWindowTitle(AppCore.AppSettings['AppTitle'])
+        self.setWindowIcon(QtGui.QIcon(AppCore.AppSettings['AppIcon']))   
         self.AllowNestedDocks
         self.ForceTabbedDocks
         self.setTabPosition(QtCore.Qt.AllDockWidgetAreas, QtGui.QTabWidget.North)
@@ -107,7 +106,7 @@ class MainWindow(QtGui.QMainWindow):
         self.addDockWidget(dockArea, dockWidget)
         
         #FLAW: A little funky to do this here, re-evaluate
-        Core.RegisterObject(widget)
+        AppCore.RegisterObject(widget)
         
     def closeEvent(self, event):
         reply = QtGui.QMessageBox.question(self, 'Message', 

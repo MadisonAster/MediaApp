@@ -27,24 +27,22 @@ import os
 from PySide import QtGui, QtCore
 import imageio
 
+import AppCore
 from NodeConstructor import *
-
 from KnobTypes import *
 
 class Clip(ImageNode, AudioNode):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
-        super(Clip, self).__init__(CorePointer)
+    def __init__(self):
+        super(Clip, self).__init__()
         self['ClassName'] = 'Clip'
-        self.setName(Core.getIncrementedName('Clip'))
+        self.setName(AppCore.getIncrementedName('Clip'))
         ################################
         
         #FLAW: move parent kw setting to KnobConstructor
         defaultPath = '*NWSTORAGE/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png'
         defaultPath = '*NWSTORAGE/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.######.tif'
         #defaultPath = '*NWSTORAGE/'
-        self['file'] = FileKnob(defaultPath, CorePointer, parent = self)
+        self['file'] = FileKnob(defaultPath, parent = self)
         self['firstFrame'] = IntKnob(86770)
         self['lastFrame'] = IntKnob(86785)
         self['startAt'] = IntKnob(0)
@@ -82,8 +80,8 @@ class Clip(ImageNode, AudioNode):
             return QImage
         else:
             #Generate Black QImage
-            width = Core.AppAttributes['ResolutionWidth']
-            height = Core.AppAttributes['ResolutionHeight']
+            width = AppCore.AppAttributes['ResolutionWidth']
+            height = AppCore.AppAttributes['ResolutionHeight']
             image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
             return image
         

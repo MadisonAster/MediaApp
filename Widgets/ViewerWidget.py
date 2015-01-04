@@ -24,6 +24,8 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+
+import AppCore
 from NodeLinkedWidget import *
 
 class modeList(list):
@@ -43,9 +45,7 @@ class modeList(list):
                     self.currentMode = i
         
 class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
+    def __init__(self):
         super(ViewerWidget, self).__init__()
         self.className = self.__class__.__name__
         ################################
@@ -57,21 +57,21 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         self.rightClick = False
 
         #Initialize User Values#
-        self.ZoomXYJoined = Core.AppSettings[self.className+'-ZoomXYJoined']
-        self.XPixelsPerUnit = Core.AppSettings[self.className+'-XPixelsPerUnit']
-        self.YPixelsPerUnit = Core.AppSettings[self.className+'-YPixelsPerUnit']
-        self.upperXZoomLimit = Core.AppSettings[self.className+'-upperXZoomLimit']
-        self.upperYZoomLimit = Core.AppSettings[self.className+'-upperYZoomLimit']
-        self.lowerXZoomLimit = Core.AppSettings[self.className+'-lowerXZoomLimit']
-        self.lowerYZoomLimit = Core.AppSettings[self.className+'-lowerYZoomLimit']
-        self.zoomSensitivity = 100.0/Core.AppSettings[self.className+'-zoomSensitivity']
+        self.ZoomXYJoined = AppCore.AppSettings[self.className+'-ZoomXYJoined']
+        self.XPixelsPerUnit = AppCore.AppSettings[self.className+'-XPixelsPerUnit']
+        self.YPixelsPerUnit = AppCore.AppSettings[self.className+'-YPixelsPerUnit']
+        self.upperXZoomLimit = AppCore.AppSettings[self.className+'-upperXZoomLimit']
+        self.upperYZoomLimit = AppCore.AppSettings[self.className+'-upperYZoomLimit']
+        self.lowerXZoomLimit = AppCore.AppSettings[self.className+'-lowerXZoomLimit']
+        self.lowerYZoomLimit = AppCore.AppSettings[self.className+'-lowerYZoomLimit']
+        self.zoomSensitivity = 100.0/AppCore.AppSettings[self.className+'-zoomSensitivity']
 
-        self.curGraphX = Core.AppAttributes[self.className+'-startGraphX']
-        self.curGraphY = Core.AppAttributes[self.className+'-startGraphY']
-        self.curGraphXS = Core.AppAttributes[self.className+'-startGraphXS']
-        self.curGraphYS = Core.AppAttributes[self.className+'-startGraphYS']
+        self.curGraphX = AppCore.AppAttributes[self.className+'-startGraphX']
+        self.curGraphY = AppCore.AppAttributes[self.className+'-startGraphY']
+        self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']
+        self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']
         
-        self.node = Core.NodeGraph.createNode('ViewerNode')
+        self.node = AppCore.NodeGraph.createNode('ViewerNode')
         self.node.setViewerWidget(self)
         
         self.setMinimumSize(0, 0)
@@ -117,10 +117,10 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         else:
             self.modes.setCurrentMode('None')
     def grabValues(self):
-        Core.AppAttributes[self.className+'-startGraphX'] = self.curGraphX
-        Core.AppAttributes[self.className+'-startGraphY'] = self.curGraphY
-        Core.AppAttributes[self.className+'-startGraphXS'] = self.curGraphXS
-        Core.AppAttributes[self.className+'-startGraphYS'] = self.curGraphYS
+        AppCore.AppAttributes[self.className+'-startGraphX'] = self.curGraphX
+        AppCore.AppAttributes[self.className+'-startGraphY'] = self.curGraphY
+        AppCore.AppAttributes[self.className+'-startGraphXS'] = self.curGraphXS
+        AppCore.AppAttributes[self.className+'-startGraphYS'] = self.curGraphYS
         self.endModeX = self.startModeX
         self.endModeY = self.startModeY
         
@@ -137,8 +137,8 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
             self.marqEvent()
         self.update() #Redraw      
     def panEvent(self):
-        self.curGraphX = Core.AppAttributes[self.className+'-startGraphX']+(self.curMouseX-self.startMouseX)
-        self.curGraphY = Core.AppAttributes[self.className+'-startGraphY']+(self.curMouseY-self.startMouseY)
+        self.curGraphX = AppCore.AppAttributes[self.className+'-startGraphX']+(self.curMouseX-self.startMouseX)
+        self.curGraphY = AppCore.AppAttributes[self.className+'-startGraphY']+(self.curMouseY-self.startMouseY)
     def zoomEvent(self):
         posDeltaX = (self.curMouseX-self.startMouseX)
         posDeltaY = (self.curMouseY-self.startMouseY)
@@ -146,28 +146,28 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         scaleDeltaY = posDeltaY/self.zoomSensitivity*-1
         
         if self.ZoomXYJoined == True:
-            self.curGraphXS = Core.AppAttributes[self.className+'-startGraphXS']+(scaleDeltaX+scaleDeltaY)/2
-            self.curGraphYS = Core.AppAttributes[self.className+'-startGraphYS']+(scaleDeltaX+scaleDeltaY)/2
+            self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']+(scaleDeltaX+scaleDeltaY)/2
+            self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']+(scaleDeltaX+scaleDeltaY)/2
         else:
-            self.curGraphXS = Core.AppAttributes[self.className+'-startGraphXS']+scaleDeltaX
-            self.curGraphYS = Core.AppAttributes[self.className+'-startGraphYS']+scaleDeltaY
+            self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']+scaleDeltaX
+            self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']+scaleDeltaY
         
-        difScaleX = self.curGraphXS-Core.AppAttributes[self.className+'-startGraphXS']
-        difScaleY = self.curGraphYS-Core.AppAttributes[self.className+'-startGraphYS']
+        difScaleX = self.curGraphXS-AppCore.AppAttributes[self.className+'-startGraphXS']
+        difScaleY = self.curGraphYS-AppCore.AppAttributes[self.className+'-startGraphYS']
         
         if self.curGraphXS > self.upperXZoomLimit:
             self.curGraphXS = self.upperXZoomLimit
         elif self.curGraphXS < self.lowerXZoomLimit:
             self.curGraphXS = self.lowerXZoomLimit
         else:
-            self.curGraphX = Core.AppAttributes[self.className+'-startGraphX']-(self.startModeX*difScaleX)
+            self.curGraphX = AppCore.AppAttributes[self.className+'-startGraphX']-(self.startModeX*difScaleX)
             
         if self.curGraphYS > self.upperYZoomLimit:
             self.curGraphYS = self.upperYZoomLimit  
         elif self.curGraphYS < self.lowerYZoomLimit:
             self.curGraphYS = self.lowerYZoomLimit
         else:
-            self.curGraphY = Core.AppAttributes[self.className+'-startGraphY']-(self.startModeY*difScaleY)   
+            self.curGraphY = AppCore.AppAttributes[self.className+'-startGraphY']-(self.startModeY*difScaleY)   
     def marqEvent(self):
         self.endModeX = self.curModeX
         self.endModeY = self.curModeY
@@ -181,7 +181,7 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         
         #DrawBG
         self.widgetSize = self.size()
-        painter.setBrush(Core.AppPrefs[self.className+'-bgColor'])
+        painter.setBrush(AppCore.AppPrefs[self.className+'-bgColor'])
         painter.drawRect(0, 0, self.widgetSize.width(), self.widgetSize.height())
         
         #SetTransform
@@ -196,8 +196,8 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         painter.drawImage(QtCore.QRect(0,0,image.width(),image.height()), image)
         
         #DrawResolutionBox
-        painter.setBrush(Core.AppPrefs[self.className+'-ResBoxColor'])
-        pen = Core.AppPrefs[self.className+'-ResBoxPen']
+        painter.setBrush(AppCore.AppPrefs[self.className+'-ResBoxColor'])
+        pen = AppCore.AppPrefs[self.className+'-ResBoxPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
         #BUG: Diagonal line gets drawn here when zoomed in just the right way
@@ -211,8 +211,8 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
             marqY = [self.startModeY, self.endModeY]
             marqX.sort()
             marqY.sort()
-            painter.setBrush(Core.AppPrefs[self.className+'-marqBoxColor'])
-            pen = Core.AppPrefs[self.className+'-marqOutlinePen']
+            painter.setBrush(AppCore.AppPrefs[self.className+'-marqBoxColor'])
+            pen = AppCore.AppPrefs[self.className+'-marqOutlinePen']
             pen.setCosmetic(True)
             painter.setPen(pen)
             painter.drawRect(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0])

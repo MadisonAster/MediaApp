@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-import os
+import os, sys
 import hashlib
 
 LibDir = __file__.replace('\\','/').rsplit('/',1)[0]
@@ -43,13 +43,17 @@ elif os.path.isfile(LibDir+'/MediaApp/LICENSE'):
 
 if LicenseFound is True:
     #MediaApp Imports if this is MediaApp Library
-    if CoreRun is True:    
+    if CoreRun is True:  
+        sys.path.append(LibDir.rsplit('/',1)[0])
+        import AppCore
+        
         import Widgets
         import Windows
         #import FileManager
         #import Timer
         #import TCP
-        from Core import *
+        
+        
     else:
         import MediaApp
     #Only import run.py globals if Parent Directory has no run.py

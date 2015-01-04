@@ -24,20 +24,19 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+import AppCore
 
 class PropertiesBin(QtGui.QScrollArea):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
+    def __init__(self):
         self.className = self.__class__.__name__
         super(PropertiesBin, self).__init__()
         ##################################
-        #self.setPalette(Core.getPalette(self.className))
+        #self.setPalette(AppCore.getPalette(self.className))
         #self.setBackgroundRole(self.palette().Base)
         
         self.setWidgetResizable(True)
         
-        self.DockingBin = DockingBin(CorePointer)
+        self.DockingBin = DockingBin()
         self.DockingBin.show()
         self.setWidget(self.DockingBin)
         
@@ -95,15 +94,13 @@ class PropertiesBin(QtGui.QScrollArea):
         widget.docked = False 
         
 class DockingBin(QtGui.QMainWindow):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
+    def __init__(self):
         super(DockingBin, self).__init__()
         ################################
         self.setDockOptions(False)
         self.setAnimated(True)
         
-        self.setFocusPolicy(Core.AppSettings['FocusPolicy'])
+        self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         
         #ToolBar#
         #toolbar = self.addToolBar('Exit')

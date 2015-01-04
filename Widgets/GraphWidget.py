@@ -24,6 +24,8 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+import AppCore
+
 class modeList(list):
     def __init__(self, *args):
         super(modeList, self).__init__(*args)
@@ -41,9 +43,7 @@ class modeList(list):
                     self.currentMode = i
         
 class GraphWidget(QtGui.QWidget):
-    def __init__(self, CorePointer):
-        global Core
-        Core = CorePointer
+    def __init__(self):
         super(GraphWidget, self).__init__()
         self.className = self.__class__.__name__
         ################################
@@ -55,27 +55,27 @@ class GraphWidget(QtGui.QWidget):
         self.rightClick = False
 
         #Initialize User Values#
-        self.ZoomXYJoined = Core.AppSettings[self.className+'-ZoomXYJoined']
-        self.XPixelsPerUnit = Core.AppSettings[self.className+'-XPixelsPerUnit']
-        self.YPixelsPerUnit = Core.AppSettings[self.className+'-YPixelsPerUnit']
-        self.PaintXGridLines = Core.AppSettings[self.className+'-PaintXGridLines']
-        self.PaintYGridLines = Core.AppSettings[self.className+'-PaintYGridLines']
-        self.upperXZoomLimit = Core.AppSettings[self.className+'-upperXZoomLimit']
-        self.upperYZoomLimit = Core.AppSettings[self.className+'-upperYZoomLimit']
-        self.lowerXZoomLimit = Core.AppSettings[self.className+'-lowerXZoomLimit']
-        self.lowerYZoomLimit = Core.AppSettings[self.className+'-lowerYZoomLimit']
-        self.zoomSensitivity = 100.0/Core.AppSettings[self.className+'-zoomSensitivity']
+        self.ZoomXYJoined = AppCore.AppSettings[self.className+'-ZoomXYJoined']
+        self.XPixelsPerUnit = AppCore.AppSettings[self.className+'-XPixelsPerUnit']
+        self.YPixelsPerUnit = AppCore.AppSettings[self.className+'-YPixelsPerUnit']
+        self.PaintXGridLines = AppCore.AppSettings[self.className+'-PaintXGridLines']
+        self.PaintYGridLines = AppCore.AppSettings[self.className+'-PaintYGridLines']
+        self.upperXZoomLimit = AppCore.AppSettings[self.className+'-upperXZoomLimit']
+        self.upperYZoomLimit = AppCore.AppSettings[self.className+'-upperYZoomLimit']
+        self.lowerXZoomLimit = AppCore.AppSettings[self.className+'-lowerXZoomLimit']
+        self.lowerYZoomLimit = AppCore.AppSettings[self.className+'-lowerYZoomLimit']
+        self.zoomSensitivity = 100.0/AppCore.AppSettings[self.className+'-zoomSensitivity']
 
-        self.curGraphX = Core.AppAttributes[self.className+'-startGraphX']
-        self.curGraphY = Core.AppAttributes[self.className+'-startGraphY']
-        self.curGraphXS = Core.AppAttributes[self.className+'-startGraphXS']
-        self.curGraphYS = Core.AppAttributes[self.className+'-startGraphYS']
+        self.curGraphX = AppCore.AppAttributes[self.className+'-startGraphX']
+        self.curGraphY = AppCore.AppAttributes[self.className+'-startGraphY']
+        self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']
+        self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']
         
-        #TEST: see if using this duplicate dictionary is actually faster than Core.getChildrenOf(self)
+        #TEST: see if using this duplicate dictionary is actually faster than AppCore.getChildrenOf(self)
         self.Nodes = {}
         
         #Go
-        self.setFocusPolicy(Core.AppSettings['FocusPolicy'])
+        self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         self.initUI()
         
     def initUI(self):
@@ -84,7 +84,7 @@ class GraphWidget(QtGui.QWidget):
         self.setMouseTracking(True)
     
     def createNode(self, nodeType):
-        node = Core.createNode(nodeType, parent = self)
+        node = AppCore.createNode(nodeType, parent = self)
         self.Nodes[node.name()] = node
         return node
     def allNodes(self):
@@ -117,12 +117,12 @@ class GraphWidget(QtGui.QWidget):
         
         for node in self.allNodes():
             if node.fallsAround(dx, dy):
-                Core.PropertiesBin.dockThisWidget(node)
+                AppCore.PropertiesBin.dockThisWidget(node)
                 
     def keyPressEvent(self, event):
         if event.key() == 16777220:                                 #Enter
             for node in self.selectedNodes():
-                Core.PropertiesBin.dockThisWidget(node)
+                AppCore.PropertiesBin.dockThisWidget(node)
     
     def mouseReleaseEvent(self, event):
         self.endMouseX = event.pos().x()
@@ -148,7 +148,7 @@ class GraphWidget(QtGui.QWidget):
         elif self.middleClick == True and self.leftClick == False:
             self.modes.setCurrentMode('panMode')
         elif self.middleClick == False and self.leftClick == True:
-            for node in self.allNodes():  #TODO-005: change Core.Nodes to an ordered dict so that nodes will be looped top to bottom here
+            for node in self.allNodes():  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
                 if node.fallsAround(self.startModeX, self.startModeY):
                     self.modes.setCurrentMode('dragMode')
                     if node['selected'].getValue() != True:
@@ -161,10 +161,10 @@ class GraphWidget(QtGui.QWidget):
         else:
             self.modes.setCurrentMode('None')
     def grabValues(self):
-        Core.AppAttributes[self.className+'-startGraphX'] = self.curGraphX
-        Core.AppAttributes[self.className+'-startGraphY'] = self.curGraphY
-        Core.AppAttributes[self.className+'-startGraphXS'] = self.curGraphXS
-        Core.AppAttributes[self.className+'-startGraphYS'] = self.curGraphYS
+        AppCore.AppAttributes[self.className+'-startGraphX'] = self.curGraphX
+        AppCore.AppAttributes[self.className+'-startGraphY'] = self.curGraphY
+        AppCore.AppAttributes[self.className+'-startGraphXS'] = self.curGraphXS
+        AppCore.AppAttributes[self.className+'-startGraphYS'] = self.curGraphYS
         self.endModeX = self.startModeX
         self.endModeY = self.startModeY
         
@@ -188,8 +188,8 @@ class GraphWidget(QtGui.QWidget):
             self.dragEvent()
         self.update() #Redraw      
     def panEvent(self):
-        self.curGraphX = Core.AppAttributes[self.className+'-startGraphX']+(self.curMouseX-self.startMouseX)
-        self.curGraphY = Core.AppAttributes[self.className+'-startGraphY']+(self.curMouseY-self.startMouseY)
+        self.curGraphX = AppCore.AppAttributes[self.className+'-startGraphX']+(self.curMouseX-self.startMouseX)
+        self.curGraphY = AppCore.AppAttributes[self.className+'-startGraphY']+(self.curMouseY-self.startMouseY)
     def zoomEvent(self):
         posDeltaX = (self.curMouseX-self.startMouseX)
         posDeltaY = (self.curMouseY-self.startMouseY)
@@ -197,28 +197,28 @@ class GraphWidget(QtGui.QWidget):
         scaleDeltaY = posDeltaY/self.zoomSensitivity*-1
         
         if self.ZoomXYJoined == True:
-            self.curGraphXS = Core.AppAttributes[self.className+'-startGraphXS']+(scaleDeltaX+scaleDeltaY)/2
-            self.curGraphYS = Core.AppAttributes[self.className+'-startGraphYS']+(scaleDeltaX+scaleDeltaY)/2
+            self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']+(scaleDeltaX+scaleDeltaY)/2
+            self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']+(scaleDeltaX+scaleDeltaY)/2
         else:
-            self.curGraphXS = Core.AppAttributes[self.className+'-startGraphXS']+scaleDeltaX
-            self.curGraphYS = Core.AppAttributes[self.className+'-startGraphYS']+scaleDeltaY
+            self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']+scaleDeltaX
+            self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']+scaleDeltaY
         
-        difScaleX = self.curGraphXS-Core.AppAttributes[self.className+'-startGraphXS']
-        difScaleY = self.curGraphYS-Core.AppAttributes[self.className+'-startGraphYS']
+        difScaleX = self.curGraphXS-AppCore.AppAttributes[self.className+'-startGraphXS']
+        difScaleY = self.curGraphYS-AppCore.AppAttributes[self.className+'-startGraphYS']
         
         if self.curGraphXS > self.upperXZoomLimit:
             self.curGraphXS = self.upperXZoomLimit
         elif self.curGraphXS < self.lowerXZoomLimit:
             self.curGraphXS = self.lowerXZoomLimit
         else:
-            self.curGraphX = Core.AppAttributes[self.className+'-startGraphX']-(self.startModeX*difScaleX)
+            self.curGraphX = AppCore.AppAttributes[self.className+'-startGraphX']-(self.startModeX*difScaleX)
             
         if self.curGraphYS > self.upperYZoomLimit:
             self.curGraphYS = self.upperYZoomLimit  
         elif self.curGraphYS < self.lowerYZoomLimit:
             self.curGraphYS = self.lowerYZoomLimit
         else:
-            self.curGraphY = Core.AppAttributes[self.className+'-startGraphY']-(self.startModeY*difScaleY)   
+            self.curGraphY = AppCore.AppAttributes[self.className+'-startGraphY']-(self.startModeY*difScaleY)   
     def marqEvent(self):
         self.endModeX = self.curModeX
         self.endModeY = self.curModeY
@@ -250,7 +250,7 @@ class GraphWidget(QtGui.QWidget):
         
         #DrawBG
         self.widgetSize = self.size()
-        painter.setBrush(Core.AppPrefs[self.className+'-bgColor'])
+        painter.setBrush(AppCore.AppPrefs[self.className+'-bgColor'])
         painter.drawRect(0, 0, self.widgetSize.width(), self.widgetSize.height())
         
         #SetTransform
@@ -263,7 +263,7 @@ class GraphWidget(QtGui.QWidget):
         self.paintGrid(painter)
         
         #DrawNodes
-        painter.setFont(Core.AppPrefs['AppFont'])
+        painter.setFont(AppCore.AppPrefs['AppFont'])
         for node in self.allNodes():
             node.drawNode(painter)
             #painter.setTransform(self.graphTrans)
@@ -277,8 +277,8 @@ class GraphWidget(QtGui.QWidget):
             marqY = [self.startModeY, self.endModeY]
             marqX.sort()
             marqY.sort()
-            painter.setBrush(Core.AppPrefs[self.className+'-marqBoxColor'])
-            pen = Core.AppPrefs[self.className+'-marqOutlinePen']
+            painter.setBrush(AppCore.AppPrefs[self.className+'-marqBoxColor'])
+            pen = AppCore.AppPrefs[self.className+'-marqOutlinePen']
             pen.setCosmetic(True)
             painter.setPen(pen)
             painter.drawRect(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0]) 
@@ -286,7 +286,7 @@ class GraphWidget(QtGui.QWidget):
         #Finished
         painter.end()
     def paintGrid(self, painter):
-        pen = Core.AppPrefs[self.className+'-gridPen']
+        pen = AppCore.AppPrefs[self.className+'-gridPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
         if self.PaintYGridLines:
