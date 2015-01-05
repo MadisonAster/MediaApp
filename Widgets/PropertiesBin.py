@@ -26,86 +26,15 @@
 from PySide import QtGui, QtCore
 import AppCore
 
-class PropertiesBin(QtGui.QScrollArea):
-    def __init__(self):
-        self.className = self.__class__.__name__
-        super(PropertiesBin, self).__init__()
-        ##################################
-        #self.setPalette(AppCore.getPalette(self.className))
-        #self.setBackgroundRole(self.palette().Base)
-        
-        self.setWidgetResizable(True)
-        
-        self.DockingBin = DockingBin()
-        self.DockingBin.show()
-        self.setWidget(self.DockingBin)
-        
-        self.show()
-        
-    def getDockedWidgets(self):
-        returnList = []
-        for child in self.DockingBin.findChildren(QtGui.QDockWidget):
-            if child.docked is True:
-                returnList.append(child)
-        return returnList
-        
-    def dockThisWidget(self, widget):
-        #WORKAROUND 1: There doesn't appear to be a way to tell QT what location
-        #within a DockWidgetArea that you want the DockWidget to be added.
-        #So each time we add a widget we are removing them all, and adding again in the right order
-    
-        #WORKAROUND 2: appears to be no way to remove a child from a qobject.
-        #recomended way seems to be widget.setParent(None), but widget still appears in list of children after making that call
-        #using custom attribute widget.docked to solve this issue
-    
-        #move called widget to the top of parent.children() list so it will go to top if already docked
-        widget.raise_()
-        
-        #Get list of current widgets, and reverse them because we need to re-add top to bottom
-        dockedWidgets = self.getDockedWidgets()
-        dockedWidgets.reverse()
-        
-        #Remove each currently docked widget
-        for dockedWidget in dockedWidgets:
-            self.DockingBin.removeDockWidget(dockedWidget)
-        
-        #Dock called widget if it is not already
-        if widget.docked is False:
-            self.DockingBin.addDockWidget(QtCore.Qt.TopDockWidgetArea, widget, QtCore.Qt.Vertical)
-            widget.docked = True
-            widget.show()
-        
-        #Re-add each docked widget
-        for dockedWidget in dockedWidgets:
-            self.DockingBin.addDockWidget(QtCore.Qt.TopDockWidgetArea, dockedWidget, QtCore.Qt.Vertical)
-            dockedWidget.show()
-        
-        #Call show docking bin so that sizehint will be recalculated
-        self.DockingBin.show()
-        
-        #Call ScrollArea.show() so that it will grab the size hint and display the widget
-        self.show()
-        
-    def unDockThisWidget(self, widget):
-        #WORKAROUND 1: widget.docked is a custom attribute, see dockThisWidget() for more details
-        
-        #self.DockingBin.removeChild(widget)
-        self.DockingBin.removeDockWidget(widget)
-        widget.docked = False 
-        
+
+            
 class DockingBin(QtGui.QMainWindow):
     def __init__(self):
         super(DockingBin, self).__init__()
-        ################################
         self.setDockOptions(False)
         self.setAnimated(True)
-        
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         
-        #ToolBar#
-        #toolbar = self.addToolBar('Exit')
-        #toolbar.addAction(exitAction)
-        #/ToolBar#
     def sizeHint(self):
         #WORKAROUND: adding together the height of all the docked widgets manually here
         #QtGui.QScrollArea does not appear to care what size policy you set, it always treats
@@ -118,4 +47,87 @@ class DockingBin(QtGui.QMainWindow):
                     XHint = child.sizeHint().width()
         return QtCore.QSize(XHint,YHint)  
     
+    def unDockThisWidget(self, widget):
+        #WORKAROUND: widget.docked is a custom attribute, see dockThisWidget() for more details
         
+        #self.removeChild(widget)
+        self.removeDockWidget(widget)
+        widget.docked = False
+        
+    def emptyBin(self):
+        for widget in self.getDockedWidgets():
+            self.unDockThisWidget(widget)
+            
+    def dockThisWidget(self, widget):
+        #WORKAROUND: There doesn't appear to be a way to tell QT what location
+        #within a DockWidgetArea that you want the DockWidget to be added.
+        #So each time we add a widget we are removing them all, and adding again in the right order
+    
+        #WORKAROUND: appears to be no way to remove a child from a qobject.
+        #recomended way seems to be widget.setParent(None), but widget still appears in list of children after making that call
+        #using custom attribute widget.docked to solve this issue
+    
+        #move called widget to the top of parent.children() list so it will go to top if already docked
+        widget.raise_()
+        
+        #Get list of current widgets, and reverse them because we need to re-add top to bottom
+        dockedWidgets = self.getDockedWidgets()
+        dockedWidgets.reverse()
+        
+        #Remove each currently docked widget
+        for dockedWidget in dockedWidgets:
+            self.removeDockWidget(dockedWidget)
+        
+        #Dock called widget if it is not already
+        if widget.docked is False:
+            self.addDockWidget(QtCore.Qt.TopDockWidgetArea, widget, QtCore.Qt.Vertical)
+            widget.docked = True
+            widget.show()
+        
+        #Re-add each docked widget
+        for dockedWidget in dockedWidgets:
+            self.addDockWidget(QtCore.Qt.TopDockWidgetArea, dockedWidget, QtCore.Qt.Vertical)
+            dockedWidget.show()
+            
+    def getDockedWidgets(self):
+        returnList = []
+        for child in self.findChildren(QtGui.QDockWidget):
+            if child.docked is True:
+                returnList.append(child)
+        return returnList
+        
+class PropertiesBin(QtGui.QMainWindow):
+    def __init__(self):
+        super(PropertiesBin, self).__init__()
+        self.className = self.__class__.__name__
+        self.setDockOptions(False)
+        
+        self.DockingBin = DockingBin()
+        self.DockingBin.show()
+        
+        self.ScrollBin = QtGui.QScrollArea()
+        self.ScrollBin.setWidgetResizable(True)
+        self.ScrollBin.setWidget(self.DockingBin)    
+        self.ScrollBin.show()
+        
+        self.setCentralWidget(self.ScrollBin)
+        
+        #ToolBar#
+        toolbar = self.addToolBar('test')
+        toolbar.setMovable(False)
+        
+        EmptyBin = QtGui.QAction('EmptyBin', self)
+        EmptyBin.setStatusTip('Close All the widgets in the bin.')
+        EmptyBin.triggered.connect(self.emptyBin)
+        
+        toolbar.addAction(EmptyBin)
+        
+    #WORKAROUND: Pointer functions below, because we can't use multiple inheritance and setWidget(self)
+    def getDockedWidgets(self):
+        return self.DockingBin.getDockedWidgets()
+    def dockThisWidget(self, widget):
+        self.DockingBin.dockThisWidget(widget)
+    def unDockThisWidget(self, widget):
+        self.DockingBin.unDockThisWidget(widget)
+    def emptyBin(self):
+        self.DockingBin.emptyBin()
