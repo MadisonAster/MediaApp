@@ -23,30 +23,11 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
-
-class KnobLabel(QtGui.QLabel):
-    def __init__(self):
-        super(KnobLabel, self).__init__()
-        
-        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Ignored)
-        self.setAlignment(QtCore.Qt.AlignRight)
-    def sizeHint(self):
-        return QtCore.QSize(100,15)
-        
-        
-class Knob(object):
-    def __init__(self):
-        self.name = KnobLabel()
-        super(Knob, self).__init__()
-        
-        self.setToolTip('Here lies a tooltip, barren and empty')
-        self.setHidden(False)
-        self.setEnabled(True)
-        self.newline = True
-        
-        self.knobLayout = QtGui.QHBoxLayout()
-        self.knobLayout.addWidget(self.name)
-    
-    
-    
+from ArrayKnob import *
+from BoolKnob import *
+from ColorKnob import *
+from ComboKnob import *
+from FileKnob import *
+from FloatKnob import *
+from IntKnob import *
+from StrKnob import *

@@ -23,6 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
+import sys
 from Clip import *
 from ViewerNode import *
 from TimelineNode import *

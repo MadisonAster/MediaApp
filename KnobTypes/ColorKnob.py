@@ -23,10 +23,31 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from ArrayKnob import *
-from BoolKnob import *
-from ComboKnob import *
-from FileKnob import *
-from FloatKnob import *
-from IntKnob import *
-from StrKnob import *
+from PySide import QtGui, QtCore
+import KnobConstructor
+from FloatKnob import FloatKnob
+
+class ColorKnob(QtGui.QWidget):
+    def __init__(self, red = 0.0, green = 0.0, blue = 0.0, name = 'FloatKnob'):
+        super(ColorKnob, self).__init__()
+        self.name = KnobConstructor.KnobLabel()
+        self.knobLayout = QtGui.QHBoxLayout()
+        
+        #BUG: Program crashes if knob contains another knobtype.
+        #self.knobLayout.addWidget(self)
+        redKnob = QtGui.QLineEdit()
+        #redKnob = FloatKnob(red)
+        #greenKnob = FloatKnob(green)
+        #blueKnob = FloatKnob(blue)
+        
+        self.knobLayout.addWidget(redKnob)
+        #self.knobLayout.addWidget(greenKnob)
+        #self.knobLayout.addWidget(blueKnob)
+        
+        self.name.setText(name)
+    def setValue(self, value):
+        self.setText(str(value))
+    def getValue(self):
+        return float(self.text())
+    def sizeHint(self):
+        return QtCore.QSize(100,24)
