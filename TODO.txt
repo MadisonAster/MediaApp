@@ -1,17 +1,13 @@
 ######HIGH PRIORITY######
-Add Toolbar to Properties Bin
-
 Add Preferences window
 
 Add Caching functions to Nodes and to Timeline
-#Node dragging being slowed down by viewer update call
+#Node dragging being slowed down by viewer update call - SubThread?
 
 
 Bundle Dependencies with program as submodules in ./Dependencies Package
 Add option to extract source of dependencies
 Add license viewer window for dependencies
-
-
 
 Add drag event functions to Node Paths
 
@@ -46,6 +42,7 @@ figure out color flipping issue in imageio
 
 fileKnob Override QKeyEvent and QMenu to provide customized copy paste functionality  
 
+Add Properties Counter/Maximum to Properties Bin Toolbar
 
 ######VERY LOW PRIORITY######
 
