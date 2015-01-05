@@ -45,7 +45,7 @@ class DockingBin(QtGui.QMainWindow):
                 YHint += child.sizeHint().height()
                 if child.sizeHint().width() > XHint:
                     XHint = child.sizeHint().width()
-        return QtCore.QSize(XHint,YHint)  
+        return QtCore.QSize(XHint,YHint)
     
     def unDockThisWidget(self, widget):
         #WORKAROUND: widget.docked is a custom attribute, see dockThisWidget() for more details

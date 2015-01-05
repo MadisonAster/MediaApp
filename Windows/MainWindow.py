@@ -23,14 +23,16 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
+import sys
+
 from PySide import QtGui, QtCore
 import AppCore
 
+
 class MainWindow(QtGui.QMainWindow):
     def __init__(self):
-        AppCore.RegisterObject(self)
         super(MainWindow, self).__init__()
-        ################################
+        AppCore.RegisterObject(self)
         
         #Get LayoutSettings
         self.defaultLayoutsPath = AppCore['AppDirectory']+'/'+'MainWindow_defaultLayouts.ini'
@@ -68,6 +70,11 @@ class MainWindow(QtGui.QMainWindow):
         saveLayout.setStatusTip('Save Layout')
         saveLayout.triggered.connect(self.saveLayoutN)
         
+        prefsWindow = QtGui.QAction('Preferences', self)
+        prefsWindow.setStatusTip('Edit Preferences')
+        prefsWindow.triggered.connect(AppCore.PrefsWindow.show)
+        
+        
         #Menu Bar#
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
@@ -75,6 +82,7 @@ class MainWindow(QtGui.QMainWindow):
         layoutMenu = menubar.addMenu('&Layout')
         layoutMenu.addAction(restoreLayout)
         layoutMenu.addAction(saveLayout)
+        layoutMenu.addAction(prefsWindow)
              
         self.show()
         self.restoreLayoutN(1)
@@ -114,5 +122,6 @@ class MainWindow(QtGui.QMainWindow):
         QtGui.QMessageBox.No, QtGui.QMessageBox.No)        
         if reply == QtGui.QMessageBox.Yes:
             event.accept()
+            quit()
         else:
             event.ignore()

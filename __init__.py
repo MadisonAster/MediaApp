@@ -46,14 +46,16 @@ if LicenseFound is True:
     if CoreRun is True:  
         sys.path.append(LibDir.rsplit('/',1)[0])
         import AppCore
+        import KnobTypes
+        sys.modules['KnobTypes'] = KnobTypes
+        import NodeTypes
+        sys.modules['NodeTypes'] = NodeTypes
         
         import Widgets
         import Windows
         #import FileManager
         #import Timer
         #import TCP
-        
-        
     else:
         import MediaApp
     #Only import run.py globals if Parent Directory has no run.py
