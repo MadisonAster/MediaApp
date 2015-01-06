@@ -32,6 +32,9 @@ class modeList(list):
     def __init__(self, *args):
         super(modeList, self).__init__(*args)
         self.currentMode = 0
+        
+        self.frameCache = None
+        self.frameCacheFrame = None
     def getCurrentMode(self):
         return self[self.currentMode]
     def getCurrentModeIndex(self):
@@ -77,7 +80,20 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         self.setMinimumSize(0, 0)
         self.setGeometry(0, 0, 0, 0)
         self.setMouseTracking(True)
-
+    
+    def keyPressEvent(self, event):
+        print event.key()
+        if event.key() == 16777234: #Left 
+            AppCore.moveCurrentFrame(-1)
+            AppCore.TimelineWidget.repaint()
+        if event.key() == 16777236: #Right
+            AppCore.moveCurrentFrame(1)
+            AppCore.TimelineWidget.repaint()
+        if event.key() == 67: #C
+            self.TimelineWidget.cacheFrames()
+        if event.key() == 32: #Space
+            self.playForward()
+        self.repaint()
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()
@@ -175,9 +191,17 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
     def marqContains(self):
         pass
         #Sample Pixels here
-                    
+    
+    def playForward(self):
+        for image in self.node.getFrameCache():
+            self.frameCache = image
+            AppCore.moveCurrentFrame(1)
+        self.repaint()
+    
     def paintEvent(self, a):
         painter = QtGui.QPainter(self)
+        #ADD quickpaint here?
+        
         
         #DrawBG
         self.widgetSize = self.size()
@@ -192,8 +216,13 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         
         
         #DrawImage
-        image = self.node.getImage()
-        painter.drawImage(QtCore.QRect(0,0,image.width(),image.height()), image)
+        
+        #if self.frameCache is None or self.frameCacheFrame != AppCore.getCurrentFrame():
+        #    self.frameCache =  self.node.getImage()
+        #    self.frameCacheFrame = AppCore.getCurrentFrame()
+        
+        self.frameCache =  self.node.getImage()
+        painter.drawImage(QtCore.QRect(0,0,self.frameCache.width(),self.frameCache.height()), self.frameCache)
         
         #DrawResolutionBox
         painter.setBrush(AppCore.AppPrefs[self.className+'-ResBoxColor'])
@@ -201,7 +230,7 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         pen.setCosmetic(True)
         painter.setPen(pen)
         #BUG: Diagonal line gets drawn here when zoomed in just the right way
-        painter.drawRect(QtCore.QRect(-1,-1,image.width()+2,image.height()+2))
+        painter.drawRect(QtCore.QRect(-1,-1,self.frameCache.width()+2,self.frameCache.height()+2))
         
         #DrawBoundingBox
         

@@ -86,6 +86,7 @@ class GraphWidget(QtGui.QWidget):
     def createNode(self, nodeType):
         node = AppCore.createNode(nodeType, parent = self)
         self.Nodes[node.name()] = node
+        self.nodeCreated()
         return node
     def allNodes(self):
         returnList = []
@@ -98,7 +99,9 @@ class GraphWidget(QtGui.QWidget):
             if self.Nodes[nodeName]['selected'].getValue() == True:
                 returnList.append(self.Nodes[nodeName])
         return returnList    
-        
+    def nodeCreated(self):
+        #Overridable event
+        return
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()

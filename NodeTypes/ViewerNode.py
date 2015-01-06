@@ -50,4 +50,5 @@ class ViewerNode(ImageNode):
     def setViewerWidget(self, widget):
         self.ViewerWidget = widget
         
-        
+    def getFrameCache(self):
+        return self.getInput().getFrameCache()

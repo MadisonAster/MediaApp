@@ -23,5 +23,30 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from Listener import *
-from Server import *
+from PySide import QtGui, QtCore
+
+class QImage(QtGui.QImage):
+    def __init__(self, *args, **kwargs):
+        super(QImage, self).__init__(*args, **kwargs)
+        
+        #WORKAROUND: set self.ImageData here so that the object takes ownership of the data.
+        #           else wise the data will get destroyed after the function that initialized this
+        #           object completes.
+        self.ImageData = args[0]
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+

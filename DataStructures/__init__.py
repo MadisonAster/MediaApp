@@ -23,4 +23,5 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from Core import *
+from ImageCache import *
+from QImage import *

@@ -1,6 +1,10 @@
 ######HIGH PRIORITY######
 Add Preferences window
 
+MediaCache class will be a subclass of deque that will enable list operations on it
+by incurring the extra cost of a copy step
+
+
 Add Caching functions to Nodes and to Timeline
 #Node dragging being slowed down by viewer update call - SubThread?
 
@@ -12,6 +16,8 @@ Add license viewer window for dependencies
 Add drag event functions to Node Paths
 
 Get Touch Events working
+
+Make program compatible with latest version of python for performance improvements -  checkout fseek bug
 
 
 ######MED PRIORITY######
