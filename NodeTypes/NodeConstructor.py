@@ -88,6 +88,8 @@ class NodeConstructor(object):
         self.nodeShape()
         self.mapNodeShape()
         
+        self['width'] = IntKnob(self.rectLowHigh[1][0])
+        self['height'] = IntKnob(self.rectLowHigh[1][1])
         #Doesn't really need to be initialized, but here for reference
         #self.parent = None
         
@@ -314,24 +316,19 @@ class ImageNode(Node):
     def __init__(self):
         super(ImageNode, self).__init__()
         
-    def getImage(self):
-        self.frameCache = self.generateImage()
-        return self.frameCache
+        self.frameCache = None
+        self.frameCacheFrame = None
         
-    def generateImage(self, inputNode = None):
-        #Override this method
+    def getImage(self, *args):
+        return self.generateImage(*args)
+        
+    def generateImage(self, inputNode = None, *args):
+        #Override this method, by default this is either passthrough, or black
+        inputNode = self.getInput()
         if inputNode is None:
-            inputNode = self.getInput()
-        if inputNode is None:
-            #Generate Black QImage
-            width = AppCore.AppAttributes['ResolutionWidth']
-            height = AppCore.AppAttributes['ResolutionHeight']
-            image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
-            return image
+            return AppCore.generateBlack()
         else:
-            #Simple PassThrough
-            #return self.getImage()
-            return inputNode.getImage()
+            return inputNode.getImage(*args)
             
 class AudioNode(Node):
     def __init__(self):

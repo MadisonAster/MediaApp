@@ -94,8 +94,11 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
             path = self.TranslatePath(path)
             self.setText(path)
         
-    def getEvaluatedPath(self):
-        currentFrame = AppCore.getCurrentFrame()
+    def getEvaluatedPath(self, *args):
+        if len(args) is 1:
+            currentFrame = args[0]
+        else:
+            currentFrame = AppCore.getCurrentFrame()
         startAt = self.parent['startAt'].getValue()
         offset = currentFrame-startAt
         
@@ -103,9 +106,7 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         lastFrame = self.parent['lastFrame'].getValue()
         length = lastFrame-firstFrame
         
-        
         ####Get Frame Value####
-        #TEST: loop and bounce
         if offset < 0 or offset > length:
             if offset < 0:
                 knob = 'before'
@@ -130,7 +131,6 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         else:
             frame = firstFrame+offset
         ####################
-
         
         #TODO fix this
         text = self.text().replace('######', str(frame).zfill(6))

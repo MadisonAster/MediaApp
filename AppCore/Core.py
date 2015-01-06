@@ -186,7 +186,16 @@ class Core(dict):
         self.Nodes = eval(str_Nodes)
     def getCurrentFrame(self):
         return self.AppAttributes['ctiTop'][0]
-        
+    def setCurrentFrame(self, value):
+        self.AppAttributes['ctiTop'][0] = value
+        self.AppAttributes['ctiBot'][0] = value
+    def moveCurrentFrame(self, value):
+        self.AppAttributes['ctiTop'][0] += value
+        self.AppAttributes['ctiBot'][0] += value
+    
+    def generateBlack(self):
+        return QtGui.QImage(self.AppAttributes['ResolutionWidth'], self.AppAttributes['ResolutionHeight'], QtGui.QImage.Format_ARGB32)
+    
     def getPalette(self, widgetName):
         palette = QtGui.QPalette()
         palette.setColor(QtGui.QPalette.Window, self.AppPrefs[widgetName+'-Window'])

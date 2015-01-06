@@ -28,6 +28,7 @@ from PySide import QtGui, QtCore
 import imageio
 
 import AppCore
+import DataStructures
 from NodeConstructor import *
 from KnobTypes import *
 
@@ -58,30 +59,33 @@ class Clip(ImageNode, AudioNode):
         self.color1 = QtGui.QColor(238,238,238)
         self.color2 = QtGui.QColor(122,122,122)
         
-    def generateImage(self):
-        imagePath = self['file'].getEvaluatedPath()
+    def generateImage(self, *args):
+        if len(args) is 1:
+            imagePath = self['file'].getEvaluatedPath(args[0])
+        else:
+            imagePath = self['file'].getEvaluatedPath()
         if os.path.isfile(imagePath):
             image = imageio.imread(imagePath)
             image = imageio.core.util.image_as_uint8(image)
-            #self.imageString = image.tobytes()
-            self.imageString = image.tostring()
             
-            #TEST: I don't think this will add any overhead, take it out if it does
+            #imageString = image.tobytes()
+            imageString = image.tostring()
+            
+            #TEST: I don't think swapaxes will add any overhead, take it out if it does
             image = image.swapaxes(0, 1)
             width, height, channels = image.shape
             #height, width, channels = image.shape
             
             bytesPerLine = channels * width
             if channels == 4:
-                QImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
+                QImage = DataStructures.QImage(imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
             elif channels == 3:
-                QImage = QtGui.QImage(self.imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
+                QImage = DataStructures.QImage(imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
             
             return QImage
         else:
             #Generate Black QImage
             width = AppCore.AppAttributes['ResolutionWidth']
             height = AppCore.AppAttributes['ResolutionHeight']
-            image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
+            image = DataStructures.QImage(width, height, QtGui.QImage.Format_ARGB32)
             return image
-        
