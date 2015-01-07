@@ -22,6 +22,7 @@
 #    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
+from time import time, sleep
 
 from PySide import QtGui, QtCore
 
@@ -202,12 +203,22 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         #Sample Pixels here
     
     def playForward(self):
+        frameperiod=1.0/AppCore.AppAttributes['FPS']
+        now = time()
+        nextframe = now
+        
         for image in AppCore.data['frameCache']:
+            while now < nextframe:
+                sleep(nextframe-now)
+                now = time()
+                
             self.frameCache = image
-            
             #Maybe some overhead here
             AppCore.moveCurrentFrame(1, playback = True)
             self.repaint()
+            
+            nextframe += frameperiod
+            
     def updateFrame(self):
         self.frameCache = AppCore.data['frameCache'][0]
     
