@@ -51,18 +51,7 @@ class TimelineNode(ImageNode, AudioNode):
     def setTimelineWidget(self, widget):
         self.TimelineWidget = widget
     
-    def getImage(self, *args):
-        #Could be simpler, really needs to be solely driven by cti
-        if len(args) is 1:
-            if self.getFrameCache().contains(args[0]) is False:
-                self.TimelineWidget.cacheFrames()
-            self.getFrameCache().goto(args[0])
-        else:
-            if self.getFrameCache().contains(AppCore.getCurrentFrame()) is False:
-                self.TimelineWidget.cacheFrames()
-        ###################
-        
-        return self.getFrameCache()[0]
-        
-    def getFrameCache(self):
-        return self.TimelineWidget.frameCache
+    def getImage(self):
+        if AppCore.data['frameCache'].contains(AppCore.getCurrentFrame()) is False:
+            self.TimelineWidget.cacheFrames()
+        return AppCore.data['frameCache'][0]

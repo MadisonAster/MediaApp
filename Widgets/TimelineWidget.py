@@ -39,8 +39,8 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         self.node = AppCore.NodeGraph.createNode('TimelineNode')
         self.node.setTimelineWidget(self)
         
-        self.frameCache = DataStructures.dynamicCache()
-        self.frameCache.append(AppCore.generateBlack())
+        AppCore.data['frameCache'] = DataStructures.dynamicCache()
+        AppCore.data['frameCache'].append(AppCore.generateBlack())
         
         
     #def dragEvent(self):
@@ -77,15 +77,17 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         painter.drawLine(AppCore.AppAttributes['ctiTop'][0],AppCore.AppAttributes['ctiTop'][1], AppCore.AppAttributes['ctiBot'][0],AppCore.AppAttributes['ctiBot'][1])
         
     def keyPressEvent(self, event):
-        print event.key()
+        print 'timeline', event.key()
         if event.key() == 16777220: #Enter
             for node in AppCore.selectedNodes():
                 AppCore.PropertiesBin.dockThisWidget(node)    
         elif event.key() == 16777234: #Left 
             AppCore.moveCurrentFrame(-1)
+            AppCore.ViewerWidget.updateFrame()
             AppCore.ViewerWidget.repaint()
         elif event.key() == 16777236: #Right
             AppCore.moveCurrentFrame(1)
+            AppCore.ViewerWidget.updateFrame()
             AppCore.ViewerWidget.repaint()
         elif event.key() == 67: #C
             self.cacheFrames()
@@ -145,11 +147,12 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
     def cacheFrames(self):
         firstFrame, lastFrame = self.getFirstLastCacheFrame()
         print 'caching '+str(lastFrame-firstFrame)+' frames',
-        self.frameCache = DataStructures.dynamicCache(zero = firstFrame)
+        AppCore.data['frameCache'] = DataStructures.dynamicCache(zero = firstFrame)
         for frame in range(firstFrame, lastFrame):
             node = self.getTopNodeAtFrame(frame)
-            self.frameCache.append(node.getImage())
+            AppCore.data['frameCache'].append(node.getImage(frame))
             print '.',
+        AppCore.data['frameCache'].goto(AppCore.getCurrentFrame())
         print 'done'
         
         

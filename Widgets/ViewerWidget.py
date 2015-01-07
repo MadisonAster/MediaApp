@@ -51,7 +51,11 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
     def __init__(self):
         super(ViewerWidget, self).__init__()
         self.className = self.__class__.__name__
-        ################################
+        
+        self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
+        self.setMouseTracking(True)
+        self.setMinimumSize(0, 0)
+        self.setGeometry(0, 0, 0, 0)
         
         #Initialize Values
         self.modes = modeList(['None','zoomMode','panMode','marqMode'])
@@ -74,26 +78,31 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']
         self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']
         
+        self.frameCache = AppCore.generateBlack()
+        
         self.node = AppCore.NodeGraph.createNode('ViewerNode')
         self.node.setViewerWidget(self)
         
-        self.setMinimumSize(0, 0)
-        self.setGeometry(0, 0, 0, 0)
-        self.setMouseTracking(True)
+    
     
     def keyPressEvent(self, event):
-        print event.key()
+        print 'viewer', event.key()
         if event.key() == 16777234: #Left 
             AppCore.moveCurrentFrame(-1)
+            self.updateFrame()
             AppCore.TimelineWidget.repaint()
         if event.key() == 16777236: #Right
             AppCore.moveCurrentFrame(1)
+            print AppCore.data['frameCache'].rotateCounter
+            self.updateFrame()
+            print self.frameCache
             AppCore.TimelineWidget.repaint()
         if event.key() == 67: #C
-            self.TimelineWidget.cacheFrames()
+            AppCore.TimelineWidget.cacheFrames()
         if event.key() == 32: #Space
             self.playForward()
         self.repaint()
+        
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()
@@ -193,10 +202,14 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         #Sample Pixels here
     
     def playForward(self):
-        for image in self.node.getFrameCache():
+        for image in AppCore.data['frameCache']:
             self.frameCache = image
-            AppCore.moveCurrentFrame(1)
-        self.repaint()
+            
+            #Maybe some overhead here
+            AppCore.moveCurrentFrame(1, playback = True)
+            self.repaint()
+    def updateFrame(self):
+        self.frameCache = AppCore.data['frameCache'][0]
     
     def paintEvent(self, a):
         painter = QtGui.QPainter(self)
@@ -221,7 +234,7 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         #    self.frameCache =  self.node.getImage()
         #    self.frameCacheFrame = AppCore.getCurrentFrame()
         
-        self.frameCache =  self.node.getImage()
+        #self.frameCache =  self.node.getImage()
         painter.drawImage(QtCore.QRect(0,0,self.frameCache.width(),self.frameCache.height()), self.frameCache)
         
         #DrawResolutionBox
