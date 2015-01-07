@@ -23,12 +23,23 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from ArrayKnob import *
-from BoolKnob import *
-from ColorKnob import *
-from ComboKnob import *
-from FileKnob import *
-from FloatKnob import *
-from IntKnob import *
-from StrKnob import *
-from TextKnob import *
+from PySide import QtGui, QtCore
+
+import AppCore
+import KnobConstructor
+
+
+class TextKnob(KnobConstructor.Knob, QtGui.QTextEdit):
+    def __init__(self, value, name = 'TextKnob'):
+        super(TextKnob, self).__init__()
+        self.knobLayout.addWidget(self)
+        
+        self.name.setText(name)
+        self.setValue(value)
+        
+        
+    def setValue(self, value):
+        self.setText(value)
+    def getValue(self):
+        return self.text()
+       

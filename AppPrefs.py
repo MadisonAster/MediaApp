@@ -29,7 +29,7 @@
 'App-AlternateBase' : QtGui.QColor(50,50,50),
 'App-ToolTipBase' : QtGui.QColor(50,50,50),
 'App-ToolTipText' : QtGui.QColor(50,50,50),
-'App-Text' : QtGui.QColor(0,0,0),
+'App-Text' : QtGui.QColor(255,255,255),
 'App-Button' : QtGui.QColor(100,100,100),
 'App-ButtonText' : QtGui.QColor(255,255,255),
 'App-BrightText' : QtGui.QColor(255,255,255),
