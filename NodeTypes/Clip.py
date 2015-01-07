@@ -50,6 +50,7 @@ class Clip(ImageNode, AudioNode):
         
         self['before'] = ComboKnob(['hold', 'loop', 'bounce', 'black'])
         self['after'] = ComboKnob(['hold', 'loop', 'bounce', 'black'])
+        self['Notes'] = TextKnob('')
         
         self.attachKnobs()
         
