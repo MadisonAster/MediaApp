@@ -322,13 +322,12 @@ class ImageNode(Node):
     def getImage(self, *args):
         return self.generateImage(*args)
         
-    def generateImage(self, inputNode = None, *args):
-        #Override this method, by default this is either passthrough, or black
-        inputNode = self.getInput()
-        if inputNode is None:
+    def generateImage(self, *args):
+        #Override this method
+        if self.getInput() is None:
             return AppCore.generateBlack()
         else:
-            return inputNode.getImage(*args)
+            return self.getInput().getImage(*args)
             
 class AudioNode(Node):
     def __init__(self):

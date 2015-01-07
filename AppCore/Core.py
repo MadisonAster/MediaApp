@@ -61,7 +61,11 @@ class Core(dict):
         
         self.App.setStyleSheet(self.generateStyleSheet())
         
+        #Nodes go here
         self.Nodes = {}
+        
+        #iterable temp containers go here
+        self.data = {}
         
         self.ctypesMagic()
         
@@ -189,9 +193,13 @@ class Core(dict):
     def setCurrentFrame(self, value):
         self.AppAttributes['ctiTop'][0] = value
         self.AppAttributes['ctiBot'][0] = value
-    def moveCurrentFrame(self, value):
+    def moveCurrentFrame(self, value, playback = False):
         self.AppAttributes['ctiTop'][0] += value
         self.AppAttributes['ctiBot'][0] += value
+        if playback is False:
+            for item in self.data.items():
+                #FLAW figure out how to override deque.rotate() nonintrusively
+                item[1].softRotate(-value)
     
     def generateBlack(self):
         return QtGui.QImage(self.AppAttributes['ResolutionWidth'], self.AppAttributes['ResolutionHeight'], QtGui.QImage.Format_ARGB32)
