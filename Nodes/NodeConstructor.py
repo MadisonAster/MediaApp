@@ -27,7 +27,7 @@ from PySide import QtGui, QtCore
 import math
 
 import AppCore
-from KnobTypes import *
+from MediaAppKnobs import *
 
 
 class PropertiesWidget(QtGui.QWidget):

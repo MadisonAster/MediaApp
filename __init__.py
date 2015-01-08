@@ -48,14 +48,14 @@ if LicenseFound is True:
         import AppCore
         import DataStructures
         sys.modules['DataStructures'] = DataStructures
-        import KnobTypes
-        sys.modules['KnobTypes'] = KnobTypes
-        import NodeTypes
-        sys.modules['NodeTypes'] = NodeTypes
-        
-        
+        import Knobs
+        sys.modules['MediaAppKnobs'] = Knobs
+        import Nodes
+        sys.modules['MediaAppNodes'] = Nodes
         import Widgets
+        sys.modules['MediaAppWidgets'] = Widgets
         import Windows
+        sys.modules['MediaAppWindows'] = Windows
     else:
         import MediaApp
     #Only import run.py globals if Parent Directory has no run.py

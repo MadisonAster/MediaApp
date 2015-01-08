@@ -26,8 +26,6 @@
 from PySide import QtGui, QtCore
 import AppCore
 
-
-            
 class DockingBin(QtGui.QMainWindow):
     def __init__(self):
         super(DockingBin, self).__init__()

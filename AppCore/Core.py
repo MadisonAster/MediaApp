@@ -119,8 +119,8 @@ class Core(dict):
     
    
     def createNode(self, nodeType, parent = None):
-        import NodeTypes
-        evalString = 'NodeTypes.'+nodeType+'()'
+        import MediaAppNodes
+        evalString = 'MediaAppNodes.'+nodeType+'()'
         node = eval(evalString)
         node.setParent(parent)
         self.Nodes[node.name()] = node
