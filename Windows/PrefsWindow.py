@@ -25,7 +25,7 @@
 
 from PySide import QtGui, QtCore
 import AppCore
-from KnobTypes import *
+from MediaAppKnobs import *
 
 class PrefsWindow(QtGui.QWidget):
     def __init__(self):

@@ -25,33 +25,27 @@
 
 import AppCore
 from NodeConstructor import *
-from KnobTypes import *
+from MediaAppKnobs import *
 
-class TimelineNode(ImageNode, AudioNode):
+class ViewerNode(ImageNode):
     def __init__(self):
-        super(TimelineNode, self).__init__()
-        self['ClassName'] = 'TimelineNode'
-        self.setName(AppCore.getIncrementedName('TimelineNode'))
+        super(ViewerNode, self).__init__()
+        self['ClassName'] = 'ViewerNode'
+        self.setName(AppCore.getIncrementedName('ViewerNode'))
         ################################
         
-        self.TimelineWidget = None
+        self.ViewerWidget = None
         
         #TODO: create ImageMath package, tie these to some math
-        self['zti'] = IntKnob(0)
-        self['cti'] = IntKnob(0)
+        self['gain'] = FloatKnob(0)
+        self['gamma'] = FloatKnob(0)
 
         self.attachKnobs()
-        
     
     def nodeShape(self):
         self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
         self.color1 = QtGui.QColor(180,50,238)
         self.color2 = QtGui.QColor(122,122,122)
 
-    def setTimelineWidget(self, widget):
-        self.TimelineWidget = widget
-    
-    def getImage(self):
-        if AppCore.data['frameCache'].contains(AppCore.getCurrentFrame()) is False:
-            self.TimelineWidget.cacheFrames()
-        return AppCore.data['frameCache'][0]
+    def setViewerWidget(self, widget):
+        self.ViewerWidget = widget
