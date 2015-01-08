@@ -220,7 +220,10 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
             nextframe += frameperiod
             
     def updateFrame(self):
-        self.frameCache = AppCore.data['frameCache'][0]
+        if AppCore.getCurrentFrame() in AppCore.data['frameCache']:
+            self.frameCache = AppCore.data['frameCache'][0]
+        else:
+            self.frameCache = AppCore.generateBlack()
     
     def paintEvent(self, a):
         painter = QtGui.QPainter(self)
