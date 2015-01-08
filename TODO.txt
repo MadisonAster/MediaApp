@@ -1,5 +1,7 @@
 ######HIGH PRIORITY######
-Add Preferences window
+NODE SUBCLASSES Figure out how to override methods like 'nodeShape' when Node becomes a child of TimelineWidget
+specifically node['width'].setValue() and node['ypos'].setValue() are problems
+called: duck typing, duck punching, or monkey patching
 
 MediaCache class will be a subclass of deque that will enable list operations on it
 by incurring the extra cost of a copy step
@@ -13,7 +15,10 @@ Bundle Dependencies with program as submodules in ./Dependencies Package
 Add option to extract source of dependencies
 Add license viewer window for dependencies
 
+
 Add drag event functions to Node Paths
+
+Add Preferences window
 
 Get Touch Events working
 
