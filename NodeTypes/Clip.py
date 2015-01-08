@@ -40,12 +40,10 @@ class Clip(ImageNode, AudioNode):
         ################################
         
         #FLAW: move parent kw setting to KnobConstructor
-        defaultPath = '*NWSTORAGE/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/chelsea.png'
-        defaultPath = '*NWSTORAGE/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.######.tif'
-        #defaultPath = '*NWSTORAGE/'
+        defaultPath = '*NWSTORAGE/'
         self['file'] = FileKnob(defaultPath, parent = self)
-        self['firstFrame'] = IntKnob(86770)
-        self['lastFrame'] = IntKnob(86785)
+        self['firstFrame'] = IntKnob(1)
+        self['lastFrame'] = IntKnob(100)
         self['startAt'] = IntKnob(0)
         
         self['before'] = ComboKnob(['hold', 'loop', 'bounce', 'black'])
@@ -54,7 +52,11 @@ class Clip(ImageNode, AudioNode):
         
         self.attachKnobs()
         
-    def setWidth(self, value):
+    def setWidth(self, *args):
+        if len(args) is 1:
+            value = args[0]
+        else:   
+            value = self['lastFrame'].getValue()-self['firstFrame'].getValue()+1
         self['width'].setValue(value)
         
         #FLAW: see NODESUBCLASSES item in TODO

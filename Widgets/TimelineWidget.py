@@ -75,6 +75,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         pen.setCosmetic(True)
         painter.setPen(pen)
         painter.drawLine(AppCore.AppAttributes['ctiTop'][0],AppCore.AppAttributes['ctiTop'][1], AppCore.AppAttributes['ctiBot'][0],AppCore.AppAttributes['ctiBot'][1])
+        painter.drawLine(AppCore.AppAttributes['ctiTop'][0]+1,AppCore.AppAttributes['ctiTop'][1], AppCore.AppAttributes['ctiBot'][0]+1,AppCore.AppAttributes['ctiBot'][1])
         
     def keyPressEvent(self, event):
         print 'timeline', event.key()
