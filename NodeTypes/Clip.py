@@ -54,6 +54,14 @@ class Clip(ImageNode, AudioNode):
         
         self.attachKnobs()
         
+    def setWidth(self, value):
+        self['width'].setValue(value)
+        
+        #FLAW: see NODESUBCLASSES item in TODO
+        self.polyShape = [[0,0],[value,0],[value,24],[0,24]]
+        self.mapNodeShape()
+    def setYPos(self, value):
+        self['ypos'].setValue(value*AppCore.AppSettings['TimelineWidget-YPixelsPerUnit'])
     
     def nodeShape(self):
         self.polyShape = [[0,0],[100,0],[100,24],[0,24]]

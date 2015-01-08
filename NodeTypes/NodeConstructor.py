@@ -148,7 +148,7 @@ class NodeConstructor(object):
         #Override Me!
         self.polyShape = [[0,0],[70,0],[74,8],[70,16],[0,16]]
         
-        #FLAW: add this to appPrefs somehow
+        #FLAW: add this to appPrefs/appSettings somehow
         self.color1 = QtGui.QColor(238,238,238)
         self.color2 = QtGui.QColor(122,122,122)
         
