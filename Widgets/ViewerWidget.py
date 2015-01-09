@@ -316,7 +316,10 @@ class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
         #self.addToolBar(QtCore.Qt.RightToolBarArea, self.rightToolBar)
         self.addToolBar(QtCore.Qt.BottomToolBarArea, self.bottomToolBar)
         
-        
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.bottomToolBar.addWidget(spacer)
+
         RNext = QtGui.QAction(MediaAppIcons.RNext(), 'RNext', self)
         RNext.triggered.connect(self.widget.playForward)
         self.bottomToolBar.addAction(RNext)
@@ -344,6 +347,10 @@ class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
         Next = QtGui.QAction(MediaAppIcons.Next(), 'Next', self)
         Next.triggered.connect(self.widget.playForward)
         self.bottomToolBar.addAction(Next)
+        
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.bottomToolBar.addWidget(spacer)
         
     def updateFrame(self):
         self.widget.updateFrame()
