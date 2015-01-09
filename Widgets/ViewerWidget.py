@@ -48,9 +48,10 @@ class modeList(list):
                 if mode == arg:
                     self.currentMode = i
         
-class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
+        
+class Viewer(QtGui.QWidget):
     def __init__(self):
-        super(ViewerWidget, self).__init__()
+        super(Viewer, self).__init__()
         self.className = self.__class__.__name__
         
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
@@ -80,11 +81,6 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']
         
         self.frameCache = AppCore.generateBlack()
-        
-        self.node = AppCore.NodeGraph.createNode('ViewerNode')
-        self.node.setViewerWidget(self)
-        
-    
     
     def keyPressEvent(self, event):
         print 'viewer', event.key()
@@ -275,3 +271,41 @@ class ViewerWidget(QtGui.QWidget, NodeLinkedWidget):
         
         #Finished
         painter.end()
+        
+class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
+    def __init__(self):
+        super(ViewerWidget, self).__init__()
+        self.setDockOptions(False)
+        self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
+        
+        
+        self.widget = Viewer()
+        self.setCentralWidget(self.widget)
+        
+        self.node = AppCore.NodeGraph.createNode('ViewerNode')
+        self.node.setViewerWidget(self.widget)
+        
+        #ToolBar#
+        self.topToolBar = QtGui.QToolBar('Top Tool Bar')
+        self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
+        self.rightToolBar = QtGui.QToolBar('Right Tool Bar')
+        self.bottomToolBar = QtGui.QToolBar('Bottom Tool Bar')
+        
+        self.topToolBar.setMovable(False)
+        self.leftToolBar.setMovable(False)
+        self.rightToolBar.setMovable(False)
+        self.bottomToolBar.setMovable(False)
+        
+        self.addToolBar(QtCore.Qt.TopToolBarArea, self.topToolBar)
+        #self.addToolBar(QtCore.Qt.LeftToolBarArea, self.leftToolBar)
+        #self.addToolBar(QtCore.Qt.RightToolBarArea, self.rightToolBar)
+        self.addToolBar(QtCore.Qt.BottomToolBarArea, self.bottomToolBar)
+        
+        
+        PlayForward = QtGui.QAction('PlayForward', self)
+        PlayForward.setStatusTip('Close All the widgets in the bin.')
+        PlayForward.triggered.connect(self.widget.playForward)
+        
+        self.bottomToolBar.addAction(PlayForward)
+    def updateFrame(self):
+        self.widget.updateFrame()
