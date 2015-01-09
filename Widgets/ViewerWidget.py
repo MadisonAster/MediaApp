@@ -23,6 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 from time import time, sleep
+import copy
 
 from PySide import QtGui, QtCore
 
@@ -99,7 +100,11 @@ class Viewer(QtGui.QWidget):
         if event.key() == 32: #Space
             self.playForward()
         self.repaint()
-        
+    
+    def setNode(self, node):
+        self.node = node
+    def setLinkedWindow(self, window):
+        self.linkedWindow = window
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()
@@ -257,6 +262,10 @@ class Viewer(QtGui.QWidget):
         
         #DrawBoundingBox
         
+        #Draw ActiveNode Overlays
+        if hasattr(AppCore.getActiveNode(), 'ViewerOverlays'):
+            AppCore.getActiveNode().ViewerOverlays(painter)
+            
         #DrawMarq
         if self.modes.getCurrentMode() == 'marqMode':
             marqX = [self.startModeX, self.endModeX]
@@ -271,7 +280,7 @@ class Viewer(QtGui.QWidget):
         
         #Finished
         painter.end()
-        
+            
 class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
     def __init__(self):
         super(ViewerWidget, self).__init__()
@@ -280,12 +289,17 @@ class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
         
         
         self.widget = Viewer()
-        self.setCentralWidget(self.widget)
-        
         self.node = AppCore.NodeGraph.createNode('ViewerNode')
-        self.node.setViewerWidget(self.widget)
         
-        #ToolBar#
+        self.setCentralWidget(self.widget)
+        self.node.setViewerWidget(self.widget)
+        self.node.setLinkedWindow(self)
+        self.widget.setNode(self.node)
+        self.widget.setLinkedWindow(self)
+        
+        ###ToolBars###
+        self.AccessoryToolBars = []
+        
         self.topToolBar = QtGui.QToolBar('Top Tool Bar')
         self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
         self.rightToolBar = QtGui.QToolBar('Right Tool Bar')
@@ -307,5 +321,19 @@ class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
         PlayForward.triggered.connect(self.widget.playForward)
         
         self.bottomToolBar.addAction(PlayForward)
+        self.removeToolBar(self.bottomToolBar)
     def updateFrame(self):
         self.widget.updateFrame()
+        
+
+    def dumpAccessoryToolbars(self):
+        for toolbar in self.AccessoryToolBars:
+            self.removeToolBar(toolbar)
+        self.AccessoryToolBars = []
+    def addAccessoryToolbars(self, toolbars):
+        for toolbar in toolbars:
+            self.AccessoryToolBars.append(toolbar[1])
+            self.addToolBar(toolbar[0], self.AccessoryToolBars[-1])
+            self.AccessoryToolBars[-1].show()
+            
+        

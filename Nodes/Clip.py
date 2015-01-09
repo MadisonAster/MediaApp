@@ -52,6 +52,12 @@ class Clip(ImageNode, AudioNode):
         
         self.attachKnobs()
         
+        self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
+        self.leftToolBar.setMovable(False)
+        
+        
+        #self.ViewerToolbars = [[QtCore.Qt.LeftToolBarArea, self.leftToolBar]]
+        
     def setWidth(self, *args):
         if len(args) is 1:
             value = args[0]

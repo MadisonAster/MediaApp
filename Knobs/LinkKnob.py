@@ -23,10 +23,25 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-#from GraphWidget import *
+from PySide import QtGui, QtCore
 
-from NodeGraph import NodeGraph
-from BrowserBin import BrowserBin
-from PropertiesBin import PropertiesBin
-from TimelineWidget import TimelineWidget
-from ViewerWidget import ViewerWidget
+import AppCore
+import KnobConstructor
+
+
+class LinkKnob(KnobConstructor.Knob, QtGui.QLineEdit):
+    def __init__(self, value, name = 'LinkKnob'):
+        super(LinkKnob, self).__init__()
+        self.knobLayout.addWidget(self)
+        
+        self.name.setText(name)
+        self.setValue(value)
+        
+        self.link = None
+        
+    def setValue(self, value):
+        self.link = value
+        self.setText(str(value))
+    def getValue(self):
+        return self.link
+       

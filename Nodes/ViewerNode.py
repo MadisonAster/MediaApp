@@ -41,7 +41,14 @@ class ViewerNode(ImageNode):
         self['gamma'] = FloatKnob(0)
 
         self.attachKnobs()
-    
+        
+        AppCore.addSensitiveNode(self)
+        
+    def setActiveNode(self, node):
+        self.linkedWindow.dumpAccessoryToolbars()
+        if hasattr(node, 'ViewerToolbars'):
+            self.linkedWindow.addAccessoryToolbars(node.ViewerToolbars)
+            
     def nodeShape(self):
         self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
         self.color1 = QtGui.QColor(180,50,238)
@@ -49,3 +56,5 @@ class ViewerNode(ImageNode):
 
     def setViewerWidget(self, widget):
         self.ViewerWidget = widget
+    def setLinkedWindow(self, window):
+        self.linkedWindow = window

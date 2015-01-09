@@ -58,7 +58,7 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         #self.visibilityChanged.triggered.connect(self.unDock)
         #self.toggleViewAction().triggered.connect(self.unDock)
         self.setAcceptDrops(True)
-        
+        self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         
         self.setAllowedAreas(False)
         self.setAllowedAreas(QtCore.Qt.TopDockWidgetArea)
@@ -69,6 +69,8 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         self.docked = False
     def closeEvent(self, event):
         AppCore.PropertiesBin.unDockThisWidget(self)
+    def focusInEvent(self, event):
+        AppCore.setActiveNode(self)
         
 class NodeConstructor(object):
     def __init__(self):

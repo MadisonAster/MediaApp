@@ -23,12 +23,13 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from ArrayKnob import *
-from BoolKnob import *
-from ColorKnob import *
-from ComboKnob import *
-from FileKnob import *
-from FloatKnob import *
-from IntKnob import *
-from StrKnob import *
-from TextKnob import *
+from ArrayKnob import ArrayKnob
+from BoolKnob import BoolKnob
+from ColorKnob import ColorKnob
+from ComboKnob import ComboKnob
+from FileKnob import FileKnob
+from FloatKnob import FloatKnob
+from IntKnob import IntKnob
+from LinkKnob import LinkKnob
+from StrKnob import StrKnob
+from TextKnob import TextKnob

@@ -51,6 +51,9 @@ class DockingBin(QtGui.QMainWindow):
         #self.removeChild(widget)
         self.removeDockWidget(widget)
         widget.docked = False
+
+        if widget == AppCore.getActiveNode():
+            AppCore.setActiveNode(None)
         
     def emptyBin(self):
         for widget in self.getDockedWidgets():
@@ -86,6 +89,8 @@ class DockingBin(QtGui.QMainWindow):
         for dockedWidget in dockedWidgets:
             self.addDockWidget(QtCore.Qt.TopDockWidgetArea, dockedWidget, QtCore.Qt.Vertical)
             dockedWidget.show()
+            
+        AppCore.setActiveNode(widget)
             
     def getDockedWidgets(self):
         returnList = []

@@ -64,10 +64,15 @@ class Core(dict):
         #Nodes go here
         self.Nodes = {}
         
+        
         #iterable temp containers go here
         self.data = {}
         
         self.ctypesMagic()
+        
+        #A sensitive node modifies it's behavior based on the active node (ie viewer paints activeNode.ViewerOverlays)
+        self.sensitiveNodes = []
+        self.activeNode = None
         
     def setPaths(self):
         self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',2)[0]
@@ -87,7 +92,7 @@ class Core(dict):
             self['AppDirectory'] = self['CoreDirectory']
         self['AppDataDirectory'] = os.getenv('APPDATA')+'/MediaApp/'+self['AppDirectory'].rsplit('/',1)[1]
         self['UserAppPrefs'] = self['AppDataDirectory']+'/'+'UserAppPrefs.py'
-        
+    
     def ctypesMagic(self):
         #Windows Taskbar icon work around
         winAppID = self.AppSettings['AppID']
@@ -117,7 +122,17 @@ class Core(dict):
     def setImpliedAppSettings(self):
         pass
     
-   
+    def getSensitiveNodes(self):
+        return self.sensitiveNodes
+    def addSensitiveNode(self, node):
+        self.sensitiveNodes.append(node)
+    def getActiveNode(self):
+        return self.activeNode
+    def setActiveNode(self, node):
+        self.activeNode = node
+        for viewer in self.getSensitiveNodes():
+            viewer.setActiveNode(self.activeNode)
+
     def createNode(self, nodeType, parent = None):
         import MediaAppNodes
         evalString = 'MediaAppNodes.'+nodeType+'()'
@@ -125,6 +140,10 @@ class Core(dict):
         node.setParent(parent)
         self.Nodes[node.name()] = node
         return node
+    def removeNode(self, node):
+        if node in self.sensitiveNodes:
+            self.sensitiveNodes.remove(node)
+        del self.Nodes[node.name()]
         
     def getChildrenOf(self, parent):
         returnList = []

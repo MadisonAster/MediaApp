@@ -1,14 +1,4 @@
 ######HIGH PRIORITY######
-Add ActiveNode Property to AppCore (set mostly via properties bin)
-    On ActiveNode open, if Node has self.ViewerOverlays, add toolbars to AllViewers, hand self.ViewerOverlays pointer to viewer
-    On ActiveNode close, reset AllViewers toolbars to default, destroy ActiveNodeWidget pointers
-    On viewer paint event, hand painter to ActiveNodeWidget to paint overlays
-On generate frame for notePainter node, do some other stuff.
-
-
-
-
-
 IconFromSvg file object constructor in icons package
 
 Move CTI into Timeline Class. Separate certain features of timeline widget out into timeline class

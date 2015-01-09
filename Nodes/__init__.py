@@ -24,6 +24,6 @@
 #===============================================================================
 
 import sys
-from Clip import *
-from ViewerNode import *
-from TimelineNode import *
+from Clip import Clip
+from ViewerNode import ViewerNode
+from TimelineNode import TimelineNode
