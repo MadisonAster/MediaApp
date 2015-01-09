@@ -48,6 +48,8 @@ if LicenseFound is True:
         import AppCore
         import DataStructures
         sys.modules['DataStructures'] = DataStructures
+        import Icons
+        sys.modules['MediaAppIcons'] = Icons
         import Knobs
         sys.modules['MediaAppKnobs'] = Knobs
         import Nodes

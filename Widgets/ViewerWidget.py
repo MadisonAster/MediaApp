@@ -28,6 +28,7 @@ import copy
 from PySide import QtGui, QtCore
 
 import AppCore
+import MediaAppIcons
 from NodeLinkedWidget import *
 
 class modeList(list):
@@ -316,12 +317,34 @@ class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
         self.addToolBar(QtCore.Qt.BottomToolBarArea, self.bottomToolBar)
         
         
-        PlayForward = QtGui.QAction('PlayForward', self)
-        PlayForward.setStatusTip('Close All the widgets in the bin.')
-        PlayForward.triggered.connect(self.widget.playForward)
+        RNext = QtGui.QAction(MediaAppIcons.RNext(), 'RNext', self)
+        RNext.triggered.connect(self.widget.playForward)
+        self.bottomToolBar.addAction(RNext)
         
-        self.bottomToolBar.addAction(PlayForward)
-        self.removeToolBar(self.bottomToolBar)
+        RPlay = QtGui.QAction(MediaAppIcons.RPlay(), 'RPlay', self)
+        RPlay.triggered.connect(self.widget.playForward)
+        self.bottomToolBar.addAction(RPlay)
+        
+        RAdvance = QtGui.QAction(MediaAppIcons.RAdvance(), 'RAdvance', self)
+        RAdvance.triggered.connect(self.widget.playForward)
+        self.bottomToolBar.addAction(RAdvance)
+        
+        Stop = QtGui.QAction(MediaAppIcons.Stop(), 'Stop', self)
+        Stop.triggered.connect(self.widget.updateFrame)
+        self.bottomToolBar.addAction(Stop)
+        
+        Advance = QtGui.QAction(MediaAppIcons.Advance(), 'Advance', self)
+        Advance.triggered.connect(self.widget.playForward)
+        self.bottomToolBar.addAction(Advance)
+        
+        Play = QtGui.QAction(MediaAppIcons.Play(), 'Play', self)
+        Play.triggered.connect(self.widget.playForward)
+        self.bottomToolBar.addAction(Play)
+        
+        Next = QtGui.QAction(MediaAppIcons.Next(), 'Next', self)
+        Next.triggered.connect(self.widget.playForward)
+        self.bottomToolBar.addAction(Next)
+        
     def updateFrame(self):
         self.widget.updateFrame()
         

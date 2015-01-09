@@ -19,6 +19,7 @@
 '*BLACK' : 'somePath',
 
 'AppFont' : QtGui.QFont('Times', 10, QtGui.QFont.Bold),
+'AppIconColor' : QtGui.QColor(255,255,255),
 'NodeNamePadding' : 3,
 
 'App-Window' : QtGui.QColor(50,50,50),
