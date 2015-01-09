@@ -1,6 +1,4 @@
 ######HIGH PRIORITY######
-IconFromSvg file object constructor in icons package
-
 Move CTI into Timeline Class. Separate certain features of timeline widget out into timeline class
 so that they may be subclassed by ViewerWidget.
 
@@ -11,7 +9,8 @@ timeline and cache, if not the viewer will provide it.
 
 provide a/b functions in viewer toolbar for different viewer inputs
 
-
+Break GraphWidget paintEvent into several functions, so that parts of the paint event can be overridden by subclasses
+Multiply positions of node by XY Unit sizes in the mode calculation for GraphWidget
 
 
 NODE SUBCLASSES Figure out how to override methods like 'nodeShape' when Node becomes a child of TimelineWidget

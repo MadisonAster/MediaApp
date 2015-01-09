@@ -57,7 +57,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
             ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)*self.YPixelsPerUnit
             node[0]['startAt'].setValue(xpos)
             
-            length = node[0]['length'].getValue()
+            length = node[0]['width'].getValue()
             
             #xpos*length
         AppCore.ViewerWidget.repaint()
