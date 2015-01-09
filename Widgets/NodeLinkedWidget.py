@@ -28,7 +28,6 @@ from PySide import QtGui, QtCore
 class NodeLinkedWidget(object):
     def __init__(self):
         super(NodeLinkedWidget, self).__init__()
-        ################################
 
     def setInput(self, index, object):
         self.node.inputPaths[index] = object

@@ -53,11 +53,11 @@
 'NodeGraph-gridPen' : QtGui.QPen(QtGui.QColor(204,204,204), 0),
 'NodeGraph-pathPen01' : QtGui.QPen(QtGui.QColor(0,0,0), 5),
 
-'ViewerWidget-bgColor' : QtGui.QColor(0,0,0),
-'ViewerWidget-ResBoxColor' : QtGui.QColor(255,255,255,25),
-'ViewerWidget-ResBoxPen' : QtGui.QPen(QtGui.QColor(204,204,204), 1),
-'ViewerWidget-marqBoxColor' : QtGui.QColor(255,255,255,0),
-'ViewerWidget-marqOutlinePen' : QtGui.QPen(QtGui.QColor(204,0,0), 1),
+'Viewer-bgColor' : QtGui.QColor(0,0,0),
+'Viewer-ResBoxColor' : QtGui.QColor(255,255,255,25),
+'Viewer-ResBoxPen' : QtGui.QPen(QtGui.QColor(204,204,204), 1),
+'Viewer-marqBoxColor' : QtGui.QColor(255,255,255,0),
+'Viewer-marqOutlinePen' : QtGui.QPen(QtGui.QColor(204,0,0), 1),
 
 'TimelineWidget-bgColor' : QtGui.QColor(50,50,50),
 'TimelineWidget-nodeTrimPen' : QtGui.QPen(QtGui.QColor(0,0,0), .5),

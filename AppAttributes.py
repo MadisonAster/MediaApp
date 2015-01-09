@@ -31,10 +31,10 @@
 'NodeGraph-startGraphXS' : 0,
 'NodeGraph-startGraphYS' : 0,
 
-'ViewerWidget-startGraphX' : 0,
-'ViewerWidget-startGraphY' : 0,
-'ViewerWidget-startGraphXS' : 0,
-'ViewerWidget-startGraphYS' : 0,
+'Viewer-startGraphX' : 0,
+'Viewer-startGraphY' : 0,
+'Viewer-startGraphXS' : 0,
+'Viewer-startGraphYS' : 0,
 
 'TimelineWidget-startGraphX' : 0,
 'TimelineWidget-startGraphY' : 0,
