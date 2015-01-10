@@ -94,30 +94,21 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
             self.cacheFrames()
         self.repaint()
     
-    def getTopNodeForCurrentFrame(self):
-        nodeStack = self.getNodesAtPos(AppCore.getCurrentFrame())
+    def getTopNodeForCurrentFrame(self, notNode = None):
+        return self.getTopNodeAtFrame(AppCore.getCurrentFrame(), notNode = notNode)
         
-        returnNode = None
-        for node in nodeStack:
-            if returnNode is None:
-                returnNode = node
-            elif node['ypos'].getValue() > returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is True:
-                returnNode = node
-            elif node['ypos'].getValue() < returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is False:
-                returnNode = node
-        return returnNode
-        
-    def getTopNodeAtFrame(self, Frame):
+    def getTopNodeAtFrame(self, Frame, notNode = None):
         nodeStack = self.getNodesAtPos(Frame)
         
         returnNode = None
         for node in nodeStack:
-            if returnNode is None:
-                returnNode = node
-            elif node['ypos'].getValue() > returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is True:
-                returnNode = node
-            elif node['ypos'].getValue() < returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is False:
-                returnNode = node
+            if node != notNode:
+                if returnNode is None:
+                    returnNode = node
+                elif node['ypos'].getValue() > returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is True:
+                    returnNode = node
+                elif node['ypos'].getValue() < returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is False:
+                    returnNode = node
         return returnNode
         
     def getNodesAtPos(self, XPos):

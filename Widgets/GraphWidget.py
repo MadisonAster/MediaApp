@@ -46,7 +46,6 @@ class GraphWidget(QtGui.QWidget):
     def __init__(self):
         super(GraphWidget, self).__init__()
         self.className = self.__class__.__name__
-        ################################
         
         #Initialize Values
         self.modes = modeList(['None','zoomMode','panMode','marqMode', 'dragMode'])
@@ -87,6 +86,7 @@ class GraphWidget(QtGui.QWidget):
         node = AppCore.createNode(nodeType, parent = self)
         self.Nodes[node.name()] = node
         self.nodeCreated()
+        self.repaint()
         return node
     def allNodes(self):
         returnList = []

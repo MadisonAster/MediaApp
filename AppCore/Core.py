@@ -118,7 +118,6 @@ class Core(dict):
             if '*' in key:
                 globalList.append(key)
         self.AppPrefs['GLOBALS'] = globalList
-        
     def setImpliedAppSettings(self):
         pass
     
@@ -136,6 +135,13 @@ class Core(dict):
     def createNode(self, nodeType, parent = None):
         import MediaAppNodes
         evalString = 'MediaAppNodes.'+nodeType+'()'
+        
+        #Check to see if developer has exposed their own Nodes package
+        if 'Nodes' in sys.modules:
+            import Nodes
+            if hasattr(Nodes, nodeType):
+                evalString = 'Nodes.'+nodeType+'()'
+            
         node = eval(evalString)
         node.setParent(parent)
         self.Nodes[node.name()] = node

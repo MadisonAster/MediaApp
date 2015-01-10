@@ -66,6 +66,8 @@ class Viewer(QtGui.QWidget):
         self.middleClick = False
         self.leftClick = False
         self.rightClick = False
+        self.shiftKey = False
+        self.ctrlKey = False
 
         #Initialize User Values#
         self.ZoomXYJoined = AppCore.AppSettings[self.className+'-ZoomXYJoined']
@@ -85,23 +87,27 @@ class Viewer(QtGui.QWidget):
         self.frameCache = AppCore.generateBlack()
     
     def keyPressEvent(self, event):
-        print 'viewer', event.key()
+        #FLAW: find a better place to put some of these, this should be a fairly short function
         if event.key() == 16777234: #Left 
             AppCore.moveCurrentFrame(-1)
             self.updateFrame()
             AppCore.TimelineWidget.repaint()
         if event.key() == 16777236: #Right
             AppCore.moveCurrentFrame(1)
-            print AppCore.data['frameCache'].rotateCounter
             self.updateFrame()
-            print self.frameCache
             AppCore.TimelineWidget.repaint()
         if event.key() == 67: #C
             AppCore.TimelineWidget.cacheFrames()
         if event.key() == 32: #Space
             self.playForward()
-        self.repaint()
-    
+            
+        key = str(event.key())
+        self.changeButton(key, True)
+
+    def keyReleaseEvent(self, event):    
+        key = str(event.key())
+        self.changeButton(key, False)
+        
     def setNode(self, node):
         self.node = node
     def setLinkedWindow(self, window):
@@ -114,9 +120,6 @@ class Viewer(QtGui.QWidget):
         button = str(event.button())
         
         self.changeButton(button, True)
-        self.setMode()
-        self.grabValues()
-        self.update()
     def mouseReleaseEvent(self, event):
         self.endMouseX = event.pos().x()
         self.endMouseY = event.pos().y()
@@ -125,22 +128,30 @@ class Viewer(QtGui.QWidget):
         button = str(event.button())
         
         self.changeButton(button, False)
+    def changeButton(self, button, Value):
+        if button.rsplit('.', 1)[-1] == 'MiddleButton' or button.rsplit('.', 1)[-1] == 'MidButton':
+            self.middleClick = Value
+        elif button.rsplit('.', 1)[-1] == 'LeftButton':
+            self.leftClick = Value
+        elif button.rsplit('.', 1)[-1] == 'RightButton':
+            self.rightClick = Value
+        elif button == '16777248': #Shift
+            self.shiftKey = Value
+        elif button == '16777249': #Ctrl
+            self.ctrlKey = Value
+        else:
+            print 'button', button, Value
+            return
+        
         self.setMode()
         self.grabValues()
         self.update()
-    def changeButton(self, button, Value):
-        if button.rsplit('.', 1)[1] == 'MiddleButton' or button.rsplit('.', 1)[1] == 'MidButton':
-            self.middleClick = Value
-        elif button.rsplit('.', 1)[1] == 'LeftButton':
-            self.leftClick = Value
-        elif button.rsplit('.', 1)[1] == 'RightButton':
-            self.rightClick = Value
     def setMode(self):
         if self.middleClick == True and self.leftClick == True:
             self.modes.setCurrentMode('zoomMode')
         elif self.middleClick == True and self.leftClick == False:
             self.modes.setCurrentMode('panMode')
-        elif self.middleClick == False and self.leftClick == True:
+        elif self.shiftKey == True and self.leftClick == True:
             self.modes.setCurrentMode('marqMode')
         else:
             self.modes.setCurrentMode('None')
@@ -265,7 +276,7 @@ class Viewer(QtGui.QWidget):
         
         #Draw ActiveNode Overlays
         if hasattr(AppCore.getActiveNode(), 'ViewerOverlays'):
-            AppCore.getActiveNode().ViewerOverlays(painter)
+            AppCore.getActiveNode().ViewerOverlays(self, painter)
             
         #DrawMarq
         if self.modes.getCurrentMode() == 'marqMode':
