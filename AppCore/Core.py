@@ -71,7 +71,7 @@ class Core(dict):
         self.ctypesMagic()
         
         #A sensitive node modifies it's behavior based on the active node (ie viewer paints activeNode.ViewerOverlays)
-        self.sensitiveNodes = []
+        self.SensitiveObjects = []
         self.activeNode = None
         
     def setPaths(self):
@@ -121,16 +121,16 @@ class Core(dict):
     def setImpliedAppSettings(self):
         pass
     
-    def getSensitiveNodes(self):
-        return self.sensitiveNodes
-    def addSensitiveNode(self, node):
-        self.sensitiveNodes.append(node)
+    def getSensitiveObjects(self):
+        return self.SensitiveObjects
+    def addSensitiveObject(self, node):
+        self.SensitiveObjects.append(node)
     def getActiveNode(self):
         return self.activeNode
     def setActiveNode(self, node):
         self.activeNode = node
-        for viewer in self.getSensitiveNodes():
-            viewer.setActiveNode(self.activeNode)
+        for object in self.getSensitiveObjects():
+            object.setActiveNode(self.activeNode)
 
     def createNode(self, nodeType, parent = None):
         import MediaAppNodes
@@ -147,8 +147,8 @@ class Core(dict):
         self.Nodes[node.name()] = node
         return node
     def removeNode(self, node):
-        if node in self.sensitiveNodes:
-            self.sensitiveNodes.remove(node)
+        if node in self.SensitiveObjects:
+            self.SensitiveObjects.remove(node)
         del self.Nodes[node.name()]
         
     def getChildrenOf(self, parent):

@@ -42,7 +42,7 @@ class ViewerNode(ImageNode):
 
         self.attachKnobs()
         
-        AppCore.addSensitiveNode(self)
+        AppCore.addSensitiveObject(self)
         
     def setActiveNode(self, node):
         self.linkedWindow.dumpAccessoryToolbars()
