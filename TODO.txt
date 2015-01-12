@@ -1,5 +1,5 @@
 ######HIGH PRIORITY######
-
+seperate nodeOwningObject class
 
 Move CTI into Timeline Class. Separate certain features of timeline widget out into timeline class
 so that they may be subclassed by ViewerWidget.

@@ -29,6 +29,8 @@ from PySide import QtGui, QtCore
 
 import AppCore
 import MediaAppIcons
+import MediaAppKnobs
+import DataStructures
 from NodeLinkedWidget import *
 
 class modeList(list):
@@ -89,15 +91,16 @@ class Viewer(QtGui.QWidget):
     def keyPressEvent(self, event):
         #FLAW: find a better place to put some of these, this should be a fairly short function
         if event.key() == 16777234: #Left 
-            AppCore.moveCurrentFrame(-1)
-            self.updateFrame()
-            AppCore.TimelineWidget.repaint()
+            self.parent().getInput().moveCurrentFrame(-1)
+            self.parent().updateFrame()
+            self.parent().getInput().repaint()
         if event.key() == 16777236: #Right
-            AppCore.moveCurrentFrame(1)
-            self.updateFrame()
-            AppCore.TimelineWidget.repaint()
+            self.parent().getInput().moveCurrentFrame(1)
+            self.parent().updateFrame()
+            self.parent().getInput().repaint()
         if event.key() == 67: #C
-            AppCore.TimelineWidget.cacheFrames()
+            self.parent().cacheFrames()
+            self.parent().updateFrame()
         if event.key() == 32: #Space
             self.playForward()
             
@@ -110,8 +113,8 @@ class Viewer(QtGui.QWidget):
         
     def setNode(self, node):
         self.node = node
-    def setLinkedWindow(self, window):
-        self.linkedWindow = window
+    #def setLinkedWindow(self, window):
+    #    self.linkedWindow = window
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()
@@ -219,24 +222,22 @@ class Viewer(QtGui.QWidget):
         frameperiod=1.0/AppCore.AppAttributes['FPS']
         now = time()
         nextframe = now
-        
-        for image in AppCore.data['frameCache']:
+        cache = self.parent().getCache()
+        print cache
+        for image in cache:
             while now < nextframe:
                 sleep(nextframe-now)
                 now = time()
                 
             self.frameCache = image
             #Maybe some overhead here
-            AppCore.moveCurrentFrame(1, playback = True)
+            cache.moveCurrentFrame(1, playback = True)
             self.repaint()
             
             nextframe += frameperiod
             
-    def updateFrame(self):
-        if AppCore.getCurrentFrame() in AppCore.data['frameCache']:
-            self.frameCache = AppCore.data['frameCache'][0]
-        else:
-            self.frameCache = AppCore.generateBlack()
+    def cacheFrame(self, image):
+        self.frameCache = image
     
     def paintEvent(self, a):
         painter = QtGui.QPainter(self)
@@ -293,25 +294,23 @@ class Viewer(QtGui.QWidget):
         #Finished
         painter.end()
             
-class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
+class ViewerWidget(NodeLinkedWidget, QtGui.QMainWindow):
     def __init__(self):
         super(ViewerWidget, self).__init__()
         self.setDockOptions(False)
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
-        
+
+        self.setLinkedNode(AppCore.NodeGraph.createNode('ViewerNode'))
+        self.TimeIndicator = DataStructures.TimeCache()
         
         self.widget = Viewer()
-        self.node = AppCore.NodeGraph.createNode('ViewerNode')
-        
         self.setCentralWidget(self.widget)
-        self.node.setViewerWidget(self.widget)
-        self.node.setLinkedWindow(self)
-        self.widget.setNode(self.node)
-        self.widget.setLinkedWindow(self)
         
-        ###ToolBars###
         self.AccessoryToolBars = []
+        self.createViewerToolbars()
         
+        
+    def createViewerToolbars(self):
         self.topToolBar = QtGui.QToolBar('Top Tool Bar')
         self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
         self.rightToolBar = QtGui.QToolBar('Right Tool Bar')
@@ -326,6 +325,24 @@ class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
         #self.addToolBar(QtCore.Qt.LeftToolBarArea, self.leftToolBar)
         #self.addToolBar(QtCore.Qt.RightToolBarArea, self.rightToolBar)
         self.addToolBar(QtCore.Qt.BottomToolBarArea, self.bottomToolBar)
+        
+        
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.topToolBar.addWidget(spacer)
+        
+        self.inputSelectorA = MediaAppKnobs.ComboKnob([])
+        self.topToolBar.addWidget(self.inputSelectorA)
+        
+        self.inputCombiner = MediaAppKnobs.ComboKnob(['A Only','B Only','Wipe','Blend'])
+        self.topToolBar.addWidget(self.inputCombiner)
+        
+        self.inputSelectorB = MediaAppKnobs.ComboKnob([])
+        self.topToolBar.addWidget(self.inputSelectorB)
+        
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.topToolBar.addWidget(spacer)
         
         spacer = QtGui.QWidget()
         spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -344,7 +361,7 @@ class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
         self.bottomToolBar.addAction(RAdvance)
         
         Stop = QtGui.QAction(MediaAppIcons.Stop(), 'Stop', self)
-        Stop.triggered.connect(self.widget.updateFrame)
+        Stop.triggered.connect(self.updateFrame)
         self.bottomToolBar.addAction(Stop)
         
         Advance = QtGui.QAction(MediaAppIcons.Advance(), 'Advance', self)
@@ -362,11 +379,38 @@ class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
         spacer = QtGui.QWidget()
         spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.bottomToolBar.addWidget(spacer)
+    
+    def getInput(self):
+        #FLAW: need to figure out how to play back from 2 caches at once in opengl later
+        if self.inputCombiner.getValue() is 'B Only':
+            return self.getLinkedNode().getInput(self.inputSelectorB.currentIndex())
+        else:
+            #For now just return input A, because there's no current method for connecting to two caches at once.
+            return self.getLinkedNode().getInput(self.inputSelectorA.currentIndex())
         
     def updateFrame(self):
-        self.widget.updateFrame()
+        inputA = self.getLinkedNode().getInput(self.inputSelectorA.currentIndex())
+        inputB = self.getLinkedNode().getInput(self.inputSelectorB.currentIndex())
         
-
+        #TODO 'implement a provided timeline in the viewer'
+        if str(self.inputCombiner.getValue()) == 'A Only':
+            self.widget.cacheFrame(inputA.getImage())
+        elif str(self.inputCombiner.getValue()) == 'B Only':
+            self.widget.cacheFrame(inputB.getImage())
+        else:
+            imageA = inputA.getImage()
+            imageB = inputB.getImage()
+        if str(self.inputCombiner.getValue()) is 'Blend':    
+            self.widget.cacheFrame(self.blendImage(imageA, imageB))
+        elif str(self.inputCombiner.getValue()) is 'Wipe':
+            self.widget.cacheFrame(self.wipeImage(imageA, imageB))
+        
+        
+        #if AppCore.getCurrentFrame() in AppCore.data['frameCache']:
+        #    self.frameCache = AppCore.data['frameCache'][0]
+        #else:
+        #    self.frameCache = AppCore.generateBlack()
+        
     def dumpAccessoryToolbars(self):
         for toolbar in self.AccessoryToolBars:
             self.removeToolBar(toolbar)
@@ -377,4 +421,23 @@ class ViewerWidget(QtGui.QMainWindow, NodeLinkedWidget):
             self.addToolBar(toolbar[0], self.AccessoryToolBars[-1])
             self.AccessoryToolBars[-1].show()
             
-        
+    ###Pointer Functions###
+    def getCache(self):
+        input = self.getInput()
+        if hasattr(input, 'getCache'):
+            return self.getInput().getCache()
+        else:
+            return self.TimeIndicator
+    def cacheFrames(self):
+        input = self.getInput()
+        if hasattr(input, 'cacheFrames'):
+            self.getInput().cacheFrames()
+        else:
+            firstFrame, lastFrame = self.getInputRange()
+            self.TimeIndicator.cacheFrames(self.generateFrames(firstFrame, lastFrame), firstFrame = firstFrame)
+    
+    def generateFrames(self, firstFrame, lastFrame):
+        print 'Viewer generating '+str(lastFrame-firstFrame)+' frames as QImages',
+        input = self.getInput()
+        for frame in range(firstFrame, lastFrame):
+            yield input.getImage(frame)

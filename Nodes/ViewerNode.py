@@ -27,14 +27,12 @@ import AppCore
 from NodeConstructor import *
 from MediaAppKnobs import *
 
-class ViewerNode(ImageNode):
+class ViewerNode(ImageNode, WidgetLinkedNode):
     def __init__(self):
         super(ViewerNode, self).__init__()
         self['ClassName'] = 'ViewerNode'
         self.setName(AppCore.getIncrementedName('ViewerNode'))
         ################################
-        
-        self.ViewerWidget = None
         
         #TODO: create ImageMath package, tie these to some math
         self['gain'] = FloatKnob(0)
@@ -45,16 +43,20 @@ class ViewerNode(ImageNode):
         AppCore.addSensitiveObject(self)
         
     def setActiveNode(self, node):
-        self.linkedWindow.dumpAccessoryToolbars()
+        self.getLinkedWidget().dumpAccessoryToolbars()
         if hasattr(node, 'ViewerToolbars'):
-            self.linkedWindow.addAccessoryToolbars(node.ViewerToolbars)
+            self.getLinkedWidget().addAccessoryToolbars(node.ViewerToolbars)
             
     def nodeShape(self):
         self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
         self.color1 = QtGui.QColor(180,50,238)
         self.color2 = QtGui.QColor(122,122,122)
-
-    def setViewerWidget(self, widget):
-        self.ViewerWidget = widget
-    def setLinkedWindow(self, window):
-        self.linkedWindow = window
+    def inputsChanged(self):
+        inputList = []
+        for node in self.getInputs():
+            inputList.append(node['nodeName'].getValue())
+        self.getLinkedWidget().inputSelectorA.setItems(inputList)
+        self.getLinkedWidget().inputSelectorB.setItems(inputList)
+        
+        
+        

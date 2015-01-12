@@ -102,6 +102,7 @@ class NodeConstructor(object):
 
     def setInput(self, index, object):
         self.inputPaths[index] = object
+        self.inputsChanged()
     def setCurrentInputIndex(self, index):
         self.currentInput = index
     def getInput(self, *args):
@@ -109,9 +110,13 @@ class NodeConstructor(object):
             return self.inputPaths[self.getCurrentInputIndex()]
         else:
             return self.inputPaths[args[0]]
+    def getInputs(self):
+        return self.inputPaths
     def getCurrentInputIndex(self):
         return self.currentInput
-        
+    def inputsChanged(self):
+        #overridable slot
+        pass
         
     def __len__(self):
         return len(self.knobs)
@@ -312,12 +317,22 @@ class NodeConstructor(object):
         
 class Node(NodeConstructor, PropertiesDockWidget):
     def __init__(self):
-        super(Node, self).__init__()   
+        super(Node, self).__init__()
+        
+class WidgetLinkedNode(Node):
+    def __init__(self):
+        super(WidgetLinkedNode, self).__init__()
+        self.LinkedWidget = None
+    def setLinkedWidget(self, widget):
+        self.LinkedWidget = widget
+        if self.LinkedWidget.getLinkedNode() != self:
+            self.LinkedWidget.setLinkedNode(self)
+    def getLinkedWidget(self):
+        return self.LinkedWidget
 
 class ImageNode(Node):
     def __init__(self):
         super(ImageNode, self).__init__()
-        
         self.frameCache = None
         self.frameCacheFrame = None
         
@@ -334,6 +349,7 @@ class ImageNode(Node):
 class AudioNode(Node):
     def __init__(self):
         super(AudioNode, self).__init__()
+
 class GeometryNode(Node):
     def __init__(self):
         super(GeometryNode, self).__init__()

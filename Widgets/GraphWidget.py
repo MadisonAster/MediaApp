@@ -25,6 +25,7 @@
 
 from PySide import QtGui, QtCore
 import AppCore
+from DataStructures import NodeOwningObject
 
 class modeList(list):
     def __init__(self, *args):
@@ -42,7 +43,7 @@ class modeList(list):
                 if mode == arg:
                     self.currentMode = i
         
-class GraphWidget(QtGui.QWidget):
+class GraphWidget( NodeOwningObject, QtGui.QWidget):
     def __init__(self):
         super(GraphWidget, self).__init__()
         self.className = self.__class__.__name__
@@ -70,38 +71,14 @@ class GraphWidget(QtGui.QWidget):
         self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']
         self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']
         
-        #TEST: see if using this duplicate dictionary is actually faster than AppCore.getChildrenOf(self)
-        self.Nodes = {}
-        
         #Go
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         self.initUI()
-        
     def initUI(self):
         self.setMinimumSize(0, 0)
         self.setGeometry(0, 0, 0, 0)
         self.setMouseTracking(True)
     
-    def createNode(self, nodeType):
-        node = AppCore.createNode(nodeType, parent = self)
-        self.Nodes[node.name()] = node
-        self.nodeCreated()
-        self.repaint()
-        return node
-    def allNodes(self):
-        returnList = []
-        for nodeName in self.Nodes:
-            returnList.append(self.Nodes[nodeName])
-        return returnList
-    def selectedNodes(self):
-        returnList = []
-        for nodeName in self.Nodes:
-            if self.Nodes[nodeName]['selected'].getValue() == True:
-                returnList.append(self.Nodes[nodeName])
-        return returnList    
-    def nodeCreated(self):
-        #Overridable event
-        return
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()

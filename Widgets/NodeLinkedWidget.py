@@ -28,15 +28,22 @@ from PySide import QtGui, QtCore
 class NodeLinkedWidget(object):
     def __init__(self):
         super(NodeLinkedWidget, self).__init__()
-
+        self.LinkedNode = None
+    def setLinkedNode(self, node):
+        self.LinkedNode = node
+        if self.LinkedNode.getLinkedWidget() != self:
+            self.LinkedNode.setLinkedWidget(self)
+    def getLinkedNode(self):
+        return self.LinkedNode
+        
     def setInput(self, index, object):
-        self.node.inputPaths[index] = object
+        self.LinkedNode.setInput(index, object)
     def setCurrentInputIndex(self, index):
-        self.node.currentInput = index
+        self.LinkedNode.setCurrentInputIndex(index)
     def getInput(self, *args):
         if len(args) < 1:
-            return self.node.inputPaths[self.getCurrentInputIndex()]
+            return self.LinkedNode.inputPaths[self.getCurrentInputIndex()]
         else:
-            return self.node.inputPaths[args[0]]
+            return self.LinkedNode.inputPaths[args[0]]
     def getCurrentInputIndex(self):
-        return self.node.currentInput
+        return self.LinkedNode.currentInput

@@ -23,37 +23,38 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
+from PySide import QtGui, QtCore
 import AppCore
-from NodeConstructor import *
-from MediaAppKnobs import *
 
-class TimelineNode(ImageNode, AudioNode, WidgetLinkedNode):
+
+class NodeOwningObject(object):
     def __init__(self):
-        super(TimelineNode, self).__init__()
-        self['ClassName'] = 'TimelineNode'
-        self.setName(AppCore.getIncrementedName('TimelineNode'))
-        ################################
+        super(NodeOwningObject, self).__init__()
         
-        #TODO: create ImageMath package, tie these to some math
-        self['zti'] = IntKnob(0)
-        self['cti'] = IntKnob(0)
-
-        self.attachKnobs()
-        
-    def nodeShape(self):
-        self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
-        self.color1 = QtGui.QColor(180,50,238)
-        self.color2 = QtGui.QColor(122,122,122)
-        
-    ###Pointer Functions###
-    def moveCurrentFrame(self, value, playback = False):
-        self.getLinkedWidget().moveCurrentFrame(value, playback = playback)
-    def repaint(self):
-        self.getLinkedWidget().repaint()
-    def getImage(self):
-        return self.getLinkedWidget().getImage()
-    def getCache(self):
-        return self.getLinkedWidget().getCache()
-    def cacheFrames(self):
-        self.getLinkedWidget().cacheFrames()
-    #######################
+        #TEST: see if using this duplicate dictionary is actually faster than AppCore.getChildrenOf(self)
+        self.Nodes = {}
+    def __getitem__(self, key):
+        return self.Nodes[key]
+    def createNode(self, nodeType):
+        node = AppCore.createNode(nodeType, parent = self)
+        self.Nodes[node.name()] = node
+        self.nodeCreated()
+        if hasattr(self, 'repaint'):
+            self.repaint()
+        return node
+    def allNodes(self):
+        returnList = []
+        for nodeName in self.Nodes:
+            returnList.append(self.Nodes[nodeName])
+        return returnList
+    def selectedNodes(self):
+        returnList = []
+        for nodeName in self.Nodes:
+            if self.Nodes[nodeName]['selected'].getValue() == True:
+                returnList.append(self.Nodes[nodeName])
+        return returnList    
+    def nodeCreated(self):
+        #Overridable event
+        return
+    def SoftDelete(self):
+        print 'Please implement this soon'

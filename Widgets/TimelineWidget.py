@@ -32,25 +32,32 @@ import DataStructures
 from NodeLinkedWidget import *
 from GraphWidget import *
 
-class TimelineWidget(GraphWidget, NodeLinkedWidget):
+class TimelineWidget(NodeLinkedWidget, GraphWidget):
     def __init__(self):
         super(TimelineWidget, self).__init__()
         ################################
-        self.node = AppCore.NodeGraph.createNode('TimelineNode')
-        self.node.setTimelineWidget(self)
+        self.setLinkedNode(AppCore.NodeGraph.createNode('TimelineNode'))
         
-        AppCore.data['frameCache'] = DataStructures.dynamicCache()
-        AppCore.data['frameCache'].append(AppCore.generateBlack())
+        self.TimeIndicators = [DataStructures.TimeCache()]
+        self.ctiIndex = 0
+        self.ZTI = 0
+    def getZeroFrame(self):
+        return self.ZTI
+    def setZeroFrame(self, value):
+        self.ZTI = value
+    def getCurrentIndicator(self):
+        return self.TimeIndicators[self.ctiIndex]
+    
+    def cacheFrames(self):
+        firstFrame, lastFrame = self.getFirstLastCacheFrame()
+        self.getCurrentIndicator().cacheFrames(self.generateFrames(firstFrame, lastFrame), firstFrame = firstFrame)
+    
+    def generateFrames(self, firstFrame, lastFrame):
+        print 'generating '+str(lastFrame-firstFrame)+' frames as QImages',
+        for frame in range(firstFrame, lastFrame):
+            node = self.getTopNodeAtFrame(frame)
+            yield node.getImage(frame)
         
-        
-    #def dragEvent(self):
-    #    for node in self.dragStartPositions:
-    #        xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
-    #        ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)*self.YPixelsPerUnit
-    #        node[0]['xpos'].setValue(xpos)
-    #        node[0]['ypos'].setValue(ypos)
-    #        node[0].getPos()
-    #    self.dragEventExtra()
     def dragEventExtra(self):
         for node in self.dragStartPositions:
             xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
@@ -60,6 +67,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
             length = node[0]['width'].getValue()
             
             #xpos*length
+        #FLAW: need to implement AppCore.registeredWidgets
         AppCore.ViewerWidget.repaint()
             
     def paintExtra(self, painter):
@@ -68,14 +76,16 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         pen = AppCore.AppPrefs[self.className+'-ztiPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
-        painter.drawLine(AppCore.AppAttributes['ztiPos'],0, AppCore.AppAttributes['ztiPos'],24*10)
+        painter.drawLine(self.getZeroFrame(),0, self.getZeroFrame(),24*10)
         
         
         pen = AppCore.AppPrefs[self.className+'-ctiPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
-        painter.drawLine(AppCore.AppAttributes['ctiTop'][0],AppCore.AppAttributes['ctiTop'][1], AppCore.AppAttributes['ctiBot'][0],AppCore.AppAttributes['ctiBot'][1])
-        painter.drawLine(AppCore.AppAttributes['ctiTop'][0]+1,AppCore.AppAttributes['ctiTop'][1], AppCore.AppAttributes['ctiBot'][0]+1,AppCore.AppAttributes['ctiBot'][1])
+        
+        for TimeIndicator in self.TimeIndicators:
+            painter.drawLine(TimeIndicator.getCurrentFrame(),TimeIndicator.getTopPosition()*24, TimeIndicator.getCurrentFrame(),TimeIndicator.getBottomPosition()*24)
+            painter.drawLine(TimeIndicator.getCurrentFrame()+1,TimeIndicator.getTopPosition()*24, TimeIndicator.getCurrentFrame()+1,TimeIndicator.getBottomPosition()*24)
         
     def keyPressEvent(self, event):
         print 'timeline', event.key()
@@ -83,11 +93,11 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
             for node in AppCore.selectedNodes():
                 AppCore.PropertiesBin.dockThisWidget(node)    
         elif event.key() == 16777234: #Left 
-            AppCore.moveCurrentFrame(-1)
+            self.moveCurrentFrame(-1)
             AppCore.ViewerWidget.updateFrame()
             AppCore.ViewerWidget.repaint()
         elif event.key() == 16777236: #Right
-            AppCore.moveCurrentFrame(1)
+            self.moveCurrentFrame(1)
             AppCore.ViewerWidget.updateFrame()
             AppCore.ViewerWidget.repaint()
         elif event.key() == 67: #C
@@ -95,7 +105,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         self.repaint()
     
     def getTopNodeForCurrentFrame(self, notNode = None):
-        return self.getTopNodeAtFrame(AppCore.getCurrentFrame(), notNode = notNode)
+        return self.getTopNodeAtFrame(self.getCurrentFrame(), notNode = notNode)
         
     def getTopNodeAtFrame(self, Frame, notNode = None):
         nodeStack = self.getNodesAtPos(Frame)
@@ -136,18 +146,19 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         #maybe unnecessary
         pass
         
-    def cacheFrames(self):
-        firstFrame, lastFrame = self.getFirstLastCacheFrame()
-        print 'caching '+str(lastFrame-firstFrame)+' frames',
-        AppCore.data['frameCache'] = DataStructures.dynamicCache(zero = firstFrame)
-        for frame in range(firstFrame, lastFrame):
-            node = self.getTopNodeAtFrame(frame)
-            AppCore.data['frameCache'].append(node.getImage(frame))
-            print '.',
-        AppCore.data['frameCache'].goto(AppCore.getCurrentFrame())
-        print 'done'
+    
         
-        
-        
-        
-        
+    ###Pointer Functions###
+    def getCurrentFrame(self):
+        return self.getCurrentIndicator().getCurrentFrame()
+    def setCurrentFrame(self, value):
+        self.getCurrentIndicator().setCurrentFrame(value)
+    def moveCurrentFrame(self, value, playback = False):
+        self.getCurrentIndicator().moveCurrentFrame(value, playback = playback)
+    def getImage(self):
+        image = self.getCurrentIndicator().getFrame()
+        if image is None:
+            image = AppCore.generateBlack()
+        return image
+    def getCache(self):
+        return self.getCurrentIndicator()

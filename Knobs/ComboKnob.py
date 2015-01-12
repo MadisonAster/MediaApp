@@ -35,8 +35,7 @@ class ComboKnob(KnobConstructor.Knob, QtGui.QComboBox):
         
         if type(values) is list:
             self.addItems(values)
-        
-        
+            
     def setValue(self, value):
         if type(value) is str:
             value = self.findText(value)
@@ -44,3 +43,8 @@ class ComboKnob(KnobConstructor.Knob, QtGui.QComboBox):
     def getValue(self):
         return self.currentText()
         
+        
+    def setItems(self, Items):
+        for index in range(self.count()):
+            self.removeItem(index)
+        self.addItems(Items)
