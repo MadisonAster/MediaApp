@@ -113,7 +113,7 @@ class EnumeratedPrefs(QtGui.QWidget):
     #def sizeHint(self):
     #    return QtCore.QSize(400,1000)    
         
-        
+PrefsWindow()
         
         
         
