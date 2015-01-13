@@ -32,18 +32,17 @@ class TimeIndicator(object):
         
         self.Position = 0
         self.Top = 0
-        self.Bottom = 10
     def getCurrentFrame(self):
         return self.Position
     def setCurrentFrame(self, value):
         self.Position = value
+    def setTopPosition(self, value):
+        self.Top = value
     def moveCurrentFrame(self, value):
         self.Position += value
     
     def getTopPosition(self):
         return self.Top
-    def getBottomPosition(self):
-        return self.Bottom
 class TimeCache(object):
     def __init__(self):
         super(TimeCache, self).__init__()
@@ -64,6 +63,8 @@ class TimeCache(object):
     def setCurrentFrame(self, value):
         self.TimeIndicator.setCurrentFrame(value)
         self.RingCache.goto(value)
+    def setTopPosition(self, value):
+        self.TimeIndicator.setTopPosition(value)
     def moveCurrentFrame(self, value, playback = False):
         self.TimeIndicator.moveCurrentFrame(value)
         if playback is False:
@@ -79,9 +80,7 @@ class TimeCache(object):
         
     def getTopPosition(self):
         return self.TimeIndicator.getTopPosition()
-    def getBottomPosition(self):
-        return self.TimeIndicator.getBottomPosition()
-    
+
     def getFrame(self):
         if self.getCurrentFrame() in self.RingCache:
             return self.RingCache[0]

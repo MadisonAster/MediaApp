@@ -1,11 +1,4 @@
 ######HIGH PRIORITY######
-seperate nodeOwningObject class
-
-Move CTI into Timeline Class. Separate certain features of timeline widget out into timeline class
-so that they may be subclassed by ViewerWidget.
-
-Allow for multiple CTI's in the timeline class, then establish an output position on node for each cti
-
 Make it so that the viewer does an isinstance on it's input node, testing to see if the input is providing it's own
 timeline and cache, if not the viewer will provide it.
 
@@ -19,14 +12,10 @@ NODE SUBCLASSES Figure out how to override methods like 'nodeShape' when Node be
 specifically node['width'].setValue() and node['ypos'].setValue() are problems
 called: duck typing, duck punching, or monkey patching
 
-MediaCache class will be a subclass of deque that will enable list operations on it
-by incurring the extra cost of a copy step
 
 Make Timeline Node subclass, with generateImage override that passes up TimelineWidget.getNodeAtPos() instead of self.input()
 Maybe there's a way to replace ancestral class in createNode override for TimelineWidget
 
-
-Add Caching functions to Nodes and to Timeline
 #Node dragging being slowed down by viewer update call - SubThread?
 
 
@@ -43,7 +32,6 @@ Add Preferences window
 Get Touch Events working
 
 Make program compatible with latest version of python for performance improvements -  checkout fseek bug
-
 
 ######MED PRIORITY######
 
@@ -76,6 +64,8 @@ fileKnob Override QKeyEvent and QMenu to provide customized copy paste functiona
 Add Properties Counter/Maximum to Properties Bin Toolbar
 
 ######VERY LOW PRIORITY######
+
+standardize self.parent or self.parent() calls
 
 Finish figuring out how to add Script Widget, so that scripts can be executed.
 Start adding Script buttons to Knobs

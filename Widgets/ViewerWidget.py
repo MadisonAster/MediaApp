@@ -289,7 +289,7 @@ class Viewer(QtGui.QWidget):
             pen = AppCore.AppPrefs[self.className+'-marqOutlinePen']
             pen.setCosmetic(True)
             painter.setPen(pen)
-            painter.drawRect(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0])
+            painter.drawRect(QtCore.QRectF(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0]))
         
         #Finished
         painter.end()

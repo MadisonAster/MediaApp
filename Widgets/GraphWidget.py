@@ -238,6 +238,9 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
         self.graphTrans.translate(self.curGraphX, self.curGraphY)
         self.graphTrans.scale(self.curGraphXS+1, self.curGraphYS+1)
         painter.setTransform(self.graphTrans)
+        
+        self.visibleLeft, self.visibleTop = self.graphTrans.inverted()[0].map(0, 0)
+        self.visibleRight, self.visibleBottom = self.graphTrans.inverted()[0].map(self.widgetSize.width(), self.widgetSize.height())
 
         #DrawGrid
         self.paintGrid(painter)
@@ -261,7 +264,7 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
             pen = AppCore.AppPrefs[self.className+'-marqOutlinePen']
             pen.setCosmetic(True)
             painter.setPen(pen)
-            painter.drawRect(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0]) 
+            painter.drawRect(QtCore.QRectF(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0])) 
         
         #Finished
         painter.end()
@@ -269,22 +272,19 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
         pen = AppCore.AppPrefs[self.className+'-gridPen']
         pen.setCosmetic(True)
         painter.setPen(pen)
+        
         if self.PaintYGridLines:
-            for i in range(self.widgetSize.width()):
+            for i in range(int(self.visibleLeft), int(self.visibleRight)):
                 if i % self.XPixelsPerUnit == 0:
-                    trash, startY = self.graphTrans.inverted()[0].map(i, 0)
-                    trash, endY = self.graphTrans.inverted()[0].map(i, self.widgetSize.height())
-                    p1 = QtCore.QPoint(i, startY)
-                    p2 = QtCore.QPoint(i, endY)
+                    p1 = QtCore.QPoint(i, self.visibleTop)
+                    p2 = QtCore.QPoint(i, self.visibleBottom)
                     painter.drawLine(p1, p2)
         if self.PaintXGridLines:     
             #TODO: get visible range
-            for i in range(self.widgetSize.height()):
+            for i in range(int(self.visibleTop), int(self.visibleBottom)):
                 if i % self.YPixelsPerUnit == 0:
-                    startX, trash = self.graphTrans.inverted()[0].map(0, i)
-                    endX, trash = self.graphTrans.inverted()[0].map(self.widgetSize.width(), i)
-                    p1 = QtCore.QPoint(startX, i)
-                    p2 = QtCore.QPoint(endX, i)
+                    p1 = QtCore.QPoint(self.visibleLeft, i)
+                    p2 = QtCore.QPoint(self.visibleRight, i)
                     painter.drawLine(p1, p2)
 
     def paintExtra(self, painter):
