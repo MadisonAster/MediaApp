@@ -33,10 +33,11 @@ class NodeOwningObject(object):
         
         #TEST: see if using this duplicate dictionary is actually faster than AppCore.getChildrenOf(self)
         self.Nodes = {}
+        self.preferredNodeClass = 'GraphNode'
     def __getitem__(self, key):
         return self.Nodes[key]
     def createNode(self, nodeType):
-        node = AppCore.createNode(nodeType, parent = self)
+        node = AppCore.createNode(nodeType, parent = self, baseClass = self.preferredNodeClass)
         self.Nodes[node.name()] = node
         self.nodeCreated()
         if hasattr(self, 'repaint'):
@@ -58,3 +59,7 @@ class NodeOwningObject(object):
         return
     def SoftDelete(self):
         print 'Please implement this soon'
+    def getAssignedXPos(self):
+        return AppCore.AppAttributes[self.className+'-GraphX']
+    def getAssignedYPos(self):
+        return AppCore.AppAttributes[self.className+'-GraphY']

@@ -66,10 +66,10 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
         self.lowerYZoomLimit = AppCore.AppSettings[self.className+'-lowerYZoomLimit']
         self.zoomSensitivity = 100.0/AppCore.AppSettings[self.className+'-zoomSensitivity']
 
-        self.curGraphX = AppCore.AppAttributes[self.className+'-startGraphX']
-        self.curGraphY = AppCore.AppAttributes[self.className+'-startGraphY']
-        self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']
-        self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']
+        self.curGraphX = AppCore.AppAttributes[self.className+'-GraphX']
+        self.curGraphY = AppCore.AppAttributes[self.className+'-GraphY']
+        self.curGraphXS = AppCore.AppAttributes[self.className+'-GraphXS']
+        self.curGraphYS = AppCore.AppAttributes[self.className+'-GraphYS']
         
         #Go
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
@@ -141,10 +141,10 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
         else:
             self.modes.setCurrentMode('None')
     def grabValues(self):
-        AppCore.AppAttributes[self.className+'-startGraphX'] = self.curGraphX
-        AppCore.AppAttributes[self.className+'-startGraphY'] = self.curGraphY
-        AppCore.AppAttributes[self.className+'-startGraphXS'] = self.curGraphXS
-        AppCore.AppAttributes[self.className+'-startGraphYS'] = self.curGraphYS
+        AppCore.AppAttributes[self.className+'-GraphX'] = self.curGraphX
+        AppCore.AppAttributes[self.className+'-GraphY'] = self.curGraphY
+        AppCore.AppAttributes[self.className+'-GraphXS'] = self.curGraphXS
+        AppCore.AppAttributes[self.className+'-GraphYS'] = self.curGraphYS
         self.endModeX = self.startModeX
         self.endModeY = self.startModeY
         
@@ -168,8 +168,8 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
             self.dragEvent()
         self.update() #Redraw      
     def panEvent(self):
-        self.curGraphX = AppCore.AppAttributes[self.className+'-startGraphX']+(self.curMouseX-self.startMouseX)
-        self.curGraphY = AppCore.AppAttributes[self.className+'-startGraphY']+(self.curMouseY-self.startMouseY)
+        self.curGraphX = AppCore.AppAttributes[self.className+'-GraphX']+(self.curMouseX-self.startMouseX)
+        self.curGraphY = AppCore.AppAttributes[self.className+'-GraphY']+(self.curMouseY-self.startMouseY)
     def zoomEvent(self):
         posDeltaX = (self.curMouseX-self.startMouseX)
         posDeltaY = (self.curMouseY-self.startMouseY)
@@ -177,28 +177,28 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
         scaleDeltaY = posDeltaY/self.zoomSensitivity*-1
         
         if self.ZoomXYJoined == True:
-            self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']+(scaleDeltaX+scaleDeltaY)/2
-            self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']+(scaleDeltaX+scaleDeltaY)/2
+            self.curGraphXS = AppCore.AppAttributes[self.className+'-GraphXS']+(scaleDeltaX+scaleDeltaY)/2
+            self.curGraphYS = AppCore.AppAttributes[self.className+'-GraphYS']+(scaleDeltaX+scaleDeltaY)/2
         else:
-            self.curGraphXS = AppCore.AppAttributes[self.className+'-startGraphXS']+scaleDeltaX
-            self.curGraphYS = AppCore.AppAttributes[self.className+'-startGraphYS']+scaleDeltaY
+            self.curGraphXS = AppCore.AppAttributes[self.className+'-GraphXS']+scaleDeltaX
+            self.curGraphYS = AppCore.AppAttributes[self.className+'-GraphYS']+scaleDeltaY
         
-        difScaleX = self.curGraphXS-AppCore.AppAttributes[self.className+'-startGraphXS']
-        difScaleY = self.curGraphYS-AppCore.AppAttributes[self.className+'-startGraphYS']
+        difScaleX = self.curGraphXS-AppCore.AppAttributes[self.className+'-GraphXS']
+        difScaleY = self.curGraphYS-AppCore.AppAttributes[self.className+'-GraphYS']
         
         if self.curGraphXS > self.upperXZoomLimit:
             self.curGraphXS = self.upperXZoomLimit
         elif self.curGraphXS < self.lowerXZoomLimit:
             self.curGraphXS = self.lowerXZoomLimit
         else:
-            self.curGraphX = AppCore.AppAttributes[self.className+'-startGraphX']-(self.startModeX*difScaleX)
+            self.curGraphX = AppCore.AppAttributes[self.className+'-GraphX']-(self.startModeX*difScaleX)
             
         if self.curGraphYS > self.upperYZoomLimit:
             self.curGraphYS = self.upperYZoomLimit  
         elif self.curGraphYS < self.lowerYZoomLimit:
             self.curGraphYS = self.lowerYZoomLimit
         else:
-            self.curGraphY = AppCore.AppAttributes[self.className+'-startGraphY']-(self.startModeY*difScaleY)   
+            self.curGraphY = AppCore.AppAttributes[self.className+'-GraphY']-(self.startModeY*difScaleY)   
     def marqEvent(self):
         self.endModeX = self.curModeX
         self.endModeY = self.curModeY

@@ -28,8 +28,8 @@ from NodeConstructor import *
 from MediaAppKnobs import *
 
 class ViewerNode(ImageNode, WidgetLinkedNode):
-    def __init__(self):
-        super(ViewerNode, self).__init__()
+    def __init__(self, parent, baseClass = None):
+        super(ViewerNode, self).__init__(parent, baseClass = baseClass)
         self['ClassName'] = 'ViewerNode'
         self.setName(AppCore.getIncrementedName('ViewerNode'))
         ################################

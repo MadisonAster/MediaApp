@@ -46,8 +46,6 @@ class PropertiesWidget(QtGui.QWidget):
         self.panelLayout.addWidget(widget)
     def sizeHint(self):
         return QtCore.QSize(100,400)
-    
-
 class PropertiesDockWidget(QtGui.QDockWidget):
     def __init__(self):
         super(PropertiesDockWidget, self).__init__()
@@ -73,14 +71,16 @@ class PropertiesDockWidget(QtGui.QDockWidget):
         AppCore.setActiveNode(self)
         
 class NodeConstructor(object):
-    def __init__(self):
+    def __init__(self, parent):
         super(NodeConstructor, self).__init__()
         ################################
+        self.parent = parent
         
         self.knobs = []
-        
-        self['xpos'] = IntKnob(AppCore.AppAttributes['GraphXPos'])
-        self['ypos'] = IntKnob(AppCore.AppAttributes['GraphYPos'])
+
+        self['xpos'] = IntKnob(self.parent.getAssignedXPos())
+        self['ypos'] = IntKnob(self.parent.getAssignedYPos())
+
         self['selected'] = BoolKnob(False)
         
         self['ClassName'] = StrKnob('Node')
@@ -98,25 +98,6 @@ class NodeConstructor(object):
         
         self.inputPaths = [None]
         self.setCurrentInputIndex(0)
-        
-
-    def setInput(self, index, object):
-        self.inputPaths[index] = object
-        self.inputsChanged()
-    def setCurrentInputIndex(self, index):
-        self.currentInput = index
-    def getInput(self, *args):
-        if len(args) < 1:
-            return self.inputPaths[self.getCurrentInputIndex()]
-        else:
-            return self.inputPaths[args[0]]
-    def getInputs(self):
-        return self.inputPaths
-    def getCurrentInputIndex(self):
-        return self.currentInput
-    def inputsChanged(self):
-        #overridable slot
-        pass
         
     def __len__(self):
         return len(self.knobs)
@@ -313,15 +294,56 @@ class NodeConstructor(object):
                 self.widget().panelLayout.addLayout(knob.knobLayout)
     def setParent(self, value):
         self.parent = value
+       
+class GraphNode(NodeConstructor, PropertiesDockWidget):
+    def __init__(self, parent):
+        super(GraphNode, self).__init__(parent)
+    def setInput(self, index, object):
+        self.inputPaths[index] = object
+        self.inputsChanged()
+    def setCurrentInputIndex(self, index):
+        self.currentInput = index
+    def getInput(self, *args):
+        if len(args) < 1:
+            return self.inputPaths[self.getCurrentInputIndex()]
+        else:
+            return self.inputPaths[args[0]]
+    def getInputs(self):
+        return self.inputPaths
+    def getCurrentInputIndex(self):
+        return self.currentInput
+    def inputsChanged(self):
+        #overridable slot
+        pass  
+class TimelineNode(NodeConstructor, PropertiesDockWidget):
+    def __init__(self, parent):
+        super(TimelineNode, self).__init__(parent)
+    
+    def setInput(self, index, object):
+        return
+    def setCurrentInputIndex(self, index):
+        return
+    def getInput(self, *args):
+        if len(args) < 1:
+            return self.parent.getTopNodeAtFrame(self.getCurrentInputIndex(), notNode = self)
+        else:
+            return self.parent.getTopNodeAtFrame(args[0], notNode = self)
+    def getInputs(self):
+        returnList = []
+        for frame in range(self['length'].getValue()):
+            frame += self['firstFrame'].getValue()
+            returnList.appened(self.parent.getTopNodeAtFrame(frame, notNode = self))
+        return returnList
+    def getCurrentInputIndex(self):
+        return self.parent.getCurrentFrame()
 
-        
-class Node(NodeConstructor, PropertiesDockWidget):
-    def __init__(self):
-        super(Node, self).__init__()
-        
-class WidgetLinkedNode(Node):
-    def __init__(self):
-        super(WidgetLinkedNode, self).__init__()
+class WidgetLinkedNode(GraphNode):
+    def __init__(self, parent, baseClass = None):
+        if type(baseClass) is str:
+                baseClass = eval(baseClass)
+        if baseClass is not None:
+            self.__bases__ = (baseClass)
+        super(WidgetLinkedNode, self).__init__(parent)
         self.LinkedWidget = None
     def setLinkedWidget(self, widget):
         self.LinkedWidget = widget
@@ -329,10 +351,13 @@ class WidgetLinkedNode(Node):
             self.LinkedWidget.setLinkedNode(self)
     def getLinkedWidget(self):
         return self.LinkedWidget
-
-class ImageNode(Node):
-    def __init__(self):
-        super(ImageNode, self).__init__()
+class ImageNode(GraphNode):
+    def __init__(self, parent, baseClass = None):
+        if type(baseClass) is str:
+                baseClass = eval(baseClass)
+        if baseClass is not None:
+            self.__bases__ = (baseClass)
+        super(ImageNode, self).__init__(parent)
         self.frameCache = None
         self.frameCacheFrame = None
         
@@ -345,15 +370,27 @@ class ImageNode(Node):
             return AppCore.generateBlack()
         else:
             return self.getInput().getImage(*args)
-            
-class AudioNode(Node):
-    def __init__(self):
-        super(AudioNode, self).__init__()
+class AudioNode(GraphNode):
+    def __init__(self, parent, baseClass = None):
+        if type(baseClass) is str:
+                baseClass = eval(baseClass)
+        if baseClass is not None:
+            self.__bases__ = (baseClass)
+        super(AudioNode, self).__init__(parent)
+class GeometryNode(GraphNode):
+    def __init__(self, parent, baseClass = None):
+        if type(baseClass) is str:
+                baseClass = eval(baseClass)
+        if baseClass is not None:
+            self.__bases__ = (baseClass)
+        super(GeometryNode, self).__init__(parent)
+class ArrayDataNode(GraphNode):
+    def __init__(self, parent, baseClass = None):
+        if type(baseClass) is str:
+                baseClass = eval(baseClass)
+        if baseClass is not None:
+            self.__bases__ = (baseClass)
+        super(ArrayDataNode, self).__init__(parent)
+        
 
-class GeometryNode(Node):
-    def __init__(self):
-        super(GeometryNode, self).__init__()
-class ArrayDataNode(Node):
-    def __init__(self):
-        super(ArrayDataNode, self).__init__()
         

@@ -33,8 +33,8 @@ from NodeConstructor import *
 from MediaAppKnobs import *
 
 class Clip(ImageNode, AudioNode):
-    def __init__(self):
-        super(Clip, self).__init__()
+    def __init__(self, parent, baseClass = None):
+        super(Clip, self).__init__(parent, baseClass = baseClass)
         self['ClassName'] = 'Clip'
         self.setName(AppCore.getIncrementedName('Clip'))
         ################################
@@ -54,7 +54,6 @@ class Clip(ImageNode, AudioNode):
         
         self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
         self.leftToolBar.setMovable(False)
-        
         
         #self.ViewerToolbars = [[QtCore.Qt.LeftToolBarArea, self.leftToolBar]]
         
@@ -106,3 +105,11 @@ class Clip(ImageNode, AudioNode):
             height = AppCore.AppAttributes['ResolutionHeight']
             image = DataStructures.QImage(width, height, QtGui.QImage.Format_ARGB32)
             return image
+    
+    
+    ###Pointer Functions###
+    def getCurrentFrame(self):
+        return self.parent.getCurrentFrame()
+        
+        
+        

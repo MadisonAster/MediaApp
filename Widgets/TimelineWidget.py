@@ -41,6 +41,8 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
         self.TimeIndicators = [DataStructures.TimeCache()]
         self.ctiIndex = 0
         self.ZTI = 0
+        
+        self.preferredNodeClass = 'TimelineNode'
     def getZeroFrame(self):
         return self.ZTI
     def setZeroFrame(self, value):
@@ -56,7 +58,10 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
         print 'generating '+str(lastFrame-firstFrame)+' frames as QImages',
         for frame in range(firstFrame, lastFrame):
             node = self.getTopNodeAtFrame(frame)
-            yield node.getImage(frame)
+            if node is None:
+                yield AppCore.generateBlack()
+            else:
+                yield node.getImage(frame)
         
     def dragEventExtra(self):
         for node in self.dragStartPositions:

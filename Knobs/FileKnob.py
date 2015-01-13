@@ -98,7 +98,7 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         if len(args) is 1:
             currentFrame = args[0]
         else:
-            currentFrame = AppCore.getCurrentFrame()
+            currentFrame = self.parent.getCurrentFrame()
         startAt = self.parent['startAt'].getValue()
         offset = currentFrame-startAt
         

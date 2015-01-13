@@ -132,18 +132,20 @@ class Core(dict):
         for object in self.getSensitiveObjects():
             object.setActiveNode(self.activeNode)
 
-    def createNode(self, nodeType, parent = None):
+    def createNode(self, nodeType, parent = None, baseClass = None):
         import MediaAppNodes
-        evalString = 'MediaAppNodes.'+nodeType+'()'
+        evalString = 'MediaAppNodes.'+nodeType
         
         #Check to see if developer has exposed their own Nodes package
         if 'Nodes' in sys.modules:
             import Nodes
             if hasattr(Nodes, nodeType):
-                evalString = 'Nodes.'+nodeType+'()'
+                evalString = 'Nodes.'+nodeType
             
-        node = eval(evalString)
-        node.setParent(parent)
+        nodeClass = eval(evalString)
+        if parent is None:
+            parent = self
+        node = nodeClass(parent, baseClass = baseClass)
         self.Nodes[node.name()] = node
         return node
     def removeNode(self, node):
