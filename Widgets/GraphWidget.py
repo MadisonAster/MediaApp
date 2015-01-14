@@ -22,6 +22,7 @@
 #    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
+from time import time
 
 from PySide import QtGui, QtCore
 import AppCore
@@ -74,6 +75,8 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
         #Go
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         self.initUI()
+        
+        self.clickWait = 0
     def initUI(self):
         self.setMinimumSize(0, 0)
         self.setGeometry(0, 0, 0, 0)
@@ -111,6 +114,10 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
         
         button = str(event.button())
         
+        self.modes.setCurrentMode('None')
+        self.clickTime = time()
+        self.clickWait = 0.1
+        
         self.changeButton(button, False)
         self.setMode()
         self.grabValues()
@@ -123,6 +130,12 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
         elif button.rsplit('.', 1)[1] == 'RightButton':
             self.rightClick = Value
     def setMode(self):
+        if self.clickWait > 0:
+            if time() > self.clickTime+self.clickWait:
+                self.clickWait = 0
+            else:
+                return
+                
         if self.middleClick == True and self.leftClick == True:
             self.modes.setCurrentMode('zoomMode')
         elif self.middleClick == True and self.leftClick == False:

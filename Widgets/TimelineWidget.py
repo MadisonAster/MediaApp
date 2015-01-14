@@ -24,6 +24,7 @@
 #===============================================================================
 
 from collections import deque
+from time import time
 
 from PySide import QtGui, QtCore
 
@@ -64,6 +65,12 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
             else:
                 yield node.getImage(frame)
     def setMode(self):
+        if self.clickWait > 0:
+            if time() > self.clickTime+self.clickWait:
+                self.clickWait = 0
+            else:
+                return
+                
         if self.middleClick == True and self.leftClick == True:
             self.modes.setCurrentMode('zoomMode')
         elif self.middleClick == True and self.leftClick == False:
