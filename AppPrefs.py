@@ -67,4 +67,9 @@
 'TimelineWidget-nodeSelectColor' : QtGui.QBrush(QtGui.QColor(252.45,186.15,99.45)),
 'TimelineWidget-nodeSelectPen' : QtGui.QPen(QtGui.QColor(0,0,0), .5),
 'TimelineWidget-gridPen' : QtGui.QPen(QtGui.QColor(204,204,204,255), 1),
+
+
+'AbstractGraphWidget-inputInterval' : 0.1,
+'AbstractGraphWidget-Shortcuts-Zoom' : ['middleClick', 'leftClick'],
+'AbstractGraphWidget-Shortcuts-Pan' : ['middleClick'],
 }

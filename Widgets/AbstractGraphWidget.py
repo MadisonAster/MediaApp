@@ -22,15 +22,11 @@
 #    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
-from time import time, sleep
+from time import time
 
-from PySide import QtGui, QtCore
+from PySide import QtGui
 
 import AppCore
-import MediaAppIcons
-import MediaAppKnobs
-import DataStructures
-from NodeLinkedWidget import *
 
 class modeList(list):
     def __init__(self, *args):
@@ -65,6 +61,7 @@ class AbstractGraphWidget(QtGui.QWidget):
         #Initialize Values
         self.modes = modeList(['None','zoomMode','panMode'])
         self.pressedButtons = []
+        self.inputInterval = 0
         
         self.getDictSettings()
     def getDictSettings(self):
@@ -95,7 +92,7 @@ class AbstractGraphWidget(QtGui.QWidget):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()
         self.startModeX, self.startModeY = self.graphTrans.inverted()[0].map(self.startMouseX, self.startMouseY)
-            
+        
         button = str(event.button().rsplit('.', 1)[-1])
         self.setButton(button)
         self.subclassPressEvents(event)
@@ -114,13 +111,21 @@ class AbstractGraphWidget(QtGui.QWidget):
     ###Button Handling###
     def setButton(self, button):
         self.pressedButtons.append(button)
+        self.initialValues()
     def clearButton(self, button):
         if button in self.pressedButtons:
             self.pressedButtons.remove(button)
-        self.setMode()
-        self.grabValues()
-        self.update()
+            
+        self.modes.setCurrentMode('None')
+        self.releaseTime = time()
+        self.inputInterval = AppCore.AppPrefs['AbstractGraphWidget-inputInterval']
     def setMode(self):
+        if self.inputInterval > 0:
+            if time() > self.releaseTime+self.inputInterval:
+                self.inputInterval = 0
+            else:
+                return
+    
         if self.pressedButtons == AppCore.AppPrefs['AbstractGraphWidget-Shortcuts-Zoom']:
             self.modes.setCurrentMode('zoomMode')
         elif self.pressedButtons == AppCore.AppPrefs['AbstractGraphWidget-Shortcuts-Pan']:
@@ -232,7 +237,5 @@ class AbstractGraphWidget(QtGui.QWidget):
         #Override me!
         painter.end()
     #################
-    
+
     pass
-    
-            
