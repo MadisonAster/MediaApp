@@ -34,15 +34,17 @@ class TimeIndicator(object):
         self.Top = 0
     def getCurrentFrame(self):
         return self.Position
+    def getTopPosition(self):
+        return self.Top
     def setCurrentFrame(self, value):
         self.Position = value
     def setTopPosition(self, value):
         self.Top = value
+        
     def moveCurrentFrame(self, value):
         self.Position += value
     
-    def getTopPosition(self):
-        return self.Top
+    
 class TimeCache(object):
     def __init__(self):
         super(TimeCache, self).__init__()
