@@ -215,8 +215,10 @@ class GraphWidget( NodeOwningObject, QtGui.QWidget):
                 node.toKnob('selected').setValue(False)
     def dragEvent(self):
         for node in self.dragStartPositions:
-            xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
-            ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)*self.YPixelsPerUnit
+            #xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
+            #ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)*self.YPixelsPerUnit
+            xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)
+            ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)
             node[0]['xpos'].setValue(xpos)
             node[0]['ypos'].setValue(ypos)
             node[0].getPos()

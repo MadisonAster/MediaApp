@@ -58,7 +58,7 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
     def generateFrames(self, firstFrame, lastFrame):
         print 'generating '+str(lastFrame-firstFrame)+' frames as QImages',
         for frame in range(firstFrame, lastFrame):
-            node = self.getTopNodeAtFrame(frame)
+            node = self.getTopNodeAtFrame(frame, top = self.getCurrentIndicator().getTopPosition())
             if node is None:
                 yield AppCore.generateBlack()
             else:
@@ -70,7 +70,7 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
             self.modes.setCurrentMode('panMode')
         elif self.middleClick == False and self.leftClick == True:
             for TimeIndicator in self.TimeIndicators:
-                if QtCore.QRect(TimeIndicator.getCurrentFrame()-10,TimeIndicator.getTopPosition()*24,20,24).contains(self.startModeX,self.startModeY):
+                if QtCore.QRect(TimeIndicator.getCurrentFrame()-10,TimeIndicator.getTopPosition()*self.YPixelsPerUnit,20,1*self.YPixelsPerUnit).contains(self.startModeX,self.startModeY):
                     self.modes.setCurrentMode('dragCtiMode')
                     
                     self.CTIList = [TimeIndicator]
@@ -135,9 +135,9 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
         penColor.setAlpha(128)
         painter.setBrush(QtGui.QBrush(penColor))
         for TimeIndicator in self.TimeIndicators:
-            painter.drawLine(TimeIndicator.getCurrentFrame(),TimeIndicator.getTopPosition()*24, TimeIndicator.getCurrentFrame(),self.visibleBottom)
-            painter.drawLine(TimeIndicator.getCurrentFrame()+1,TimeIndicator.getTopPosition()*24, TimeIndicator.getCurrentFrame()+1,self.visibleBottom)
-            painter.drawRect(TimeIndicator.getCurrentFrame()-10,TimeIndicator.getTopPosition()*24,20,24)
+            painter.drawLine(TimeIndicator.getCurrentFrame(),TimeIndicator.getTopPosition()*self.YPixelsPerUnit, TimeIndicator.getCurrentFrame(),self.visibleBottom)
+            painter.drawLine(TimeIndicator.getCurrentFrame()+1,TimeIndicator.getTopPosition()*self.YPixelsPerUnit, TimeIndicator.getCurrentFrame()+1,self.visibleBottom)
+            painter.drawRect(TimeIndicator.getCurrentFrame()-10,TimeIndicator.getTopPosition()*self.YPixelsPerUnit,20,1*self.YPixelsPerUnit)
             
             penColor.setHsv(penColor.hue()+66, 255, 255)
             penColor.setAlpha(255)
@@ -182,18 +182,23 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
     def getTopNodeForCurrentFrame(self, notNode = None):
         return self.getTopNodeAtFrame(self.getCurrentFrame(), notNode = notNode)
         
-    def getTopNodeAtFrame(self, Frame, notNode = None):
+    def getTopNodeAtFrame(self, Frame, notNode = None, top = None):
         nodeStack = self.getNodesAtPos(Frame)
         
         returnNode = None
         for node in nodeStack:
+            if top is None:
+                topVal = node['ypos'].getValue()
+            else:
+                topVal = top
             if node != notNode:
-                if returnNode is None:
-                    returnNode = node
-                elif node['ypos'].getValue() > returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is True:
-                    returnNode = node
-                elif node['ypos'].getValue() < returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is False:
-                    returnNode = node
+                if node['ypos'].getValue() >= topVal:
+                    if returnNode is None:
+                        returnNode = node
+                    elif node['ypos'].getValue() > returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is True:
+                        returnNode = node
+                    elif node['ypos'].getValue() < returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is False:
+                        returnNode = node
         return returnNode
         
     def getNodesAtPos(self, XPos):

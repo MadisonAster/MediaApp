@@ -173,8 +173,8 @@ class NodeConstructor(object):
         
         self.getPos()   
     def getPos(self):
-        self.lastX = self['xpos'].getValue()
-        self.lastY = self['ypos'].getValue()
+        self.lastX = self['xpos'].getValue()*self.parent.XPixelsPerUnit
+        self.lastY = self['ypos'].getValue()*self.parent.YPixelsPerUnit
         
         self.mappedPolyShape = self.scaledPolyShape.translated(self.lastX,self.lastY)
         self.mappedSelectShape = self.shapeTransform.map(self.selectShape).translated(self.lastX,self.lastY)

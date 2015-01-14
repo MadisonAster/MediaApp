@@ -65,13 +65,13 @@ class Clip(ImageNode, AudioNode):
         self['width'].setValue(value)
         
         #FLAW: see NODESUBCLASSES item in TODO
-        self.polyShape = [[0,0],[value,0],[value,24],[0,24]]
+        self.polyShape = [[0,0],[value,0],[value,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
         self.mapNodeShape()
     def setYPos(self, value):
-        self['ypos'].setValue(value*AppCore.AppSettings['TimelineWidget-YPixelsPerUnit'])
+        self['ypos'].setValue(value)
     
     def nodeShape(self):
-        self.polyShape = [[0,0],[100,0],[100,24],[0,24]]
+        self.polyShape = [[0,0],[100,0],[100,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
         self.color1 = QtGui.QColor(238,238,238)
         self.color2 = QtGui.QColor(122,122,122)
         
