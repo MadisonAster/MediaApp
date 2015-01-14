@@ -34,26 +34,7 @@ import DataStructures
 from NodeLinkedWidget import *
 from AbstractGraphArea import AbstractGraphArea
 
-class modeList(list):
-    def __init__(self, *args):
-        super(modeList, self).__init__(*args)
-        self.currentMode = 0
-        
-        self.frameCache = None
-        self.frameCacheFrame = None
-    def getCurrentMode(self):
-        return self[self.currentMode]
-    def getCurrentModeIndex(self):
-        return self.currentMode
-    def setCurrentMode(self, arg):
-        if type(arg) is int:
-            self.currentMode = i
-        elif type(arg) is str:
-            for i, mode in enumerate(self):
-                if mode == arg:
-                    self.currentMode = i
-        
-        
+ 
 class Viewer(AbstractGraphArea):
     ###Initialize Class###
     def __init__(self):

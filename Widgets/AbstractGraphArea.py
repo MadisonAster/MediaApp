@@ -135,8 +135,8 @@ class AbstractGraphArea(QtGui.QWidget):
     ###Button Handling###
     def setButton(self, button):
         self.pressedButtons.append(button)
-        self.initialValues()
         self.setMode()
+        self.initialValues()
     def clearButton(self, button):
         if button in self.pressedButtons:
             self.pressedButtons.remove(button)

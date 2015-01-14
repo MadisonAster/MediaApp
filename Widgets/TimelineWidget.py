@@ -36,46 +36,37 @@ from GraphWidget import *
 class TimelineWidget(NodeLinkedWidget, GraphWidget):
     def __init__(self):
         super(TimelineWidget, self).__init__()
-        ################################
+        
         self.setLinkedNode(AppCore.NodeGraph.createNode('TimelineNode'))
         
-        self.modes = modeList(['None','zoomMode','panMode','marqMode', 'dragMode', 'dragCtiMode'])
+        self.modes.append('dragCtiMode')
         self.TimeIndicators = [DataStructures.TimeCache()]
         self.ctiIndex = 0
         self.ZTI = 0
         
         self.preferredNodeClass = 'TimelineNode'
-    def getZeroFrame(self):
-        return self.ZTI
-    def setZeroFrame(self, value):
-        self.ZTI = value
-    def getCurrentIndicator(self):
-        return self.TimeIndicators[self.ctiIndex]
+
+    ###Input Events###
+    def subclassPressEvents(self, event):
+        if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-OpenNode']:
+            for node in AppCore.selectedNodes():
+                AppCore.PropertiesBin.dockThisWidget(node)    
+        elif self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-frameBackward']:
+            self.moveCurrentFrame(-1)
+            AppCore.ViewerWidget.updateFrame()
+            AppCore.ViewerWidget.repaint()
+        elif self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-frameForward']:
+            self.moveCurrentFrame(1)
+            AppCore.ViewerWidget.updateFrame()
+            AppCore.ViewerWidget.repaint()
+        elif self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-cacheFrames']:
+            self.cacheFrames()
+        self.repaint()
+    ##################
     
-    def cacheFrames(self):
-        firstFrame, lastFrame = self.getFirstLastCacheFrame()
-        self.getCurrentIndicator().cacheFrames(self.generateFrames(firstFrame, lastFrame), firstFrame = firstFrame)
-    
-    def generateFrames(self, firstFrame, lastFrame):
-        print 'generating '+str(lastFrame-firstFrame)+' frames as QImages',
-        for frame in range(firstFrame, lastFrame):
-            node = self.getTopNodeAtFrame(frame, top = self.getCurrentIndicator().getTopPosition())
-            if node is None:
-                yield AppCore.generateBlack()
-            else:
-                yield node.getImage(frame)
-    def setMode(self):
-        if self.clickWait > 0:
-            if time() > self.clickTime+self.clickWait:
-                self.clickWait = 0
-            else:
-                return
-                
-        if self.middleClick == True and self.leftClick == True:
-            self.modes.setCurrentMode('zoomMode')
-        elif self.middleClick == True and self.leftClick == False:
-            self.modes.setCurrentMode('panMode')
-        elif self.middleClick == False and self.leftClick == True:
+    ###Button Handling###
+    def subclassModes(self):
+        if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-SelectNodes']:
             for TimeIndicator in self.TimeIndicators:
                 if QtCore.QRect(TimeIndicator.getCurrentFrame()-10,TimeIndicator.getTopPosition()*self.YPixelsPerUnit,20,1*self.YPixelsPerUnit).contains(self.startModeX,self.startModeY):
                     self.modes.setCurrentMode('dragCtiMode')
@@ -103,8 +94,17 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
                         break
                 else:
                     self.modes.setCurrentMode('marqMode')
-        else:
-            self.modes.setCurrentMode('None')   
+    #####################
+    
+    ###ModeEvents###
+    def subclassModeEvents(self, event):
+        if self.modes.getCurrentMode() == 'marqMode':
+            self.marqEvent()
+        elif self.modes.getCurrentMode() == 'dragMode':
+            self.dragEvent()
+        elif self.modes.getCurrentMode() == 'dragCtiMode':
+            self.dragCtiEvent()
+    
     def dragCtiEvent(self):
         for i in range(len(self.CTIList)):
             self.CTIList[i]
@@ -112,7 +112,6 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
             ypos = int(round((self.CTIypos[i]+self.curModeY-self.startModeY)/self.YPixelsPerUnit))
             self.CTIList[i].setCurrentFrame(xpos)
             self.CTIList[i].setTopPosition(ypos)
-
     def dragEventExtra(self):
         for node in self.dragStartPositions:
             xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
@@ -124,7 +123,9 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
             #xpos*length
         #FLAW: need to implement AppCore.registeredWidgets
         AppCore.ViewerWidget.repaint()
-            
+    #################
+    
+    ###PaintEvents###
     def paintExtra(self, painter):
         #Draw cti and zti here!
 
@@ -152,43 +153,40 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
             painter.setPen(pen)
             penColor.setAlpha(128)
             painter.setBrush(QtGui.QBrush(penColor))
-            
-    def keyPressEvent(self, event):
-        print 'timeline', event.key()
-        if event.key() == 16777220: #Enter
-            for node in AppCore.selectedNodes():
-                AppCore.PropertiesBin.dockThisWidget(node)    
-        elif event.key() == 16777234: #Left 
-            self.moveCurrentFrame(-1)
-            AppCore.ViewerWidget.updateFrame()
-            AppCore.ViewerWidget.repaint()
-        elif event.key() == 16777236: #Right
-            self.moveCurrentFrame(1)
-            AppCore.ViewerWidget.updateFrame()
-            AppCore.ViewerWidget.repaint()
-        elif event.key() == 67: #C
-            self.cacheFrames()
-        self.repaint()
+    #################
     
-    def mouseMoveEvent(self, event):
-        self.curMouseX = event.pos().x()
-        self.curMouseY = event.pos().y()
-        self.curModeX, self.curModeY = self.graphTrans.inverted()[0].map(self.curMouseX, self.curMouseY)
-        
-        if self.modes.getCurrentMode() == 'zoomMode':
-            self.zoomEvent()
-        elif self.modes.getCurrentMode() == 'panMode':
-            self.panEvent()
-        elif self.modes.getCurrentMode() == 'marqMode':
-            self.marqEvent()
-        elif self.modes.getCurrentMode() == 'dragMode':
-            self.dragEvent()
-        elif self.modes.getCurrentMode() == 'dragCtiMode':
-            self.dragCtiEvent()
-        self.update() #Redraw 
+    ###Other Functions###
+    def getZeroFrame(self):
+        return self.ZTI
+    def setZeroFrame(self, value):
+        self.ZTI = value
+    def getCurrentIndicator(self):
+        return self.TimeIndicators[self.ctiIndex]
+    def cacheFrames(self):
+        firstFrame, lastFrame = self.getFirstLastCacheFrame()
+        self.getCurrentIndicator().cacheFrames(self.generateFrames(firstFrame, lastFrame), firstFrame = firstFrame)
+    def generateFrames(self, firstFrame, lastFrame):
+        print 'generating '+str(lastFrame-firstFrame)+' frames as QImages',
+        for frame in range(firstFrame, lastFrame):
+            node = self.getTopNodeAtFrame(frame, top = self.getCurrentIndicator().getTopPosition())
+            if node is None:
+                yield AppCore.generateBlack()
+            else:
+                yield node.getImage(frame)
+    def getFirstLastCacheFrame(self):
+        firstFrame = None
+        lastFrame = None
+        for node in self.allNodes():
+            if firstFrame is None:
+                firstFrame = node['xpos'].getValue()
+                lastFrame = node['xpos'].getValue()+node['width'].getValue()
+            if node['xpos'].getValue() < firstFrame:
+                firstFrame = node['xpos'].getValue()
+            if node['xpos'].getValue()+node['width'].getValue() > lastFrame:
+                lastFrame = node['xpos'].getValue()+node['width'].getValue()
+        return firstFrame, lastFrame
     def getTopNodeForCurrentFrame(self, notNode = None):
         return self.getTopNodeAtFrame(self.getCurrentFrame(), notNode = notNode)
-        
     def getTopNodeAtFrame(self, Frame, notNode = None, top = None):
         nodeStack = self.getNodesAtPos(Frame)
         
@@ -207,7 +205,6 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
                     elif node['ypos'].getValue() < returnNode['ypos'].getValue() and AppCore.AppSettings[self.className+'-YInverted'] is False:
                         returnNode = node
         return returnNode
-        
     def getNodesAtPos(self, XPos):
         nodeStack = []
         #for node in AppCore.getChildrenOf(self):
@@ -215,25 +212,7 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
             if node.fallsAround(XPos, None):
                 nodeStack.append(node)
         return nodeStack
-        
-    def getFirstLastCacheFrame(self):
-        firstFrame = None
-        lastFrame = None
-        for node in self.allNodes():
-            if firstFrame is None:
-                firstFrame = node['xpos'].getValue()
-                lastFrame = node['xpos'].getValue()+node['width'].getValue()
-            if node['xpos'].getValue() < firstFrame:
-                firstFrame = node['xpos'].getValue()
-            if node['xpos'].getValue()+node['width'].getValue() > lastFrame:
-                lastFrame = node['xpos'].getValue()+node['width'].getValue()
-        return firstFrame, lastFrame
-        
-    def nodeCreate(self):
-        #maybe unnecessary
-        pass
-        
-    
+    #####################
         
     ###Pointer Functions###
     def getCurrentFrame(self):
@@ -249,3 +228,6 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
         return image
     def getCache(self):
         return self.getCurrentIndicator()
+    #####################
+        
+    pass

@@ -53,6 +53,8 @@
 'NodeGraph-nodeSelectPen' : QtGui.QPen(QtGui.QColor(0,0,0), .5),
 'NodeGraph-gridPen' : QtGui.QPen(QtGui.QColor(204,204,204), 0),
 'NodeGraph-pathPen01' : QtGui.QPen(QtGui.QColor(0,0,0), 5),
+'NodeGraph-Shortcuts-SelectNodes' : ['LeftButton'],
+'NodeGraph-Shortcuts-OpenNode' : ['Enter'],
 
 'Viewer-bgColor' : QtGui.QColor(0,0,0),
 'Viewer-ResBoxColor' : QtGui.QColor(255,255,255,25),
@@ -74,6 +76,12 @@
 'TimelineWidget-gridPen' : QtGui.QPen(QtGui.QColor(204,204,204,255), 1),
 'TimelineWidget-ztiPen' : QtGui.QPen(QtGui.QColor(255,255,255,255), 1),
 'TimelineWidget-ctiPen' : QtGui.QPen(QtGui.QColor(255,0,0,255), 1),
+'TimelineWidget-Shortcuts-SelectNodes' : ['LeftButton'],
+'TimelineWidget-Shortcuts-OpenNode' : ['Enter'],
+'TimelineWidget-Shortcuts-playForward' : ['Space'],
+'TimelineWidget-Shortcuts-cacheFrames' : ['C'],
+'TimelineWidget-Shortcuts-frameForward' : ['Right'],
+'TimelineWidget-Shortcuts-frameBackward' : ['Left'],
 
 'AbstractGraphArea-inputInterval' : 0.1,
 'AbstractGraphArea-Shortcuts-Zoom' : ['MiddleButton', 'LeftButton'],

@@ -31,10 +31,6 @@ from GraphWidget import *
 class NodeGraph(GraphWidget):
     def __init__(self):
         super(NodeGraph, self).__init__()
-        ################################
-
-    def keyPressEvent(self, event):
-        print event.key()
 
         
         
