@@ -33,7 +33,6 @@ import MediaAppKnobs
 import DataStructures
 from NodeLinkedWidget import *
 from AbstractGraphArea import AbstractGraphArea
-from DataStructures import KeyboardDict
 
 class modeList(list):
     def __init__(self, *args):
