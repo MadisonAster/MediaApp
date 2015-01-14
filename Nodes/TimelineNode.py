@@ -28,8 +28,8 @@ from NodeConstructor import *
 from MediaAppKnobs import *
 
 class TimelineNode(ImageNode, AudioNode, WidgetLinkedNode):
-    def __init__(self, parent, baseClass = None):
-        super(TimelineNode, self).__init__(parent, baseClass = baseClass)
+    def __init__(self, parent):
+        super(TimelineNode, self).__init__(parent)
         self['ClassName'] = 'TimelineNode'
         self.setName(AppCore.getIncrementedName('TimelineNode'))
         ################################

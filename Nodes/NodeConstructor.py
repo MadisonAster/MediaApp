@@ -298,6 +298,7 @@ class NodeConstructor(object):
 class GraphNode(NodeConstructor, PropertiesDockWidget):
     def __init__(self, parent):
         super(GraphNode, self).__init__(parent)
+        
     def setInput(self, index, object):
         self.inputPaths[index] = object
         self.inputsChanged()
@@ -318,7 +319,6 @@ class GraphNode(NodeConstructor, PropertiesDockWidget):
 class TimelineNode(NodeConstructor, PropertiesDockWidget):
     def __init__(self, parent):
         super(TimelineNode, self).__init__(parent)
-    
     def setInput(self, index, object):
         return
     def setCurrentInputIndex(self, index):
@@ -336,13 +336,19 @@ class TimelineNode(NodeConstructor, PropertiesDockWidget):
         return returnList
     def getCurrentInputIndex(self):
         return self.parent.getCurrentFrame()
-
-class WidgetLinkedNode(GraphNode):
-    def __init__(self, parent, baseClass = None):
-        if type(baseClass) is str:
-                baseClass = eval(baseClass)
-        if baseClass is not None:
-            self.__bases__ = (baseClass)
+    
+    def setWidth(self, *args):
+        if len(args) is 1:
+            value = args[0]
+        else:   
+            value = self['lastFrame'].getValue()-self['firstFrame'].getValue()+1
+        self['width'].setValue(value)
+        
+        self.polyShape = [[0,0],[value,0],[value,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
+        self.mapNodeShape()
+        
+class WidgetLinkedNode(object):
+    def __init__(self, parent):
         super(WidgetLinkedNode, self).__init__(parent)
         self.LinkedWidget = None
     def setLinkedWidget(self, widget):
@@ -351,13 +357,11 @@ class WidgetLinkedNode(GraphNode):
             self.LinkedWidget.setLinkedNode(self)
     def getLinkedWidget(self):
         return self.LinkedWidget
-class ImageNode(GraphNode):
-    def __init__(self, parent, baseClass = None):
-        if type(baseClass) is str:
-                baseClass = eval(baseClass)
-        if baseClass is not None:
-            self.__bases__ = (baseClass)
+class ImageNode(object):
+    def __init__(self, parent):
         super(ImageNode, self).__init__(parent)
+        print 'image init'
+        #self.extension()
         self.frameCache = None
         self.frameCacheFrame = None
         
@@ -370,26 +374,14 @@ class ImageNode(GraphNode):
             return AppCore.generateBlack()
         else:
             return self.getInput().getImage(*args)
-class AudioNode(GraphNode):
-    def __init__(self, parent, baseClass = None):
-        if type(baseClass) is str:
-                baseClass = eval(baseClass)
-        if baseClass is not None:
-            self.__bases__ = (baseClass)
+class AudioNode(object):
+    def __init__(self, parent):
         super(AudioNode, self).__init__(parent)
-class GeometryNode(GraphNode):
-    def __init__(self, parent, baseClass = None):
-        if type(baseClass) is str:
-                baseClass = eval(baseClass)
-        if baseClass is not None:
-            self.__bases__ = (baseClass)
+class GeometryNode(object):
+    def __init__(self, parent):
         super(GeometryNode, self).__init__(parent)
-class ArrayDataNode(GraphNode):
-    def __init__(self, parent, baseClass = None):
-        if type(baseClass) is str:
-                baseClass = eval(baseClass)
-        if baseClass is not None:
-            self.__bases__ = (baseClass)
+class ArrayDataNode(object):
+    def __init__(self, parent):
         super(ArrayDataNode, self).__init__(parent)
         
 

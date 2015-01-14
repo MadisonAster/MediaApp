@@ -64,7 +64,7 @@ class Viewer(QtGui.QWidget):
         self.setGeometry(0, 0, 0, 0)
         
         #Initialize Values
-        self.modes = modeList(['None','zoomMode','panMode','marqMode'])
+        self.modes = modeList(['None','zoomMode','panMode','marqMode', 'extraMode'])
         self.middleClick = False
         self.leftClick = False
         self.rightClick = False
@@ -113,8 +113,6 @@ class Viewer(QtGui.QWidget):
         
     def setNode(self, node):
         self.node = node
-    #def setLinkedWindow(self, window):
-    #    self.linkedWindow = window
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()
@@ -150,14 +148,23 @@ class Viewer(QtGui.QWidget):
         self.grabValues()
         self.update()
     def setMode(self):
+        #Mouse and Touch modes
         if self.middleClick == True and self.leftClick == True:
             self.modes.setCurrentMode('zoomMode')
         elif self.middleClick == True and self.leftClick == False:
             self.modes.setCurrentMode('panMode')
+        
+        #Modifier Modes
+        elif hasattr(AppCore.getActiveNode(), 'ViewerEventExtra'):
+            self.modes.setCurrentMode('extraMode')
         elif self.shiftKey == True and self.leftClick == True:
             self.modes.setCurrentMode('marqMode')
+        
+        #Finally
         else:
             self.modes.setCurrentMode('None')
+    def getCurrentMode(self):
+        return self.modes.getCurrentMode()
     def grabValues(self):
         AppCore.AppAttributes[self.className+'-GraphX'] = self.curGraphX
         AppCore.AppAttributes[self.className+'-GraphY'] = self.curGraphY
@@ -165,18 +172,25 @@ class Viewer(QtGui.QWidget):
         AppCore.AppAttributes[self.className+'-GraphYS'] = self.curGraphYS
         self.endModeX = self.startModeX
         self.endModeY = self.startModeY
-        
+        if hasattr(AppCore.getActiveNode(), 'grabViewerValues'):
+            AppCore.getActiveNode().grabViewerValues(self)
     def mouseMoveEvent(self, event):
         self.curMouseX = event.pos().x()
         self.curMouseY = event.pos().y()
         self.curModeX, self.curModeY = self.graphTrans.inverted()[0].map(self.curMouseX, self.curMouseY)
         
-        if self.modes.getCurrentMode() == 'zoomMode':
+        #Mouse and Touch Modes
+        if self.getCurrentMode() == 'zoomMode':
             self.zoomEvent()
-        elif self.modes.getCurrentMode() == 'panMode':
+        elif self.getCurrentMode() == 'panMode':
             self.panEvent()
-        elif self.modes.getCurrentMode() == 'marqMode':
+        
+        #Modifier Modes
+        elif self.getCurrentMode() == 'extraMode':
+            self.extraEvent()
+        elif self.getCurrentMode() == 'marqMode':
             self.marqEvent()
+           
         self.update() #Redraw      
     def panEvent(self):
         self.curGraphX = AppCore.AppAttributes[self.className+'-GraphX']+(self.curMouseX-self.startMouseX)
@@ -214,9 +228,14 @@ class Viewer(QtGui.QWidget):
         self.endModeX = self.curModeX
         self.endModeY = self.curModeY
         self.marqContains()
+    def extraEvent(self):
+        self.endModeX = self.curModeX
+        self.endModeY = self.curModeY
+        AppCore.getActiveNode().ViewerEventExtra(self)
     def marqContains(self):
-        pass
         #Sample Pixels here
+        pass
+        
     
     def playForward(self):
         frameperiod=1.0/AppCore.AppAttributes['FPS']
@@ -239,10 +258,9 @@ class Viewer(QtGui.QWidget):
     def cacheFrame(self, image):
         self.frameCache = image
     
-    def paintEvent(self, a):
+    def paintEvent(self, pEvent):
         painter = QtGui.QPainter(self)
         #ADD quickpaint here?
-        
         
         #DrawBG
         self.widgetSize = self.size()

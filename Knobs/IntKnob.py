@@ -33,7 +33,12 @@ class IntKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         
         self.name.setText(name)
         self.setValue(value)
+        
     def setValue(self, value):
         self.setText(str(value))
+        self.textChanged.emit
     def getValue(self):
         return int(float(self.text()))
+    def setChanged(self, callable):
+        self.changed = callable
+        self.textChanged.connect(self.changed)

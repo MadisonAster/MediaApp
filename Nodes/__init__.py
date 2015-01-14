@@ -27,3 +27,4 @@ import sys
 from Clip import Clip
 from ViewerNode import ViewerNode
 from TimelineNode import TimelineNode
+import NodeConstructor

@@ -33,8 +33,8 @@ from NodeConstructor import *
 from MediaAppKnobs import *
 
 class Clip(ImageNode, AudioNode):
-    def __init__(self, parent, baseClass = None):
-        super(Clip, self).__init__(parent, baseClass = baseClass)
+    def __init__(self, parent):
+        super(Clip, self).__init__(parent)
         self['ClassName'] = 'Clip'
         self.setName(AppCore.getIncrementedName('Clip'))
         ################################
@@ -56,20 +56,7 @@ class Clip(ImageNode, AudioNode):
         self.leftToolBar.setMovable(False)
         
         #self.ViewerToolbars = [[QtCore.Qt.LeftToolBarArea, self.leftToolBar]]
-        
-    def setWidth(self, *args):
-        if len(args) is 1:
-            value = args[0]
-        else:   
-            value = self['lastFrame'].getValue()-self['firstFrame'].getValue()+1
-        self['width'].setValue(value)
-        
-        #FLAW: see NODESUBCLASSES item in TODO
-        self.polyShape = [[0,0],[value,0],[value,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
-        self.mapNodeShape()
-    def setYPos(self, value):
-        self['ypos'].setValue(value)
-    
+
     def nodeShape(self):
         self.polyShape = [[0,0],[100,0],[100,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
         self.color1 = QtGui.QColor(238,238,238)
