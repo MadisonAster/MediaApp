@@ -69,7 +69,7 @@
 'TimelineWidget-gridPen' : QtGui.QPen(QtGui.QColor(204,204,204,255), 1),
 
 
-'AbstractGraphWidget-inputInterval' : 0.1,
-'AbstractGraphWidget-Shortcuts-Zoom' : ['middleClick', 'leftClick'],
-'AbstractGraphWidget-Shortcuts-Pan' : ['middleClick'],
+'AbstractGraphArea-inputInterval' : 0.1,
+'AbstractGraphArea-Shortcuts-Zoom' : ['middleClick', 'leftClick'],
+'AbstractGraphArea-Shortcuts-Pan' : ['middleClick'],
 }

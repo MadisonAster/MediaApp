@@ -47,10 +47,10 @@ class modeList(list):
                 if mode == arg:
                     self.currentMode = i
 
-class AbstractGraphWidget(QtGui.QWidget):
+class AbstractGraphArea(QtGui.QWidget):
     ###Initialize Class###
     def __init__(self):
-        super(AbstractGraphWidget, self).__init__()
+        super(AbstractGraphArea, self).__init__()
         
         #QWidget Settings
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
@@ -118,7 +118,7 @@ class AbstractGraphWidget(QtGui.QWidget):
             
         self.modes.setCurrentMode('None')
         self.releaseTime = time()
-        self.inputInterval = AppCore.AppPrefs['AbstractGraphWidget-inputInterval']
+        self.inputInterval = AppCore.AppPrefs['AbstractGraphArea-inputInterval']
     def setMode(self):
         if self.inputInterval > 0:
             if time() > self.releaseTime+self.inputInterval:
@@ -126,9 +126,9 @@ class AbstractGraphWidget(QtGui.QWidget):
             else:
                 return
     
-        if self.pressedButtons == AppCore.AppPrefs['AbstractGraphWidget-Shortcuts-Zoom']:
+        if self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Zoom']:
             self.modes.setCurrentMode('zoomMode')
-        elif self.pressedButtons == AppCore.AppPrefs['AbstractGraphWidget-Shortcuts-Pan']:
+        elif self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Pan']:
             self.modes.setCurrentMode('panMode')
         else:
             self.modes.setCurrentMode('None')
