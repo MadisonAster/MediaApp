@@ -59,6 +59,11 @@
 'Viewer-ResBoxPen' : QtGui.QPen(QtGui.QColor(204,204,204), 1),
 'Viewer-marqBoxColor' : QtGui.QColor(255,255,255,0),
 'Viewer-marqOutlinePen' : QtGui.QPen(QtGui.QColor(204,0,0), 1),
+'Viewer-Shortcuts-marq' : ['LeftButton', 'Shift'],
+'Viewer-Shortcuts-playForward' : ['Space'],
+'Viewer-Shortcuts-cacheFrames' : ['C'],
+'Viewer-Shortcuts-frameForward' : ['Right'],
+'Viewer-Shortcuts-frameBackward' : ['Left'],
 
 'TimelineWidget-bgColor' : QtGui.QColor(50,50,50),
 'TimelineWidget-nodeTrimPen' : QtGui.QPen(QtGui.QColor(0,0,0), .5),
@@ -67,9 +72,10 @@
 'TimelineWidget-nodeSelectColor' : QtGui.QBrush(QtGui.QColor(252.45,186.15,99.45)),
 'TimelineWidget-nodeSelectPen' : QtGui.QPen(QtGui.QColor(0,0,0), .5),
 'TimelineWidget-gridPen' : QtGui.QPen(QtGui.QColor(204,204,204,255), 1),
-
+'TimelineWidget-ztiPen' : QtGui.QPen(QtGui.QColor(255,255,255,255), 1),
+'TimelineWidget-ctiPen' : QtGui.QPen(QtGui.QColor(255,0,0,255), 1),
 
 'AbstractGraphArea-inputInterval' : 0.1,
-'AbstractGraphArea-Shortcuts-Zoom' : ['middleClick', 'leftClick'],
-'AbstractGraphArea-Shortcuts-Pan' : ['middleClick'],
+'AbstractGraphArea-Shortcuts-Zoom' : ['MiddleButton', 'LeftButton'],
+'AbstractGraphArea-Shortcuts-Pan' : ['MiddleButton'],
 }

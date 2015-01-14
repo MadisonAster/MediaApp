@@ -23,11 +23,28 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 from time import time
+from copy import copy
 
 from PySide import QtGui
 
 import AppCore
+from DataStructures import KeyboardDict
 
+class keyList(list):
+    def __init__(self, *args):
+        super(keyList, self).__init__(*args)
+    def __eq__(self, other):
+        if not isinstance(other, list):
+            return NotImplemented
+                
+        for item in other:
+            if item not in self:
+                return False
+        for item in self:
+            if item not in other:
+                return False
+        return True
+                
 class modeList(list):
     def __init__(self, *args):
         super(modeList, self).__init__(*args)
@@ -51,6 +68,7 @@ class AbstractGraphArea(QtGui.QWidget):
     ###Initialize Class###
     def __init__(self):
         super(AbstractGraphArea, self).__init__()
+        self.className = self.__class__.__name__
         
         #QWidget Settings
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
@@ -60,7 +78,7 @@ class AbstractGraphArea(QtGui.QWidget):
         
         #Initialize Values
         self.modes = modeList(['None','zoomMode','panMode'])
-        self.pressedButtons = []
+        self.pressedButtons = keyList()
         self.inputInterval = 0
         
         self.getDictSettings()
@@ -82,18 +100,24 @@ class AbstractGraphArea(QtGui.QWidget):
     
     ###Input Events###
     def keyPressEvent(self, event):
-        key = str(event.key())
+        if event.key() in KeyboardDict.keys():
+            key = KeyboardDict[event.key()]
+        else:
+            print 'key '+str(event.key())+' pressed.'
         self.setButton(key)
         self.subclassPressEvents(event)
     def keyReleaseEvent(self, event):    
-        key = str(event.key())
+        if event.key() in KeyboardDict.keys():
+            key = KeyboardDict[event.key()]
+        else:
+            print 'key '+str(event.key())+' released.'
         self.clearButton(key)
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
         self.startMouseY = event.pos().y()
         self.startModeX, self.startModeY = self.graphTrans.inverted()[0].map(self.startMouseX, self.startMouseY)
         
-        button = str(event.button().rsplit('.', 1)[-1])
+        button = str(event.button()).rsplit('.', 1)[-1]
         self.setButton(button)
         self.subclassPressEvents(event)
     def mouseReleaseEvent(self, event):
@@ -101,7 +125,7 @@ class AbstractGraphArea(QtGui.QWidget):
         self.endMouseY = event.pos().y()
         self.endModeX, self.endModeY = self.graphTrans.inverted()[0].map(self.endMouseX, self.endMouseY)
         
-        button = str(event.button())
+        button = str(event.button()).rsplit('.', 1)[-1]
         self.clearButton(button)
     def subclassPressEvents(self, event):
         #Override me!
@@ -112,11 +136,13 @@ class AbstractGraphArea(QtGui.QWidget):
     def setButton(self, button):
         self.pressedButtons.append(button)
         self.initialValues()
+        self.setMode()
     def clearButton(self, button):
         if button in self.pressedButtons:
             self.pressedButtons.remove(button)
             
         self.modes.setCurrentMode('None')
+        self.subclassModes()
         self.releaseTime = time()
         self.inputInterval = AppCore.AppPrefs['AbstractGraphArea-inputInterval']
     def setMode(self):
@@ -125,14 +151,14 @@ class AbstractGraphArea(QtGui.QWidget):
                 self.inputInterval = 0
             else:
                 return
-    
+        
         if self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Zoom']:
             self.modes.setCurrentMode('zoomMode')
         elif self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Pan']:
             self.modes.setCurrentMode('panMode')
         else:
             self.modes.setCurrentMode('None')
-        self.subclassModes()
+            self.subclassModes()
     def subclassModes(self):
         #Override me!
         pass
@@ -148,6 +174,8 @@ class AbstractGraphArea(QtGui.QWidget):
         AppCore.AppAttributes[self.className+'-GraphYS'] = self.curGraphYS
         self.endModeX = self.startModeX
         self.endModeY = self.startModeY
+        
+        self.subclassInitialValues()
     def subclassInitialValues(self):
         #Override me!
         pass
@@ -178,7 +206,7 @@ class AbstractGraphArea(QtGui.QWidget):
         elif self.getCurrentMode() == 'panMode':
             self.panEvent()
         else:
-            self.subclassMoveEvents(event)
+            self.subclassModeEvents(event)
     def subclassModeEvents(self, event):
         #Override me!
         pass

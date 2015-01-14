@@ -27,3 +27,4 @@ from NodeOwningObject import NodeOwningObject
 from RingCache import RingCache
 from TimeCache import TimeCache
 from QImage import QImage
+from KeyboardDict import KeyboardDict

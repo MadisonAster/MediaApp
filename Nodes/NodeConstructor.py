@@ -360,7 +360,6 @@ class WidgetLinkedNode(object):
 class ImageNode(object):
     def __init__(self, parent):
         super(ImageNode, self).__init__(parent)
-        print 'image init'
         #self.extension()
         self.frameCache = None
         self.frameCacheFrame = None
