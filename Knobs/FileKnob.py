@@ -52,6 +52,7 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         
     def setValue(self, value):
         self.setText(value)
+        self.update()
     def getValue(self):
         return self.text()
     
@@ -64,6 +65,7 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         eventText = event.mimeData().urls()[0].path().lstrip('/')
         self.setText(self.TranslatePath(eventText))
         self.urlDropped.emit()  
+        self.update()
     
     @QtCore.Slot()
     def copy(self):
@@ -73,7 +75,8 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         
     def paste(self):
         self.setValue(self.TranslatePath(AppCore.App.clipboard().text()))
-    
+        self.update()
+        
     def unTranslatePath(self, path):
         path = path.replace('\\','/')
         for key in AppCore.AppPrefs['GLOBALS']:
@@ -93,6 +96,7 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         if path:
             path = self.TranslatePath(path)
             self.setText(path)
+        self.update()
         
     def getEvaluatedPath(self, *args):
         if len(args) is 1:

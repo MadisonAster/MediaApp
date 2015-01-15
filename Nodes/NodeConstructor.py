@@ -117,6 +117,7 @@ class NodeConstructor(object):
                 del self[key]       #BUG widgets don't get destroyed when we do a simple delete
             #Node subclass has assigned knob the name key, so we tell the knob that here.   
             value.name.setText(key)
+            value.parent = self
             self.knobs.append(value)
         else:
             self[key].setValue(value)
@@ -294,6 +295,8 @@ class NodeConstructor(object):
                 self.widget().panelLayout.addLayout(knob.knobLayout)
     def setParent(self, value):
         self.parent = value
+    def update(self):
+        self.parent.update()
        
 class GraphNode(NodeConstructor, PropertiesDockWidget):
     def __init__(self, parent):

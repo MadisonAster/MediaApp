@@ -33,7 +33,20 @@ def IconFromSVG(iconPath):
     with open(iconPath, 'r') as iconFile:
         iconText = iconFile.read()
 
-    iconText = iconText.replace('#111111', AppCore.AppPrefs['AppIconColor'].name().encode("utf8"))
+    iconText = iconText.replace('#111111', AppCore.AppPrefs['AppIconColor1'].name().encode("utf8"))
+    iconText = iconText.replace('#222222', AppCore.AppPrefs['AppIconColor2'].name().encode("utf8"))
+    iconText = iconText.replace('#333333', AppCore.AppPrefs['AppIconColor3'].name().encode("utf8"))
+    iconText = iconText.replace('#444444', AppCore.AppPrefs['AppIconColor4'].name().encode("utf8"))
+    iconText = iconText.replace('#555555', AppCore.AppPrefs['AppIconColor5'].name().encode("utf8"))
+    iconText = iconText.replace('#666666', AppCore.AppPrefs['AppIconColor6'].name().encode("utf8"))
+    iconText = iconText.replace('#777777', AppCore.AppPrefs['AppIconColor7'].name().encode("utf8"))
+    iconText = iconText.replace('#888888', AppCore.AppPrefs['AppIconColor8'].name().encode("utf8"))
+    iconText = iconText.replace('#999999', AppCore.AppPrefs['AppIconColor9'].name().encode("utf8"))
+    iconText = iconText.replace('#AAAAAA', AppCore.AppPrefs['AppIconColorA'].name().encode("utf8"))
+    iconText = iconText.replace('#BBBBBB', AppCore.AppPrefs['AppIconColorB'].name().encode("utf8"))
+    iconText = iconText.replace('#CCCCCC', AppCore.AppPrefs['AppIconColorC'].name().encode("utf8"))
+    iconText = iconText.replace('#DDDDDD', AppCore.AppPrefs['AppIconColorD'].name().encode("utf8"))
+    iconText = iconText.replace('#EEEEEE', AppCore.AppPrefs['AppIconColorE'].name().encode("utf8"))
     iconStream = QtCore.QXmlStreamReader(iconText)
     svg_renderer = QtSvg.QSvgRenderer(iconStream)
 

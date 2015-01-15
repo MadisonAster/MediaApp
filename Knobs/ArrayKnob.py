@@ -38,5 +38,6 @@ class ArrayKnob(KnobConstructor.Knob, QtGui.QLineEdit):
             raise TypeError
         else:
             self.knobValue = value
+        self.update()
     def getValue(self):
         return self.knobValue

@@ -24,3 +24,4 @@
 #===============================================================================
 
 from IconFromSVG import *
+from IconFromColor import IconFromColor

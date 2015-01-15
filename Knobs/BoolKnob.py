@@ -38,6 +38,7 @@ class BoolKnob(KnobConstructor.Knob, QtGui.QCheckBox):
             self.setCheckState(QtCore.Qt.Checked)
         else:
             self.setCheckState(QtCore.Qt.Unchecked)
+        self.update()
     def getValue(self):
         value = self.checkState()
         if value == QtCore.Qt.Checked:

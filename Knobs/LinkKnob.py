@@ -42,6 +42,7 @@ class LinkKnob(KnobConstructor.Knob, QtGui.QLineEdit):
     def setValue(self, value):
         self.link = value
         self.setText(str(value))
+        self.update()
     def getValue(self):
         return self.link
        

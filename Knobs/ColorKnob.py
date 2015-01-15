@@ -24,30 +24,64 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
+
+import AppCore
 import KnobConstructor
 from FloatKnob import FloatKnob
 
+import MediaAppIcons
+
 class ColorKnob(QtGui.QWidget):
-    def __init__(self, red = 0.0, green = 0.0, blue = 0.0, name = 'FloatKnob'):
+    def __init__(self, *args, **kwargs):
+        if 'name' in kwargs.keys():
+            name = kwargs['name']
+        else:
+            name = 'ColorKnob'
         super(ColorKnob, self).__init__()
         self.name = KnobConstructor.KnobLabel()
-        self.knobLayout = QtGui.QHBoxLayout()
-        
-        #BUG: Program crashes if knob contains another knobtype.
-        #self.knobLayout.addWidget(self)
-        redKnob = QtGui.QLineEdit()
-        #redKnob = FloatKnob(red)
-        #greenKnob = FloatKnob(green)
-        #blueKnob = FloatKnob(blue)
-        
-        self.knobLayout.addWidget(redKnob)
-        #self.knobLayout.addWidget(greenKnob)
-        #self.knobLayout.addWidget(blueKnob)
-        
         self.name.setText(name)
+        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        
+        self.knobLayout = QtGui.QHBoxLayout()
+        self.knobLayout.addWidget(self.name)
+        
+        self.button = QtGui.QPushButton()
+        self.knobLayout.addWidget(self.button)
+
+        if len(args) > 0:
+            self.QColor = args[0]
+        else:
+            self.QColor = QtGui.QColor(AppCore.AppPrefs['ColorKnob-DefaultColor'])
+        
+        self.setIcon()
+        self.button.clicked.connect(self.showDialog)
+        #self.QColor = QtGui.QColor(QtGui.QColor(255,255,255))
+        
+        def none(): pass
+        self.changed = none
+
     def setValue(self, value):
-        self.setText(str(value))
+        if isinstance(value, QtGui.QColor):
+            self.QColor = value
+        else:
+            self.QColor.setNamedColor(value)
+        self.setIcon()
+        self.changed()
+        self.update()
     def getValue(self):
-        return float(self.text())
+        return self.QColor
+    def showDialog(self):
+        newColor = QtGui.QColorDialog.getColor(self.QColor)
+        if newColor.isValid():
+            self.QColor = newColor
+        self.setIcon()
+        self.changed()
+        self.update()
+        return self.QColor
+    def setIcon(self):
+        self.button.setIcon(MediaAppIcons.IconFromColor(self.QColor))
     def sizeHint(self):
-        return QtCore.QSize(100,24)
+        return QtCore.QSize(64,64)
+        
+    def setChanged(self, callable):
+        self.changed = callable

@@ -76,7 +76,7 @@ class EnumeratedPrefs(QtGui.QWidget):
             elif type(AppCore.AppPrefs[key]) is bool:
                 self[key] = BoolKnob(AppCore.AppPrefs[key])
             elif type(AppCore.AppPrefs[key]).__name__ == 'QColor':
-                self[key] = ColorKnob(red = AppCore.AppPrefs[key].redF(), green = AppCore.AppPrefs[key].greenF(), blue = AppCore.AppPrefs[key].blueF())
+                self[key] = ColorKnob(AppCore.AppPrefs[key], name = key)
             else:
                 #TODO: QPen, QBrush, QFont
                 #print type(AppCore.AppPrefs[key]).__name__ 

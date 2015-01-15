@@ -35,5 +35,6 @@ class FloatKnob(KnobConstructor.Knob, QtGui.QLineEdit):
         self.setValue(value)
     def setValue(self, value):
         self.setText(str(value))
+        self.update()
     def getValue(self):
         return float(self.text())

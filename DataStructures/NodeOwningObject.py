@@ -40,8 +40,11 @@ class NodeOwningObject(object):
         node = AppCore.createNode(nodeType, parent = self, baseClass = self.preferredNodeClass)
         self.Nodes[node.name()] = node
         self.nodeCreated()
-        if hasattr(self, 'repaint'):
-            self.repaint()
+        
+        if hasattr(self, 'update'):
+            self.update()
+        #if hasattr(self, 'repaint'):
+        #    self.repaint()
         return node
     def allNodes(self):
         returnList = []

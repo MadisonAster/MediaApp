@@ -19,7 +19,20 @@
 '*BLACK' : 'somePath',
 
 'AppFont' : QtGui.QFont('Times', 10, QtGui.QFont.Bold),
-'AppIconColor' : QtGui.QColor(255,255,255),
+'AppIconColor1' : QtGui.QColor(17,17,17),
+'AppIconColor2' : QtGui.QColor(34,34,34),
+'AppIconColor3' : QtGui.QColor(51,51,51),
+'AppIconColor4' : QtGui.QColor(68,68,68),
+'AppIconColor5' : QtGui.QColor(85,85,85),
+'AppIconColor6' : QtGui.QColor(102,102,102),
+'AppIconColor7' : QtGui.QColor(119,119,119),
+'AppIconColor8' : QtGui.QColor(136,136,136),
+'AppIconColor9' : QtGui.QColor(153,153,153),
+'AppIconColorA' : QtGui.QColor(170,170,170),
+'AppIconColorB' : QtGui.QColor(187,187,187),
+'AppIconColorC' : QtGui.QColor(204,204,204),
+'AppIconColorD' : QtGui.QColor(221,221,221),
+'AppIconColorE' : QtGui.QColor(238,238,238),
 'NodeNamePadding' : 3,
 
 'App-Window' : QtGui.QColor(50,50,50),
@@ -82,6 +95,8 @@
 'TimelineWidget-Shortcuts-cacheFrames' : ['C'],
 'TimelineWidget-Shortcuts-frameForward' : ['Right'],
 'TimelineWidget-Shortcuts-frameBackward' : ['Left'],
+
+'ColorKnob-DefaultColor' : QtGui.QColor(255,255,255),
 
 'AbstractGraphArea-inputInterval' : 0.1,
 'AbstractGraphArea-Shortcuts-Zoom' : ['MiddleButton', 'LeftButton'],

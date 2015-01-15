@@ -104,6 +104,7 @@ class AbstractGraphArea(QtGui.QWidget):
             key = KeyboardDict[event.key()]
         else:
             print 'key '+str(event.key())+' pressed.'
+            return
         self.setButton(key)
         self.subclassPressEvents(event)
     def keyReleaseEvent(self, event):    
@@ -111,6 +112,7 @@ class AbstractGraphArea(QtGui.QWidget):
             key = KeyboardDict[event.key()]
         else:
             print 'key '+str(event.key())+' released.'
+            return
         self.clearButton(key)
     def mousePressEvent(self, event):
         self.startMouseX = event.pos().x()
