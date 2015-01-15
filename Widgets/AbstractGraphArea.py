@@ -25,7 +25,7 @@
 from time import time
 from copy import copy
 
-from PySide import QtGui
+from PySide import QtGui, QtCore
 
 import AppCore
 from DataStructures import KeyboardDict
@@ -81,7 +81,48 @@ class AbstractGraphArea(QtGui.QWidget):
         self.pressedButtons = keyList()
         self.inputInterval = 0
         
+        self.addToolBarLayouts()
         self.getDictSettings()
+        
+    def addToolBarLayouts(self):
+        self.VBox = QtGui.QVBoxLayout()
+        self.HBox = QtGui.QHBoxLayout()
+        self.topToolBars = QtGui.QVBoxLayout()
+        self.bottomToolBars = QtGui.QVBoxLayout()
+        self.leftToolBars = QtGui.QHBoxLayout()
+        self.rightToolBars = QtGui.QHBoxLayout()
+        
+        self.VBox.setContentsMargins(0, 0, 0, 0)
+        self.HBox.setContentsMargins(0, 0, 0, 0)
+        self.topToolBars.setContentsMargins(0, 0, 0, 0)
+        self.bottomToolBars.setContentsMargins(0, 0, 0, 0)
+        self.leftToolBars.setContentsMargins(0, 0, 0, 0)
+        self.rightToolBars.setContentsMargins(0, 0, 0, 0)
+        
+        self.VBox.setSpacing(0)
+        self.HBox.setSpacing(0)
+        self.topToolBars.setSpacing(0)
+        self.bottomToolBars.setSpacing(0)
+        self.leftToolBars.setSpacing(0)
+        self.rightToolBars.setSpacing(0)
+        
+        self.setLayout(self.VBox)
+        
+        ###Widget ToolBarLayouts###
+        self.VBox.addLayout(self.topToolBars)
+        
+        self.VBox.addLayout(self.HBox)
+        self.HBox.addLayout(self.leftToolBars)
+        
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.HBox.addWidget(spacer)
+        
+        self.HBox.addLayout(self.rightToolBars)
+
+        self.VBox.addLayout(self.bottomToolBars)
+        ####################
+        
     def getDictSettings(self):
         self.ZoomXYJoined = AppCore.AppSettings[self.className+'-ZoomXYJoined']
         self.XPixelsPerUnit = AppCore.AppSettings[self.className+'-XPixelsPerUnit']
@@ -268,4 +309,17 @@ class AbstractGraphArea(QtGui.QWidget):
         painter.end()
     #################
 
+    ###Other Functions###
+    def addToolBar(self, ToolBarArea, ToolBar):
+        if ToolBarArea == QtCore.Qt.TopToolBarArea:
+            self.topToolBars.addWidget(ToolBar)
+        if ToolBarArea == QtCore.Qt.BottomToolBarArea:
+            self.bottomToolBars.addWidget(ToolBar)
+        if ToolBarArea == QtCore.Qt.LeftToolBarArea:
+            ToolBar.setOrientation(QtCore.Qt.Vertical)
+            self.leftToolBars.addWidget(ToolBar)
+        if ToolBarArea == QtCore.Qt.RightToolBarArea:
+            ToolBar.setOrientation(QtCore.Qt.Vertical)
+            self.rightToolBars.addWidget(ToolBar)
+    #####################
     pass

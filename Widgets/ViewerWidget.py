@@ -35,32 +35,104 @@ from NodeLinkedWidget import *
 from AbstractGraphArea import AbstractGraphArea
 
  
-class Viewer(AbstractGraphArea):
+class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     ###Initialize Class###
     def __init__(self):
-        super(Viewer, self).__init__()
-
+        super(ViewerWidget, self).__init__()
+        
         self.modes.append('marqMode')
         self.modes.append('extraMode')
         
         #Initialize Values
         self.frameCache = AppCore.generateBlack()
+        self.AccessoryToolBars = []
+        
+        
+        self.setLinkedNode(AppCore.NodeGraph.createNode('ViewerNode'))
+        self.TimeIndicator = DataStructures.TimeCache()
+        
+        
+        self.addToolBars()
+    def addToolBars(self):
+        self.topToolBar = QtGui.QToolBar('Top Tool Bar')
+        self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
+        self.rightToolBar = QtGui.QToolBar('Right Tool Bar')
+        self.bottomToolBar = QtGui.QToolBar('Bottom Tool Bar')
+        
+        self.addToolBar(QtCore.Qt.TopToolBarArea, self.topToolBar)
+        #self.addToolBar(QtCore.Qt.LeftToolBarArea, self.leftToolBar)
+        #self.addToolBar(QtCore.Qt.RightToolBarArea, self.rightToolBar)
+        self.addToolBar(QtCore.Qt.BottomToolBarArea, self.bottomToolBar)
+        
+        
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.topToolBar.addWidget(spacer)
+        
+        self.inputSelectorA = MediaAppKnobs.ComboKnob([])
+        self.topToolBar.addWidget(self.inputSelectorA)
+        
+        self.inputCombiner = MediaAppKnobs.ComboKnob(['A Only','B Only','Wipe','Blend'])
+        self.topToolBar.addWidget(self.inputCombiner)
+        
+        self.inputSelectorB = MediaAppKnobs.ComboKnob([])
+        self.topToolBar.addWidget(self.inputSelectorB)
+        
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.topToolBar.addWidget(spacer)
+        
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.bottomToolBar.addWidget(spacer)
+
+        RNext = QtGui.QAction(MediaAppIcons.RNext(), 'RNext', self)
+        RNext.triggered.connect(self.playForward)
+        self.bottomToolBar.addAction(RNext)
+        
+        RPlay = QtGui.QAction(MediaAppIcons.RPlay(), 'RPlay', self)
+        RPlay.triggered.connect(self.playForward)
+        self.bottomToolBar.addAction(RPlay)
+        
+        RAdvance = QtGui.QAction(MediaAppIcons.RAdvance(), 'RAdvance', self)
+        RAdvance.triggered.connect(self.playForward)
+        self.bottomToolBar.addAction(RAdvance)
+        
+        Stop = QtGui.QAction(MediaAppIcons.Stop(), 'Stop', self)
+        Stop.triggered.connect(self.updateFrame)
+        self.bottomToolBar.addAction(Stop)
+        
+        Advance = QtGui.QAction(MediaAppIcons.Advance(), 'Advance', self)
+        Advance.triggered.connect(self.playForward)
+        self.bottomToolBar.addAction(Advance)
+        
+        Play = QtGui.QAction(MediaAppIcons.Play(), 'Play', self)
+        Play.triggered.connect(self.playForward)
+        self.bottomToolBar.addAction(Play)
+        
+        Next = QtGui.QAction(MediaAppIcons.Next(), 'Next', self)
+        Next.triggered.connect(self.playForward)
+        self.bottomToolBar.addAction(Next)
+        
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.bottomToolBar.addWidget(spacer)
     ######################
     
     ###Input Events###
     def subclassPressEvents(self, event):
-        if self.pressedButtons == AppCore.AppPrefs['Viewer-Shortcuts-frameBackward']:
-            self.parent().getInput().moveCurrentFrame(-1)
-            self.parent().updateFrame()
-            self.parent().getInput().repaint()
-        if self.pressedButtons == AppCore.AppPrefs['Viewer-Shortcuts-frameForward']:
-            self.parent().getInput().moveCurrentFrame(1)
-            self.parent().updateFrame()
-            self.parent().getInput().repaint()
-        if self.pressedButtons == AppCore.AppPrefs['Viewer-Shortcuts-cacheFrames']:
-            self.parent().cacheFrames()
-            self.parent().updateFrame()
-        if self.pressedButtons == AppCore.AppPrefs['Viewer-Shortcuts-playForward']:
+        if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-frameBackward']:
+            self.getInput().moveCurrentFrame(-1)
+            self.updateFrame()
+            self.getInput().repaint()
+        if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-frameForward']:
+            self.getInput().moveCurrentFrame(1)
+            self.updateFrame()
+            self.getInput().repaint()
+        if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-cacheFrames']:
+            self.cacheFrames()
+            self.updateFrame()
+        if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-playForward']:
             self.playForward()
     ##################
     
@@ -68,7 +140,7 @@ class Viewer(AbstractGraphArea):
     def subclassModes(self):
         if hasattr(AppCore.getActiveNode(), 'ViewerEventExtra'):
             self.modes.setCurrentMode('extraMode')
-        elif self.pressedButtons == AppCore.AppPrefs['Viewer-Shortcuts-marq']:
+        elif self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-marq']:
             self.modes.setCurrentMode('marqMode')
     #####################
     
@@ -144,7 +216,7 @@ class Viewer(AbstractGraphArea):
         frameperiod=1.0/AppCore.AppAttributes['FPS']
         now = time()
         nextframe = now
-        cache = self.parent().getCache()
+        cache = self.getCache()
         for image in cache:
             while now < nextframe:
                 sleep(nextframe-now)
@@ -158,97 +230,6 @@ class Viewer(AbstractGraphArea):
             nextframe += frameperiod
     def cacheFrame(self, image):
         self.frameCache = image
-    #def setNode(self, node):
-    #    self.node = node
-    #####################
-    
-    
-    
-class ViewerWidget(NodeLinkedWidget, QtGui.QMainWindow):
-    def __init__(self):
-        super(ViewerWidget, self).__init__()
-        self.setDockOptions(False)
-        self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
-
-        self.setLinkedNode(AppCore.NodeGraph.createNode('ViewerNode'))
-        self.TimeIndicator = DataStructures.TimeCache()
-        
-        self.widget = Viewer()
-        self.setCentralWidget(self.widget)
-        
-        self.AccessoryToolBars = []
-        self.createViewerToolbars()
-        
-        
-    def createViewerToolbars(self):
-        self.topToolBar = QtGui.QToolBar('Top Tool Bar')
-        self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
-        self.rightToolBar = QtGui.QToolBar('Right Tool Bar')
-        self.bottomToolBar = QtGui.QToolBar('Bottom Tool Bar')
-        
-        self.topToolBar.setMovable(False)
-        self.leftToolBar.setMovable(False)
-        self.rightToolBar.setMovable(False)
-        self.bottomToolBar.setMovable(False)
-        
-        self.addToolBar(QtCore.Qt.TopToolBarArea, self.topToolBar)
-        #self.addToolBar(QtCore.Qt.LeftToolBarArea, self.leftToolBar)
-        #self.addToolBar(QtCore.Qt.RightToolBarArea, self.rightToolBar)
-        self.addToolBar(QtCore.Qt.BottomToolBarArea, self.bottomToolBar)
-        
-        
-        spacer = QtGui.QWidget()
-        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        self.topToolBar.addWidget(spacer)
-        
-        self.inputSelectorA = MediaAppKnobs.ComboKnob([])
-        self.topToolBar.addWidget(self.inputSelectorA)
-        
-        self.inputCombiner = MediaAppKnobs.ComboKnob(['A Only','B Only','Wipe','Blend'])
-        self.topToolBar.addWidget(self.inputCombiner)
-        
-        self.inputSelectorB = MediaAppKnobs.ComboKnob([])
-        self.topToolBar.addWidget(self.inputSelectorB)
-        
-        spacer = QtGui.QWidget()
-        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        self.topToolBar.addWidget(spacer)
-        
-        spacer = QtGui.QWidget()
-        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        self.bottomToolBar.addWidget(spacer)
-
-        RNext = QtGui.QAction(MediaAppIcons.RNext(), 'RNext', self)
-        RNext.triggered.connect(self.widget.playForward)
-        self.bottomToolBar.addAction(RNext)
-        
-        RPlay = QtGui.QAction(MediaAppIcons.RPlay(), 'RPlay', self)
-        RPlay.triggered.connect(self.widget.playForward)
-        self.bottomToolBar.addAction(RPlay)
-        
-        RAdvance = QtGui.QAction(MediaAppIcons.RAdvance(), 'RAdvance', self)
-        RAdvance.triggered.connect(self.widget.playForward)
-        self.bottomToolBar.addAction(RAdvance)
-        
-        Stop = QtGui.QAction(MediaAppIcons.Stop(), 'Stop', self)
-        Stop.triggered.connect(self.updateFrame)
-        self.bottomToolBar.addAction(Stop)
-        
-        Advance = QtGui.QAction(MediaAppIcons.Advance(), 'Advance', self)
-        Advance.triggered.connect(self.widget.playForward)
-        self.bottomToolBar.addAction(Advance)
-        
-        Play = QtGui.QAction(MediaAppIcons.Play(), 'Play', self)
-        Play.triggered.connect(self.widget.playForward)
-        self.bottomToolBar.addAction(Play)
-        
-        Next = QtGui.QAction(MediaAppIcons.Next(), 'Next', self)
-        Next.triggered.connect(self.widget.playForward)
-        self.bottomToolBar.addAction(Next)
-        
-        spacer = QtGui.QWidget()
-        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        self.bottomToolBar.addWidget(spacer)
     
     def getInput(self):
         #FLAW: need to figure out how to play back from 2 caches at once in opengl later
@@ -257,29 +238,22 @@ class ViewerWidget(NodeLinkedWidget, QtGui.QMainWindow):
         else:
             #For now just return input A, because there's no current method for connecting to two caches at once.
             return self.getLinkedNode().getInput(self.inputSelectorA.currentIndex())
-        
     def updateFrame(self):
         inputA = self.getLinkedNode().getInput(self.inputSelectorA.currentIndex())
         inputB = self.getLinkedNode().getInput(self.inputSelectorB.currentIndex())
         
         #TODO 'implement a provided timeline in the viewer'
         if str(self.inputCombiner.getValue()) == 'A Only':
-            self.widget.cacheFrame(inputA.getImage())
+            self.cacheFrame(inputA.getImage())
         elif str(self.inputCombiner.getValue()) == 'B Only':
-            self.widget.cacheFrame(inputB.getImage())
+            self.cacheFrame(inputB.getImage())
         else:
             imageA = inputA.getImage()
             imageB = inputB.getImage()
         if str(self.inputCombiner.getValue()) is 'Blend':    
-            self.widget.cacheFrame(self.blendImage(imageA, imageB))
+            self.cacheFrame(self.blendImage(imageA, imageB))
         elif str(self.inputCombiner.getValue()) is 'Wipe':
-            self.widget.cacheFrame(self.wipeImage(imageA, imageB))
-        
-        
-        #if AppCore.getCurrentFrame() in AppCore.data['frameCache']:
-        #    self.frameCache = AppCore.data['frameCache'][0]
-        #else:
-        #    self.frameCache = AppCore.generateBlack()
+            self.cacheFrame(self.wipeImage(imageA, imageB))
         
     def dumpAccessoryToolbars(self):
         for toolbar in self.AccessoryToolBars:
@@ -290,8 +264,6 @@ class ViewerWidget(NodeLinkedWidget, QtGui.QMainWindow):
             self.AccessoryToolBars.append(toolbar[1])
             self.addToolBar(toolbar[0], self.AccessoryToolBars[-1])
             self.AccessoryToolBars[-1].show()
-            
-    ###Pointer Functions###
     def getCache(self):
         input = self.getInput()
         if hasattr(input, 'getCache'):
@@ -311,3 +283,5 @@ class ViewerWidget(NodeLinkedWidget, QtGui.QMainWindow):
         input = self.getInput()
         for frame in range(firstFrame, lastFrame):
             yield input.getImage(frame)
+    #####################
+    

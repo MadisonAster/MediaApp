@@ -313,6 +313,7 @@ class Core(dict):
         stylesheet += 'QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {background: none;}\n'
         stylesheet += 'QScrollBar::handle:horizontal {background: '+Button+'; margin: 0 24px 0 24px;}\n'
         
+        stylesheet += 'QToolBar{background: '+Window+'; spacing: 3px;}\n'
         #stylesheet += "QScrollBar::add-line:vertical { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0  rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),  stop:1 rgb(32, 47, 130)); height: px; subcontrol-position: bottom; subcontrol-origin: margin;}"
         
         return stylesheet

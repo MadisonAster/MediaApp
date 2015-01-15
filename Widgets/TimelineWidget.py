@@ -30,14 +30,16 @@ from PySide import QtGui, QtCore
 
 import AppCore
 import DataStructures
+import MediaAppIcons
+import MediaAppKnobs
 from NodeLinkedWidget import *
 from GraphWidget import *
 
-class TimelineWidget(NodeLinkedWidget, GraphWidget):
+class TimelineWidget(GraphWidget, NodeLinkedWidget):
     def __init__(self):
         super(TimelineWidget, self).__init__()
-        
         self.setLinkedNode(AppCore.NodeGraph.createNode('TimelineNode'))
+        self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         
         self.modes.append('dragCtiMode')
         self.TimeIndicators = [DataStructures.TimeCache()]
@@ -46,6 +48,24 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
         
         self.preferredNodeClass = 'TimelineNode'
 
+        self.addToolBars() 
+    def addToolBars(self):
+        self.topToolBar = QtGui.QToolBar('Top Tool Bar')
+        self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
+        
+        self.leftToolBar.setOrientation(QtCore.Qt.Vertical)
+
+        self.RPlay = QtGui.QAction(MediaAppIcons.RPlay(), 'cacheFrames', self)
+        self.RPlay.triggered.connect(self.cacheFrames)
+        self.topToolBar.addAction(self.RPlay)
+        
+        self.RPlay2 = QtGui.QAction(MediaAppIcons.RPlay(), 'cacheFrames', self)
+        self.RPlay2.triggered.connect(self.cacheFrames)
+        self.leftToolBar.addAction(self.RPlay2)
+        
+        self.addToolBar(QtCore.Qt.TopToolBarArea, self.topToolBar)
+        self.addToolBar(QtCore.Qt.LeftToolBarArea, self.leftToolBar)
+        
     ###Input Events###
     def subclassPressEvents(self, event):
         if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-OpenNode']:
@@ -231,3 +251,8 @@ class TimelineWidget(NodeLinkedWidget, GraphWidget):
     #####################
         
     pass
+    
+    
+
+        
+        
