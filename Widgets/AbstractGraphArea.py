@@ -30,6 +30,8 @@ from PySide import QtGui, QtCore
 import AppCore
 from DataStructures import KeyboardDict
 
+#Provides unordered comparisons for a list, In this case keyboard keys,
+#so that it does not matter what order you pressed the keys in
 class keyList(list):
     def __init__(self, *args):
         super(keyList, self).__init__(*args)
@@ -44,7 +46,8 @@ class keyList(list):
             if item not in other:
                 return False
         return True
-                
+
+#Provides a list with a currently selected item, .currentMode
 class modeList(list):
     def __init__(self, *args):
         super(modeList, self).__init__(*args)
@@ -72,7 +75,6 @@ class AbstractGraphArea(QtGui.QWidget):
         
         #QWidget Settings
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
-        self.setMouseTracking(True)
         self.setMinimumSize(0, 0)
         self.setGeometry(0, 0, 0, 0)
         
@@ -115,6 +117,7 @@ class AbstractGraphArea(QtGui.QWidget):
         self.HBox.addLayout(self.leftToolBars)
         
         spacer = QtGui.QWidget()
+        spacer.setMouseTracking(True)
         spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         self.HBox.addWidget(spacer)
         
@@ -170,8 +173,7 @@ class AbstractGraphArea(QtGui.QWidget):
         
         button = str(event.button()).rsplit('.', 1)[-1]
         self.clearButton(button)
-    def subclassPressEvents(self, event):
-        #Override me!
+    def subclassPressEvents(self, event): #Override me!
         pass
     ##################
     
@@ -184,8 +186,9 @@ class AbstractGraphArea(QtGui.QWidget):
         if button in self.pressedButtons:
             self.pressedButtons.remove(button)
             
-        self.modes.setCurrentMode('None')
-        self.subclassModes()
+        #self.modes.setCurrentMode('None')
+        self.setMode()
+        self.initialValues()
         self.releaseTime = time()
         self.inputInterval = AppCore.AppPrefs['AbstractGraphArea-inputInterval']
     def setMode(self):
@@ -202,8 +205,8 @@ class AbstractGraphArea(QtGui.QWidget):
         else:
             self.modes.setCurrentMode('None')
             self.subclassModes()
-    def subclassModes(self):
-        #Override me!
+        self.update()
+    def subclassModes(self): #Override me!
         pass
     def getCurrentMode(self):
         return self.modes.getCurrentMode()
@@ -219,8 +222,7 @@ class AbstractGraphArea(QtGui.QWidget):
         self.endModeY = self.startModeY
         
         self.subclassInitialValues()
-    def subclassInitialValues(self):
-        #Override me!
+    def subclassInitialValues(self): #Override me!
         pass
     ##################
 
@@ -229,6 +231,7 @@ class AbstractGraphArea(QtGui.QWidget):
         self.progressValues(event)
         self.ModeEvents(event)
         self.update() #Redraw  
+        self.repaint()
     ################
     
     ###ProgressValues###
@@ -237,8 +240,7 @@ class AbstractGraphArea(QtGui.QWidget):
         self.curMouseY = event.pos().y()
         self.curModeX, self.curModeY = self.graphTrans.inverted()[0].map(self.curMouseX, self.curMouseY)
         self.subclassProgressValues(event)
-    def subclassProgressValues(self, event):
-        #Override me!
+    def subclassProgressValues(self, event): #Override me!
         pass
     ####################
     
@@ -250,8 +252,7 @@ class AbstractGraphArea(QtGui.QWidget):
             self.panEvent()
         else:
             self.subclassModeEvents(event)
-    def subclassModeEvents(self, event):
-        #Override me!
+    def subclassModeEvents(self, event): #Override me!
         pass
         
     def panEvent(self):
@@ -304,8 +305,7 @@ class AbstractGraphArea(QtGui.QWidget):
         painter.setTransform(self.graphTrans)
         
         self.subclassPaintEvent(pEvent, painter)
-    def subclassPaintEvent(self, pEvent, painter):    
-        #Override me!
+    def subclassPaintEvent(self, pEvent, painter): #Override me!
         painter.end()
     #################
 

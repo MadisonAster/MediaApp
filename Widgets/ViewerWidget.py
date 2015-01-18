@@ -40,6 +40,7 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     def __init__(self):
         super(ViewerWidget, self).__init__()
         
+        self.setMouseTracking(True)
         self.modes.append('marqMode')
         self.modes.append('extraMode')
         
@@ -152,10 +153,10 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     
     ###ModeEvents###
     def subclassModeEvents(self, event):
-        if self.getCurrentMode() == 'extraMode':
-            self.extraEvent()
-        elif self.getCurrentMode() == 'marqMode':
+        if self.getCurrentMode() == 'marqMode':
             self.marqEvent()
+        else: #self.getCurrentMode() == 'extraMode':
+            self.extraEvent()
    
     def marqEvent(self):
         self.endModeX = self.curModeX
