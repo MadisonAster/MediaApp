@@ -47,7 +47,7 @@ class keyList(list):
             if item not in other:
                 return False
         return True
-
+        
 #Provides a list with a currently selected item, .currentMode
 class modeList(list):
     def __init__(self, *args):
@@ -68,10 +68,36 @@ class modeList(list):
                 if mode == arg:
                     self.currentMode = i
 
+#Provides comparisons for touchPoints 
 class touchList(list):
     def __init__(self, *args):
-        super(modeList, self).__init__(*args)
-    
+        if len(args) == 1:
+            if type(args[0]) is list:
+                args = args[0]
+        super(touchList, self).__init__(args)
+    def __eq__(self, other):
+        if not isinstance(other, list):
+            return NotImplemented
+        for TouchPoint1 in self:
+            found = False
+            for TouchPoint2 in other:
+                if TouchPoint1.startPos() == TouchPoint2.startPos():
+                    found = True
+            if found is False:
+                return False
+        return True
+    def __ne__(self, other):
+        if not isinstance(other, list):
+            return NotImplemented
+        for TouchPoint1 in self:
+            found = False
+            for TouchPoint2 in other:
+                if TouchPoint1.startPos() == TouchPoint2.startPos():
+                    found = True
+            if found is False:
+                return True
+        return False
+
 class AbstractGraphArea(QtGui.QWidget):
     ###Initialize Class###
     def __init__(self):
@@ -134,7 +160,7 @@ class AbstractGraphArea(QtGui.QWidget):
         self.HBox.addLayout(self.rightToolBars)
 
         self.VBox.addLayout(self.bottomToolBars)
-        ####################
+    ####################
         
     def getDictSettings(self):
         self.ZoomXYJoined = AppCore.AppSettings[self.className+'-ZoomXYJoined']
@@ -153,7 +179,6 @@ class AbstractGraphArea(QtGui.QWidget):
     ######################
     
     ###Input Events###
-    
     def keyPressEvent(self, event):
         if event.key() in KeyboardDict.keys():
             key = KeyboardDict[event.key()]
@@ -178,15 +203,17 @@ class AbstractGraphArea(QtGui.QWidget):
     def touchEvent(self, event):
         if event.type().name == 'TouchBegin':
             self.TouchInput = True
-            print '##begin##'
-            self.TouchList = event.touchPoints()
+            print '##touch begin##'
+            self.initialTouchValues(event)
             return True
         elif event.type().name == 'TouchUpdate':
-            self.TouchList = event.touchPoints()
-            print self.TouchList
+            if self.TouchList != event.touchPoints():
+                self.initialTouchValues(event)
+            self.touchMoveEvent(event)
         elif event.type().name == 'TouchEnd':
             self.TouchList = []
-            print '##end##'
+            self.modes.setCurrentMode('None')
+            print '##touch end##'
             self.TouchInput = None
         return False
     def tabletEvent(self, event):
@@ -255,11 +282,33 @@ class AbstractGraphArea(QtGui.QWidget):
         self.update()
     def subclassModes(self): #Override me!
         pass
+    def setTouchMode(self, event):
+        if len(event.touchPoints()) == 1:
+            self.modes.setCurrentMode('panMode')
+        else:   
+            self.modes.setCurrentMode('None')
+            self.subclassTouchModes()
+    def subclassTouchModes(self): #Override me!
+        pass
     def getCurrentMode(self):
         return self.modes.getCurrentMode()
     #####################
     
     ###InitalValues###
+    def initialTouchValues(self, event):
+        self.TouchList = touchList(event.touchPoints())
+        
+        if event.type().name == 'TouchBegin':
+            self.startMouseX = event.touchPoints()[0].startPos().x()
+            self.startMouseY = event.touchPoints()[0].startPos().y()
+        else:
+            self.startMouseX = event.touchPoints()[0].pos().x()
+            self.startMouseY = event.touchPoints()[0].pos().y()
+        
+        self.startModeX, self.startModeY = self.graphTrans.inverted()[0].map(self.startMouseX, self.startMouseY)
+        
+        self.setTouchMode(event)
+        self.initialValues()
     def initialValues(self):
         AppCore.AppAttributes[self.className+'-GraphX'] = self.curGraphX
         AppCore.AppAttributes[self.className+'-GraphY'] = self.curGraphY
@@ -279,6 +328,11 @@ class AbstractGraphArea(QtGui.QWidget):
         self.ModeEvents(event)
         self.update() #Redraw  
         self.repaint()
+    def touchMoveEvent(self, event):
+        self.progressTouchValues(event)
+        self.TouchModeEvents(event)
+        self.update() #Redraw  
+        self.repaint()
     ################
     
     ###ProgressValues###
@@ -288,6 +342,13 @@ class AbstractGraphArea(QtGui.QWidget):
         self.curModeX, self.curModeY = self.graphTrans.inverted()[0].map(self.curMouseX, self.curMouseY)
         self.subclassProgressValues(event)
     def subclassProgressValues(self, event): #Override me!
+        pass
+    def progressTouchValues(self, event):
+        self.curMouseX = event.touchPoints()[0].pos().x()
+        self.curMouseY = event.touchPoints()[0].pos().y()
+        self.curModeX, self.curModeY = self.graphTrans.inverted()[0].map(self.curMouseX, self.curMouseY)
+        self.subclassProgressValues(event)
+    def subclassProgressTouchValues(self, event): #Override me!
         pass
     ####################
     
@@ -299,7 +360,16 @@ class AbstractGraphArea(QtGui.QWidget):
             self.panEvent()
         else:
             self.subclassModeEvents(event)
+    def TouchModeEvents(self, event):
+        if self.getCurrentMode() == 'touchZoomMode':
+            self.touchZoomEvent()
+        elif self.getCurrentMode() == 'panMode':
+            self.panEvent()
+        else:
+            self.subclassTouchModeEvents(event)
     def subclassModeEvents(self, event): #Override me!
+        pass
+    def subclassTouchModeEvents(self, event): #Override me!
         pass
         
     def panEvent(self):
