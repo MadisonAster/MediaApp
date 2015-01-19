@@ -165,7 +165,8 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     def extraEvent(self):
         self.endModeX = self.curModeX
         self.endModeY = self.curModeY
-        AppCore.getActiveNode().ViewerEventExtra(self)
+        if hasattr(AppCore.getActiveNode(), 'ViewerEventExtra'):
+            AppCore.getActiveNode().ViewerEventExtra(self)
     def marqContains(self):
         #Sample Pixels here
         pass

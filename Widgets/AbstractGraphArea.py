@@ -22,6 +22,7 @@
 #    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
+import threading
 from time import time
 from copy import copy
 
@@ -67,6 +68,10 @@ class modeList(list):
                 if mode == arg:
                     self.currentMode = i
 
+class touchList(list):
+    def __init__(self, *args):
+        super(modeList, self).__init__(*args)
+    
 class AbstractGraphArea(QtGui.QWidget):
     ###Initialize Class###
     def __init__(self):
@@ -77,6 +82,7 @@ class AbstractGraphArea(QtGui.QWidget):
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         self.setMinimumSize(0, 0)
         self.setGeometry(0, 0, 0, 0)
+        self.setAttribute(QtCore.Qt.WA_AcceptTouchEvents)
         
         #Initialize Values
         self.modes = modeList(['None','zoomMode','panMode'])
@@ -85,6 +91,10 @@ class AbstractGraphArea(QtGui.QWidget):
         
         self.addToolBarLayouts()
         self.getDictSettings()
+        
+        self.TabletPressure = 1.0
+        self.TouchInput = False
+        self.TouchList = []
         
     def addToolBarLayouts(self):
         self.VBox = QtGui.QVBoxLayout()
@@ -143,6 +153,7 @@ class AbstractGraphArea(QtGui.QWidget):
     ######################
     
     ###Input Events###
+    
     def keyPressEvent(self, event):
         if event.key() in KeyboardDict.keys():
             key = KeyboardDict[event.key()]
@@ -158,21 +169,53 @@ class AbstractGraphArea(QtGui.QWidget):
             print 'key '+str(event.key())+' released.'
             return
         self.clearButton(key)
+    
+    def event(self, event):
+        if type(event) is QtGui.QTouchEvent:
+            return self.touchEvent(event)
+        else:
+            return super(AbstractGraphArea, self).event(event)
+    def touchEvent(self, event):
+        if event.type().name == 'TouchBegin':
+            self.TouchInput = True
+            print '##begin##'
+            self.TouchList = event.touchPoints()
+            return True
+        elif event.type().name == 'TouchUpdate':
+            self.TouchList = event.touchPoints()
+            print self.TouchList
+        elif event.type().name == 'TouchEnd':
+            self.TouchList = []
+            print '##end##'
+            self.TouchInput = None
+        return False
+    def tabletEvent(self, event):
+        self.TabletPressure = event.pressure()
+        print 'tablet event'
+        event.ignore()
     def mousePressEvent(self, event):
-        self.startMouseX = event.pos().x()
-        self.startMouseY = event.pos().y()
-        self.startModeX, self.startModeY = self.graphTrans.inverted()[0].map(self.startMouseX, self.startMouseY)
+        if self.TouchInput is False:
+            self.startMouseX = event.pos().x()
+            self.startMouseY = event.pos().y()
+            self.startModeX, self.startModeY = self.graphTrans.inverted()[0].map(self.startMouseX, self.startMouseY)
         
-        button = str(event.button()).rsplit('.', 1)[-1]
-        self.setButton(button)
-        self.subclassPressEvents(event)
+            print 'pressEvent', event.button()
+            button = str(event.button()).rsplit('.', 1)[-1]
+            self.setButton(button)
+            self.subclassPressEvents(event)
+        elif self.TouchInput is None:
+            self.TouchInput = False
     def mouseReleaseEvent(self, event):
-        self.endMouseX = event.pos().x()
-        self.endMouseY = event.pos().y()
-        self.endModeX, self.endModeY = self.graphTrans.inverted()[0].map(self.endMouseX, self.endMouseY)
+        if self.TouchInput is False:
+            self.endMouseX = event.pos().x()
+            self.endMouseY = event.pos().y()
+            self.endModeX, self.endModeY = self.graphTrans.inverted()[0].map(self.endMouseX, self.endMouseY)
         
-        button = str(event.button()).rsplit('.', 1)[-1]
-        self.clearButton(button)
+            print 'releaseEvent', event.button()
+            button = str(event.button()).rsplit('.', 1)[-1]
+            self.clearButton(button)
+        elif self.TouchInput is None:
+            self.TouchInput = False
     def subclassPressEvents(self, event): #Override me!
         pass
     ##################
@@ -191,6 +234,9 @@ class AbstractGraphArea(QtGui.QWidget):
         self.initialValues()
         self.releaseTime = time()
         self.inputInterval = AppCore.AppPrefs['AbstractGraphArea-inputInterval']
+    def clearAllButtons(self):  
+        for button in self.pressedButtons:
+            self.clearButton(button)
     def setMode(self):
         if self.inputInterval > 0:
             if time() > self.releaseTime+self.inputInterval:
@@ -198,6 +244,7 @@ class AbstractGraphArea(QtGui.QWidget):
             else:
                 return
         
+        print self.pressedButtons
         if self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Zoom']:
             self.modes.setCurrentMode('zoomMode')
         elif self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Pan']:
