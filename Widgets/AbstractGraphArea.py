@@ -218,7 +218,6 @@ class AbstractGraphArea(QtGui.QWidget):
         return False
     def tabletEvent(self, event):
         self.TabletPressure = event.pressure()
-        print 'tablet event'
         event.ignore()
     def mousePressEvent(self, event):
         if self.TouchInput is False:
@@ -226,7 +225,7 @@ class AbstractGraphArea(QtGui.QWidget):
             self.startMouseY = event.pos().y()
             self.startModeX, self.startModeY = self.graphTrans.inverted()[0].map(self.startMouseX, self.startMouseY)
         
-            print 'pressEvent', event.button()
+            #print 'pressEvent', event.button()
             button = str(event.button()).rsplit('.', 1)[-1]
             self.setButton(button)
             self.subclassPressEvents(event)
@@ -238,7 +237,7 @@ class AbstractGraphArea(QtGui.QWidget):
             self.endMouseY = event.pos().y()
             self.endModeX, self.endModeY = self.graphTrans.inverted()[0].map(self.endMouseX, self.endMouseY)
         
-            print 'releaseEvent', event.button()
+            #print 'releaseEvent', event.button()
             button = str(event.button()).rsplit('.', 1)[-1]
             self.clearButton(button)
         elif self.TouchInput is None:
@@ -271,7 +270,7 @@ class AbstractGraphArea(QtGui.QWidget):
             else:
                 return
         
-        print self.pressedButtons
+        #print self.pressedButtons
         if self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Zoom']:
             self.modes.setCurrentMode('zoomMode')
         elif self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Pan']:
@@ -438,5 +437,11 @@ class AbstractGraphArea(QtGui.QWidget):
         if ToolBarArea == QtCore.Qt.RightToolBarArea:
             ToolBar.setOrientation(QtCore.Qt.Vertical)
             self.rightToolBars.addWidget(ToolBar)
+    def removeToolBar(self, ToolBar):
+        self.topToolBars.removeWidget(ToolBar)
+        self.bottomToolBars.removeWidget(ToolBar)
+        self.leftToolBars.removeWidget(ToolBar)
+        self.rightToolBars.removeWidget(ToolBar)
+        ToolBar.hide()
     #####################
     pass

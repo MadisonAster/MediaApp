@@ -25,23 +25,7 @@
 
 from PySide import QtGui, QtCore
 
-from KnobConstructor import Knob
-import KnobElements
-
-
-class TextKnob(Knob):
-    def __init__(self, value, name = 'TextKnob'):
-        super(TextKnob, self).__init__()
-        
-        self.TextWidget = KnobElements.TextWidget()
-        self.knobLayout.addWidget(self.TextWidget)
-        
-        self.name.setText(name)
+class SliderWidget(QtGui.QSlider):
+    def __init__(self):
+        super(SliderWidget, self).__init__()
         self.setValue(value)
-
-    def setValue(self, value):
-        self.TextWidget.setValue(value)
-    def getValue(self):
-        return self.TextWidget.getValue()
-
-       

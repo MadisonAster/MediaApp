@@ -82,7 +82,7 @@ class EnumeratedPrefs(QtGui.QWidget):
                 #print type(AppCore.AppPrefs[key]).__name__ 
                 continue
             self[key].name.labelSize = 250
-            self.panelLayout.addLayout(self[key].knobLayout)
+            self.panelLayout.addWidget(self[key])
     def __delitem__(self, key):
         for i, knob in enumerate(self.knobs):
             if knob.name.text() == key:

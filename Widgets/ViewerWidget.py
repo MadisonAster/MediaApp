@@ -66,26 +66,22 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         self.addToolBar(QtCore.Qt.BottomToolBarArea, self.bottomToolBar)
         
         
-        spacer = QtGui.QWidget()
-        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        self.topToolBar.addWidget(spacer)
+        self.topToolBar.addWidget(MediaAppKnobs.Spacer())
         
         self.inputSelectorA = MediaAppKnobs.ComboKnob([])
+        self.inputSelectorA.showName(False)
         self.topToolBar.addWidget(self.inputSelectorA)
         
         self.inputCombiner = MediaAppKnobs.ComboKnob(['A Only','B Only','Wipe','Blend'])
+        self.inputCombiner.showName(False)
         self.topToolBar.addWidget(self.inputCombiner)
         
         self.inputSelectorB = MediaAppKnobs.ComboKnob([])
+        self.inputSelectorB.showName(False)
         self.topToolBar.addWidget(self.inputSelectorB)
-        
-        spacer = QtGui.QWidget()
-        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        self.topToolBar.addWidget(spacer)
-        
-        spacer = QtGui.QWidget()
-        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        self.bottomToolBar.addWidget(spacer)
+
+        self.topToolBar.addWidget(MediaAppKnobs.Spacer())
+        self.bottomToolBar.addWidget(MediaAppKnobs.Spacer())
 
         RNext = QtGui.QAction(MediaAppIcons.RNext(), 'RNext', self)
         RNext.triggered.connect(self.playForward)
@@ -115,24 +111,22 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         Next.triggered.connect(self.playForward)
         self.bottomToolBar.addAction(Next)
         
-        spacer = QtGui.QWidget()
-        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        self.bottomToolBar.addWidget(spacer)
+        self.bottomToolBar.addWidget(MediaAppKnobs.Spacer())
     ######################
     
     ###Input Events###
     def subclassPressEvents(self, event):
         if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-frameBackward']:
             self.getInput().moveCurrentFrame(-1)
-            self.updateFrame()
+            self.update()
             self.getInput().repaint()
         if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-frameForward']:
             self.getInput().moveCurrentFrame(1)
-            self.updateFrame()
+            self.update()
             self.getInput().repaint()
         if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-cacheFrames']:
             self.cacheFrames()
-            self.updateFrame()
+            self.update()
         if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-playForward']:
             self.playForward()
     ##################
@@ -256,7 +250,10 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
             self.cacheFrame(self.blendImage(imageA, imageB))
         elif str(self.inputCombiner.getValue()) is 'Wipe':
             self.cacheFrame(self.wipeImage(imageA, imageB))
-        
+    
+    def update(self):
+        self.updateFrame()
+        super(ViewerWidget, self).update()
     def dumpAccessoryToolbars(self):
         for toolbar in self.AccessoryToolBars:
             self.removeToolBar(toolbar)

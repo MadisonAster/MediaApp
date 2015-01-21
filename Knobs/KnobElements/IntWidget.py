@@ -25,23 +25,16 @@
 
 from PySide import QtGui, QtCore
 
-from KnobConstructor import Knob
-import KnobElements
-
-
-class TextKnob(Knob):
-    def __init__(self, value, name = 'TextKnob'):
-        super(TextKnob, self).__init__()
+class IntWidget(QtGui.QLineEdit):
+    def __init__(self):
+        super(IntWidget, self).__init__()
         
-        self.TextWidget = KnobElements.TextWidget()
-        self.knobLayout.addWidget(self.TextWidget)
-        
-        self.name.setText(name)
-        self.setValue(value)
-
+        self.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
     def setValue(self, value):
-        self.TextWidget.setValue(value)
+        self.setText(str(value))
+        self.textChanged.emit
+        self.update()
     def getValue(self):
-        return self.TextWidget.getValue()
-
-       
+        return int(float(self.text()))
+    def sizeHint(self):
+        return QtCore.QSize(150,16)

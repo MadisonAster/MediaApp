@@ -25,23 +25,22 @@
 
 from PySide import QtGui, QtCore
 
-from KnobConstructor import Knob
-import KnobElements
-
-
-class TextKnob(Knob):
-    def __init__(self, value, name = 'TextKnob'):
-        super(TextKnob, self).__init__()
+class CheckBoxWidget(QtGui.QCheckBox):
+    def __init__(self):
+        super(CheckBoxWidget, self).__init__()
         
-        self.TextWidget = KnobElements.TextWidget()
-        self.knobLayout.addWidget(self.TextWidget)
-        
-        self.name.setText(name)
-        self.setValue(value)
-
+        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+    def sizeHint(self):
+        return QtCore.QSize(16,16)
     def setValue(self, value):
-        self.TextWidget.setValue(value)
+        if value == True:
+            self.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.setCheckState(QtCore.Qt.Unchecked)
+        self.update()
     def getValue(self):
-        return self.TextWidget.getValue()
-
-       
+        value = self.checkState()
+        if value == QtCore.Qt.Checked:
+            return True
+        if value == QtCore.Qt.Unchecked:
+            return False

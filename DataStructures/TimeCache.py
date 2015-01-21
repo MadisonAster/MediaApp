@@ -88,3 +88,12 @@ class TimeCache(object):
             return self.RingCache[0]
         else:
             return None
+    def getFrameAt(self, frame):
+        if frame in self.RingCache:
+            currentFrame = self.getCurrentFrame()
+            self.RingCache.goto(frame)
+            returnVal = self.RingCache[0]
+            self.RingCache.goto(currentFrame)
+            return returnVal
+        else:
+            return None

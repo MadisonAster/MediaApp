@@ -51,6 +51,12 @@ class NodeOwningObject(object):
         for nodeName in self.Nodes:
             returnList.append(self.Nodes[nodeName])
         return returnList
+    def nodesOfType(self, nodeClass):
+        returnList = []
+        for node in self.allNodes():
+            if node['ClassName'].getValue() == nodeClass:
+                returnList.append(node)
+        return returnList
     def selectedNodes(self):
         returnList = []
         for nodeName in self.Nodes:

@@ -78,20 +78,26 @@ class NodeConstructor(object):
         
         self.knobs = []
 
+        self['ClassName'] = StrKnob('Node')
+        self['ClassName'].shown = False
+        self['nodeName'] = StrKnob('Node000')
+        
         self['xpos'] = IntKnob(self.parent.getAssignedXPos())
         self['ypos'] = IntKnob(self.parent.getAssignedYPos())
-
         self['selected'] = BoolKnob(False)
+        self['xpos'].shown = False
+        self['ypos'].shown = False
+        self['selected'].shown = False
         
-        self['ClassName'] = StrKnob('Node')
-        self['nodeName'] = StrKnob('Node000')
         
         self.shapeTransform = QtGui.QTransform()
         self.nodeShape()
         self.mapNodeShape()
         
         self['width'] = IntKnob(self.rectLowHigh[1][0])
+        self['width'].shown = False
         self['height'] = IntKnob(self.rectLowHigh[1][1])
+        self['height'].shown = False
         #Doesn't really need to be initialized, but here for reference
         #self.parent = None
         
@@ -279,20 +285,32 @@ class NodeConstructor(object):
         
         #LAYER5: Node Thumbnail
         
-        
+        self.drawNodeExtra(painter)
+    def drawNodeExtra(self, painter): #Override me!
+        pass
                 
     def setName(self, value):
-        self['nodeName'].setText(value)
+        self['nodeName'].setValue(value)
         self.setObjectName(value)
         self.setWindowTitle(value)
     def attachKnobs(self):
         #for widget in self.widget().panelLayout.findChildren(object):
         #    self.widget().panelLayout.removeWidget(widget)
+        LineList = []
+        LineLayout = QtGui.QHBoxLayout()
+        LineLayout.setContentsMargins(0,0,0,0)
         for knob in self:
-            if knob not in self.widget().panelLayout.findChildren(object):
-                #self.widget().panelLayout.addWidget(knob.name)
-                #self.widget().panelLayout.addWidget(knob)
-                self.widget().panelLayout.addLayout(knob.knobLayout)
+            if knob.shown is True:
+                if knob not in self.widget().panelLayout.findChildren(object):
+                    if knob.newline is True:
+                        LineList.append(LineLayout)
+                        LineLayout = QtGui.QHBoxLayout()
+                        LineLayout.setContentsMargins(0,0,0,0)
+                    LineLayout.addWidget(knob)
+        LineList.append(LineLayout)
+        
+        for layout in LineList:
+            self.widget().panelLayout.addLayout(layout)
     def setParent(self, value):
         self.parent = value
     def update(self):
@@ -333,7 +351,7 @@ class TimelineNode(NodeConstructor, PropertiesDockWidget):
             return self.parent.getTopNodeAtFrame(args[0], notNode = self)
     def getInputs(self):
         returnList = []
-        for frame in range(self['length'].getValue()):
+        for frame in range(self['width'].getValue()):
             frame += self['firstFrame'].getValue()
             returnList.appened(self.parent.getTopNodeAtFrame(frame, notNode = self))
         return returnList

@@ -25,23 +25,20 @@
 
 from PySide import QtGui, QtCore
 
-from KnobConstructor import Knob
-import KnobElements
-
-
-class TextKnob(Knob):
-    def __init__(self, value, name = 'TextKnob'):
-        super(TextKnob, self).__init__()
-        
-        self.TextWidget = KnobElements.TextWidget()
-        self.knobLayout.addWidget(self.TextWidget)
-        
-        self.name.setText(name)
-        self.setValue(value)
-
+class ComboWidget(QtGui.QComboBox):
+    def __init__(self):
+        super(ComboWidget, self).__init__()
+        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+    def sizeHint(self):
+        return QtCore.QSize(600,16)
     def setValue(self, value):
-        self.TextWidget.setValue(value)
+        if type(value) is str:
+            value = self.findText(value)
+        self.setCurrentIndex(value)
     def getValue(self):
-        return self.TextWidget.getValue()
-
-       
+        return self.currentText()
+    def setItems(self, Items):
+        for index in range(self.count()):
+            self.removeItem(index)
+        self.addItems(Items)
+        self.update()

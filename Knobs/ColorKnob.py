@@ -27,6 +27,7 @@ from PySide import QtGui, QtCore
 
 import AppCore
 import KnobConstructor
+import KnobElements
 from FloatKnob import FloatKnob
 
 import MediaAppIcons
@@ -38,7 +39,11 @@ class ColorKnob(QtGui.QWidget):
         else:
             name = 'ColorKnob'
         super(ColorKnob, self).__init__()
-        self.name = KnobConstructor.KnobLabel()
+        
+        self.shown = True
+        self.newline = True
+        
+        self.name = KnobElements.KnobLabel()
         self.name.setText(name)
         self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         

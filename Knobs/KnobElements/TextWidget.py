@@ -25,24 +25,13 @@
 
 from PySide import QtGui, QtCore
 
-import AppCore
-import KnobConstructor
-
-
-class LinkKnob(KnobConstructor.Knob, QtGui.QLineEdit):
-    def __init__(self, value, name = 'LinkKnob'):
-        super(LinkKnob, self).__init__()
-        self.knobLayout.addWidget(self)
-        
-        self.name.setText(name)
-        self.setValue(value)
-        
-        self.link = None
-        
+class TextWidget(QtGui.QTextEdit):
+    def __init__(self):
+        super(TextWidget, self).__init__()
+        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
     def setValue(self, value):
-        self.link = value
-        self.setText(str(value))
-        self.update()
+        self.setText(value)
     def getValue(self):
-        return self.link
-       
+        return self.text()
+    def sizeHint(self):
+        return QtCore.QSize(400,300)

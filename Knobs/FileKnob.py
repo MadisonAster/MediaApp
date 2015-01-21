@@ -26,78 +26,40 @@
 from PySide import QtGui, QtCore
 
 import AppCore
-import KnobConstructor
+from KnobConstructor import Knob
+import KnobElements
 
 
-
-class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
+class FileKnob(Knob):
     urlDropped = QtCore.Signal()
     def __init__(self, value, parent = None, name = 'FileKnob'):
         super(FileKnob, self).__init__()
         #######################################
-        
-        self.parent = parent
-        self.setAcceptDrops(True)
-        
-        self.knobLayout.addWidget(self)
         self.name.setText(name)
-        self.setValue(value)
+        self.parent = parent
+        #self.setAcceptDrops(True)
         
-        
-         
-        self.browseButton = QtGui.QPushButton('Browse', self)
+        self.PathWidget = KnobElements.PathWidget()
+        self.knobLayout.addWidget(self.PathWidget)
+
+        self.browseButton = KnobElements.SquareButton('B')
         self.browseButton.setAutoFillBackground(True)
-        self.browseButton.clicked[bool].connect(self.fileBrowse)
+        self.browseButton.clicked.connect(self.fileBrowse)
         self.knobLayout.addWidget(self.browseButton)
         
+        self.setValue(value)
+        
     def setValue(self, value):
-        self.setText(value)
-        self.update()
+        self.PathWidget.setValue(value)
     def getValue(self):
-        return self.text()
-    
-    def dragEnterEvent(self, event):
-        if event.mimeData().hasUrls():
-            event.accept()
-        else:
-            event.ignore() 
-    def dropEvent(self, event):
-        eventText = event.mimeData().urls()[0].path().lstrip('/')
-        self.setText(self.TranslatePath(eventText))
-        self.urlDropped.emit()  
-        self.update()
-    
-    @QtCore.Slot()
-    def copy(self):
-        print 'hello carl'
-        unTranslatedText = self.unTranslatePath(self.getValue())
-        AppCore.App.clipboard().setText('hello carl')
-        
-    def paste(self):
-        self.setValue(self.TranslatePath(AppCore.App.clipboard().text()))
-        self.update()
-        
-    def unTranslatePath(self, path):
-        path = path.replace('\\','/')
-        for key in AppCore.AppPrefs['GLOBALS']:
-            repVal = AppCore.AppPrefs[key].replace('\\','/').rstrip('/')
-            path = path.replace(key, repVal)
-        return path
-        
-    def TranslatePath(self, path):
-        path = path.replace('\\','/')
-        for key in AppCore.AppPrefs['GLOBALS']:
-            repVal = AppCore.AppPrefs[key].replace('\\','/').rstrip('/')
-            path = path.replace(repVal, key)
-        return path
-        
+        return self.PathWidget.getValue()
+
     def fileBrowse(self):
-        path = QtGui.QFileDialog.getExistingDirectory(self, "Open File", self.unTranslatePath(self.text()))
+        path = QtGui.QFileDialog.getExistingDirectory(self, "Open File", self.PathWidget.getValue())
         if path:
-            path = self.TranslatePath(path)
-            self.setText(path)
-        self.update()
+            self.PathWidget.setValue(path)
         
+    #FLAW: Maybe this does not belong here
     def getEvaluatedPath(self, *args):
         if len(args) is 1:
             currentFrame = args[0]
@@ -131,14 +93,13 @@ class FileKnob(KnobConstructor.Knob, QtGui.QLineEdit):
                 elif int(offset/(length+1)) % 2 == 0:
                     frame = firstFrame+(offset % (length+1))        
             elif knobVal == 'black':
-                return self.unTranslatePath('*BLACK')
+                return self.PathWidget.unTranslatePath('*BLACK')
         else:
             frame = firstFrame+offset
         ####################
         
         #TODO fix this
-        text = self.text().replace('######', str(frame).zfill(6))
-        text = self.unTranslatePath(text)
+        text = self.getValue().replace('######', str(frame).zfill(6))
         
         return text
         

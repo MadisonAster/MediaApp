@@ -24,22 +24,25 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
-import KnobConstructor
 
-class IntKnob(KnobConstructor.Knob, QtGui.QLineEdit):
+from KnobConstructor import Knob
+import KnobElements
+
+class IntKnob(Knob):
     def __init__(self, value, name = 'IntKnob'):
         super(IntKnob, self).__init__()
-        self.knobLayout.addWidget(self)
+        
+        self.IntWidget = KnobElements.IntWidget()
+        self.knobLayout.addWidget(self.IntWidget)
+        self.knobLayout.addWidget(KnobElements.Spacer())
         
         self.name.setText(name)
         self.setValue(value)
         
     def setValue(self, value):
-        self.setText(str(value))
-        self.textChanged.emit
-        self.update()
+        self.IntWidget.setValue(value)
     def getValue(self):
-        return int(float(self.text()))
+        return self.IntWidget.getValue()
     def setChanged(self, callable):
         self.changed = callable
-        self.textChanged.connect(self.changed)
+        self.IntWidget.textChanged.connect(self.changed)

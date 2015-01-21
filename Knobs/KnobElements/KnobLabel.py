@@ -25,23 +25,13 @@
 
 from PySide import QtGui, QtCore
 
-from KnobConstructor import Knob
-import KnobElements
-
-
-class TextKnob(Knob):
-    def __init__(self, value, name = 'TextKnob'):
-        super(TextKnob, self).__init__()
+class KnobLabel(QtGui.QLabel):
+    def __init__(self):
+        super(KnobLabel, self).__init__()
         
-        self.TextWidget = KnobElements.TextWidget()
-        self.knobLayout.addWidget(self.TextWidget)
-        
-        self.name.setText(name)
-        self.setValue(value)
-
-    def setValue(self, value):
-        self.TextWidget.setValue(value)
-    def getValue(self):
-        return self.TextWidget.getValue()
-
+        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        self.setAlignment(QtCore.Qt.AlignRight)
+        self.labelSize = 100
+    def sizeHint(self):
+        return QtCore.QSize(self.labelSize,18)
        

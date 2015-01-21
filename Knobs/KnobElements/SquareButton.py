@@ -25,23 +25,13 @@
 
 from PySide import QtGui, QtCore
 
-from KnobConstructor import Knob
-import KnobElements
-
-
-class TextKnob(Knob):
-    def __init__(self, value, name = 'TextKnob'):
-        super(TextKnob, self).__init__()
-        
-        self.TextWidget = KnobElements.TextWidget()
-        self.knobLayout.addWidget(self.TextWidget)
-        
-        self.name.setText(name)
-        self.setValue(value)
-
-    def setValue(self, value):
-        self.TextWidget.setValue(value)
-    def getValue(self):
-        return self.TextWidget.getValue()
-
-       
+class SquareButton(QtGui.QPushButton):
+    def __init__(self, *args):
+        if type(args[0]) is str:
+            text = args[0]
+        else:
+            text = ''
+        super(SquareButton, self).__init__(text)
+        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+    def sizeHint(self):
+        return QtCore.QSize(24,24)

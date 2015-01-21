@@ -52,16 +52,10 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
     def addToolBars(self):
         self.topToolBar = QtGui.QToolBar('Top Tool Bar')
         self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
-        
-        self.leftToolBar.setOrientation(QtCore.Qt.Vertical)
 
-        self.RPlay = QtGui.QAction(MediaAppIcons.RPlay(), 'cacheFrames', self)
-        self.RPlay.triggered.connect(self.cacheFrames)
-        self.topToolBar.addAction(self.RPlay)
-        
-        self.RPlay2 = QtGui.QAction(MediaAppIcons.RPlay(), 'cacheFrames', self)
-        self.RPlay2.triggered.connect(self.cacheFrames)
-        self.leftToolBar.addAction(self.RPlay2)
+        spacer = QtGui.QWidget()
+        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.topToolBar.addWidget(spacer)
         
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.topToolBar)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, self.leftToolBar)
@@ -239,6 +233,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         return self.getCurrentIndicator().getCurrentFrame()
     def setCurrentFrame(self, value):
         self.getCurrentIndicator().setCurrentFrame(value)
+        self.update()
     def moveCurrentFrame(self, value, playback = False):
         self.getCurrentIndicator().moveCurrentFrame(value, playback = playback)
     def getImage(self):
@@ -246,6 +241,8 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         if image is None:
             image = AppCore.generateBlack()
         return image
+    def getImageAt(self, frame):
+        return self.getCurrentIndicator().getFrameAt(frame)
     def getCache(self):
         return self.getCurrentIndicator()
     #####################

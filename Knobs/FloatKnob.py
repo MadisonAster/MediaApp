@@ -24,17 +24,24 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
-import KnobConstructor
 
-class FloatKnob(KnobConstructor.Knob, QtGui.QLineEdit):
+from KnobConstructor import Knob
+import KnobElements
+
+class FloatKnob(Knob):
     def __init__(self, value, name = 'FloatKnob'):
         super(FloatKnob, self).__init__()
-        self.knobLayout.addWidget(self)
+        
+        self.FloatWidget = KnobElements.FloatWidget()
+        self.knobLayout.addWidget(self.FloatWidget)
         
         self.name.setText(name)
         self.setValue(value)
+        
     def setValue(self, value):
-        self.setText(str(value))
-        self.update()
+        self.FloatWidget.setValue(value)
     def getValue(self):
-        return float(self.text())
+        return self.FloatWidget.getValue()
+    def setChanged(self, callable):
+        self.changed = callable
+        self.FloatWidget.textChanged.connect(self.changed)

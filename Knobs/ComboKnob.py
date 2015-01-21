@@ -23,30 +23,28 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
-import KnobConstructor
 
-class ComboKnob(KnobConstructor.Knob, QtGui.QComboBox):
+from PySide import QtGui, QtCore
+
+from KnobConstructor import Knob
+import KnobElements
+
+class ComboKnob(Knob):
     def __init__(self, values, name = 'ComboKnob'):
         super(ComboKnob, self).__init__()
-        self.knobLayout.addWidget(self)
-        
         self.name.setText(name)
         
+        self.ComboWidget = KnobElements.ComboWidget()
+        self.knobLayout.addWidget(self.ComboWidget)
+
         if type(values) is list:
-            self.addItems(values)
+            self.ComboWidget.setItems(values)
             
     def setValue(self, value):
-        if type(value) is str:
-            value = self.findText(value)
-        self.setCurrentIndex(value)
-        self.update()
+        self.ComboWidget.setValue(value)
     def getValue(self):
-        return self.currentText()
-        
-        
+        return self.ComboWidget.getValue()
     def setItems(self, Items):
-        for index in range(self.count()):
-            self.removeItem(index)
-        self.addItems(Items)
-        self.update()
+        self.ComboWidget.setItems(Items)
+    def currentIndex(self):
+        return self.ComboWidget.currentIndex()

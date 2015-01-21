@@ -23,13 +23,7 @@ Bundle Dependencies with program as submodules in ./Dependencies Package
 Add option to extract source of dependencies
 Add license viewer window for dependencies
 
-Create Color Knob
-
 Add drag event functions to Node Paths
-
-Add Preferences window
-
-Get Touch Events working
 
 Make program compatible with latest version of python for performance improvements -  checkout fseek bug
 
@@ -38,12 +32,11 @@ Make program compatible with latest version of python for performance improvemen
 Start Adding Toolbars, Node Performance overlays option in NodeGraph
 
 
-
-
-#fix marquee float bug
 Fix zooming math so that it doesn't slow down as you zoom in
 
+-Create Layers Knob Class,
 
+implement different node styles, simpleVertical, simpleHorizontal, verboseVertical, verboseHorizontal
 
 
 ######LOW PRIORITY######
@@ -68,6 +61,5 @@ Add Properties Counter/Maximum to Properties Bin Toolbar
 standardize self.parent or self.parent() calls
 
 Finish figuring out how to add Script Widget, so that scripts can be executed.
-Start adding Script buttons to Knobs
 
-Figure out how to override TabBar look
+Start adding Script buttons to Knobs

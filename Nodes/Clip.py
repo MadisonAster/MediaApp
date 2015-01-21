@@ -42,12 +42,17 @@ class Clip(ImageNode, AudioNode):
         #FLAW: move parent kw setting to KnobConstructor
         defaultPath = '*NWSTORAGE/'
         self['file'] = FileKnob(defaultPath, parent = self)
-        self['firstFrame'] = IntKnob(1)
-        self['lastFrame'] = IntKnob(100)
-        self['startAt'] = IntKnob(0)
         
         self['before'] = ComboKnob(['hold', 'loop', 'bounce', 'black'])
+        self['firstFrame'] = IntKnob(1)
+        self['lastFrame'] = IntKnob(100)
         self['after'] = ComboKnob(['hold', 'loop', 'bounce', 'black'])
+        self['firstFrame'].newline = False
+        self['lastFrame'].newline = False
+        self['after'].newline = False
+        
+        self['startAt'] = IntKnob(0)
+
         self['Notes'] = TextKnob('')
         
         self.attachKnobs()

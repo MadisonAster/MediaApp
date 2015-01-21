@@ -25,32 +25,41 @@
 
 from PySide import QtGui, QtCore
 
-class KnobLabel(QtGui.QLabel):
+import KnobElements
+
+class Knob(QtGui.QWidget):
     def __init__(self):
-        super(KnobLabel, self).__init__()
-        
-        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Ignored)
-        self.setAlignment(QtCore.Qt.AlignRight)
-        self.labelSize = 100
-    def sizeHint(self):
-        return QtCore.QSize(self.labelSize,15)
-        
-        
-class Knob(object):
-    def __init__(self):
-        self.name = KnobLabel()
+        self.name = KnobElements.KnobLabel()
         super(Knob, self).__init__()
         
         #self.setToolTip('Here lies a tooltip, barren and empty')
         #self.setHidden(False)
         #self.setEnabled(True)
         self.newline = True
+        self.shown = True
         
         self.knobLayout = QtGui.QHBoxLayout()
+        self.knobLayout.setContentsMargins(0,0,0,0)
         self.knobLayout.addWidget(self.name)
+        
+        self.setLayout(self.knobLayout)
+        
+        def none(): pass
+        self.changed = none
+        
     def update(self):
         if hasattr(self, 'parent'):
             if not callable(self.parent):
                 self.parent.update()
-    
+    def setChanged(self, callable):
+        self.changed = callable
+        
+        #BUG: add some isinstance calls here
+        self.textChanged.connect(self.changed)
+    def showName(self, value):
+        if value is True:
+            self.name.show()
+        else:
+            self.name.hide()
+        
     

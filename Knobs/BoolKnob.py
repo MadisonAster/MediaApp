@@ -24,24 +24,21 @@
 #===============================================================================
 
 from PySide import QtGui, QtCore
-import KnobConstructor
 
-class BoolKnob(KnobConstructor.Knob, QtGui.QCheckBox):
+from KnobConstructor import Knob
+import KnobElements
+
+class BoolKnob(Knob):
     def __init__(self, value, name = 'BoolKnob'):
         super(BoolKnob, self).__init__()
-        self.knobLayout.addWidget(self)
-        
         self.name.setText(name)
+        
+        self.CheckBoxWidget = KnobElements.CheckBoxWidget()
+        self.knobLayout.addWidget(self.CheckBoxWidget)
+        self.knobLayout.addWidget(KnobElements.Spacer())
+        
         self.setValue(value)
     def setValue(self, value):
-        if value == True:
-            self.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.setCheckState(QtCore.Qt.Unchecked)
-        self.update()
+        self.CheckBoxWidget.setValue(value)
     def getValue(self):
-        value = self.checkState()
-        if value == QtCore.Qt.Checked:
-            return True
-        if value == QtCore.Qt.Unchecked:
-            return False
+        return self.CheckBoxWidget.getValue()

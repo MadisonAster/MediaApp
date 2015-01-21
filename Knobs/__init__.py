@@ -30,6 +30,6 @@ from ComboKnob import ComboKnob
 from FileKnob import FileKnob
 from FloatKnob import FloatKnob
 from IntKnob import IntKnob
-from LinkKnob import LinkKnob
+from Spacer import Spacer
 from StrKnob import StrKnob
 from TextKnob import TextKnob

@@ -23,25 +23,15 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
-
-from KnobConstructor import Knob
-import KnobElements
-
-
-class TextKnob(Knob):
-    def __init__(self, value, name = 'TextKnob'):
-        super(TextKnob, self).__init__()
-        
-        self.TextWidget = KnobElements.TextWidget()
-        self.knobLayout.addWidget(self.TextWidget)
-        
-        self.name.setText(name)
-        self.setValue(value)
-
-    def setValue(self, value):
-        self.TextWidget.setValue(value)
-    def getValue(self):
-        return self.TextWidget.getValue()
-
-       
+from CheckBoxWidget import CheckBoxWidget
+from ComboWidget import ComboWidget
+from FloatWidget import FloatWidget
+from IntWidget import IntWidget
+from KnobLabel import KnobLabel
+from PathWidget import PathWidget
+from RectButton import RectButton
+from SliderWidget import SliderWidget
+from Spacer import Spacer
+from SquareButton import SquareButton
+from StrWidget import StrWidget
+from TextWidget import TextWidget
