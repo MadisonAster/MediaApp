@@ -38,11 +38,17 @@ class Knob(QtGui.QWidget):
         self.newline = True
         self.shown = True
         
-        self.knobLayout = QtGui.QHBoxLayout()
-        self.knobLayout.setContentsMargins(0,0,0,0)
-        self.knobLayout.addWidget(self.name)
+        self.vertLayout = QtGui.QVBoxLayout()
+        self.vertLayout.setContentsMargins(0,0,0,0)
+        self.vertLayout.setSpacing(0)
+        self.vertLayout.addWidget(self.name)
         
-        self.setLayout(self.knobLayout)
+        self.knobLayout = QtGui.QHBoxLayout()
+        self.knobLayout.setContentsMargins(3,0,3,0)
+        self.knobLayout.setSpacing(0)
+        self.vertLayout.addLayout(self.knobLayout)
+        
+        self.setLayout(self.vertLayout)
         
         def none(): pass
         self.changed = none

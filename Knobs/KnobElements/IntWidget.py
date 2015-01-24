@@ -29,7 +29,8 @@ class IntWidget(QtGui.QLineEdit):
     def __init__(self):
         super(IntWidget, self).__init__()
         
-        self.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
+        self.setAlignment(QtCore.Qt.AlignLeft)
     def setValue(self, value):
         self.setText(str(value))
         self.textChanged.emit

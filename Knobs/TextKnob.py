@@ -32,6 +32,7 @@ import KnobElements
 class TextKnob(Knob):
     def __init__(self, value, name = 'TextKnob'):
         super(TextKnob, self).__init__()
+        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
         
         self.TextWidget = KnobElements.TextWidget()
         self.knobLayout.addWidget(self.TextWidget)

@@ -34,7 +34,8 @@ class FileKnob(Knob):
     urlDropped = QtCore.Signal()
     def __init__(self, value, parent = None, name = 'FileKnob'):
         super(FileKnob, self).__init__()
-        #######################################
+        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        
         self.name.setText(name)
         self.parent = parent
         #self.setAcceptDrops(True)

@@ -39,6 +39,7 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     ###Initialize Class###
     def __init__(self):
         super(ViewerWidget, self).__init__()
+        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         
         self.setMouseTracking(True)
         self.modes.append('marqMode')
@@ -282,5 +283,8 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         input = self.getInput()
         for frame in range(firstFrame, lastFrame):
             yield input.getImage(frame)
+    
+    def sizeHint(self):
+        return QtCore.QSize(1920,1080)
     #####################
     

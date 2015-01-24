@@ -28,10 +28,10 @@ from PySide import QtGui, QtCore
 class TextWidget(QtGui.QTextEdit):
     def __init__(self):
         super(TextWidget, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
     def setValue(self, value):
         self.setText(value)
     def getValue(self):
         return self.text()
     def sizeHint(self):
-        return QtCore.QSize(400,300)
+        return QtCore.QSize(150,300)

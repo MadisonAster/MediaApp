@@ -80,14 +80,15 @@ class NodeConstructor(object):
 
         self['ClassName'] = StrKnob('Node')
         self['ClassName'].shown = False
-        self['nodeName'] = StrKnob('Node000')
+        
+        self['nodeName'] = TitleKnob('Node000')
         
         self['xpos'] = IntKnob(self.parent.getAssignedXPos())
         self['ypos'] = IntKnob(self.parent.getAssignedYPos())
         self['selected'] = BoolKnob(False)
         self['xpos'].shown = False
         self['ypos'].shown = False
-        self['selected'].shown = False
+        #self['selected'].shown = False
         
         
         self.shapeTransform = QtGui.QTransform()
@@ -299,27 +300,45 @@ class NodeConstructor(object):
         LineList = []
         LineLayout = QtGui.QHBoxLayout()
         LineLayout.setContentsMargins(0,0,0,0)
+        LineLayout.setSpacing(0)
         for knob in self:
-            if knob.shown is True:
-                if knob not in self.widget().panelLayout.findChildren(object):
-                    if knob.newline is True:
-                        LineList.append(LineLayout)
-                        LineLayout = QtGui.QHBoxLayout()
-                        LineLayout.setContentsMargins(0,0,0,0)
-                    LineLayout.addWidget(knob)
+            if type(knob) is not TitleKnob:
+                if knob.shown is True:
+                    if knob not in self.widget().panelLayout.findChildren(object):
+                        if knob.newline is True:
+                            if self.hasStretch(LineLayout) is False:
+                                LineLayout.addWidget(Spacer())
+                            LineList.append(LineLayout)
+                            LineLayout = QtGui.QHBoxLayout()
+                            LineLayout.setContentsMargins(0,0,0,0)
+                            LineLayout.setSpacing(0)
+                        LineLayout.addWidget(knob)
+        if self.hasStretch(LineLayout) is False:            
+            LineLayout.addWidget(Spacer())
         LineList.append(LineLayout)
         
         for layout in LineList:
             self.widget().panelLayout.addLayout(layout)
+    def hasStretch(self, layout):
+        for index in range(layout.count()):
+            if layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtGui.QSizePolicy.MinimumExpanding:
+                return True
+            elif layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtGui.QSizePolicy.Expanding:
+                return True
+            elif layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtGui.QSizePolicy.Preferred:
+                return True
+        else:
+            return False
+        
     def setParent(self, value):
         self.parent = value
     def update(self):
         self.parent.update()
-       
+        
 class GraphNode(NodeConstructor, PropertiesDockWidget):
     def __init__(self, parent):
         super(GraphNode, self).__init__(parent)
-        
+        self.setTitleBarWidget(self['nodeName'])
     def setInput(self, index, object):
         self.inputPaths[index] = object
         self.inputsChanged()
@@ -340,6 +359,7 @@ class GraphNode(NodeConstructor, PropertiesDockWidget):
 class TimelineNode(NodeConstructor, PropertiesDockWidget):
     def __init__(self, parent):
         super(TimelineNode, self).__init__(parent)
+        self.setTitleBarWidget(self['nodeName'])
     def setInput(self, index, object):
         return
     def setCurrentInputIndex(self, index):

@@ -28,9 +28,10 @@ from PySide import QtGui, QtCore
 class ComboWidget(QtGui.QComboBox):
     def __init__(self):
         super(ComboWidget, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
+        #self.setAlignment(QtCore.Qt.AlignLeft)
     def sizeHint(self):
-        return QtCore.QSize(600,16)
+        return QtCore.QSize(150,16)
     def setValue(self, value):
         if type(value) is str:
             value = self.findText(value)

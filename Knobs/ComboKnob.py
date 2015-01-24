@@ -33,6 +33,7 @@ class ComboKnob(Knob):
     def __init__(self, values, name = 'ComboKnob'):
         super(ComboKnob, self).__init__()
         self.name.setText(name)
+        self.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
         
         self.ComboWidget = KnobElements.ComboWidget()
         self.knobLayout.addWidget(self.ComboWidget)

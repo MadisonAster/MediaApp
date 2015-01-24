@@ -22,16 +22,24 @@
 #    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
+from copy import copy
 
 from PySide import QtGui, QtCore
+
+import AppCore
 
 class KnobLabel(QtGui.QLabel):
     def __init__(self):
         super(KnobLabel, self).__init__()
         
-        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
-        self.setAlignment(QtCore.Qt.AlignRight)
-        self.labelSize = 100
-    def sizeHint(self):
-        return QtCore.QSize(self.labelSize,18)
+        font = copy(AppCore.AppPrefs['AppFont'])
+        #font.setStyle(QtGui.QFont.StyleOblique)
+        font.setPointSize(font.pointSize()-3)
+        self.setFont(font)
+        
+        #self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        #self.setAlignment(QtCore.Qt.AlignRight)
+        #self.labelSize = 100
+    #def sizeHint(self):
+    #    return QtCore.QSize(self.labelSize,18)
        

@@ -25,6 +25,7 @@
 
 from CheckBoxWidget import CheckBoxWidget
 from ComboWidget import ComboWidget
+from Divider import Divider
 from FloatWidget import FloatWidget
 from IntWidget import IntWidget
 from KnobLabel import KnobLabel

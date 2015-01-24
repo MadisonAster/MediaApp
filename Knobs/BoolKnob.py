@@ -32,10 +32,12 @@ class BoolKnob(Knob):
     def __init__(self, value, name = 'BoolKnob'):
         super(BoolKnob, self).__init__()
         self.name.setText(name)
+        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        self.setLayout(self.knobLayout)
         
         self.CheckBoxWidget = KnobElements.CheckBoxWidget()
         self.knobLayout.addWidget(self.CheckBoxWidget)
-        self.knobLayout.addWidget(KnobElements.Spacer())
+        self.knobLayout.addWidget(self.name)
         
         self.setValue(value)
     def setValue(self, value):

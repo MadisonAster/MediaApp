@@ -28,15 +28,44 @@ from PySide import QtGui, QtCore
 from KnobConstructor import Knob
 import KnobElements
 
-class StrKnob(Knob):
-    def __init__(self, value, name = 'StrKnob'):
-        super(StrKnob, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+class TitleKnob(Knob):
+    def __init__(self, value, name = 'TitleKnob'):
+        super(TitleKnob, self).__init__()
+        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
 
+        self.topDivider = KnobElements.Divider(horizontal = True)
+        self.barDivider = KnobElements.Divider(horizontal = True)
+        self.bottomDivider = KnobElements.Divider(horizontal = True)
+        self.leftDivider = KnobElements.Divider(vertical = True)
+        self.rightDivider = KnobElements.Divider(vertical = True)
+        
+        self.spacerLayout = QtGui.QHBoxLayout()
+        self.spacerLayout.addWidget(self.leftDivider)
+        self.spacerLayout.addWidget(KnobElements.Spacer())
+        self.spacerLayout.addWidget(self.rightDivider)
+        
+        self.vertLayout.insertWidget(0, self.topDivider)
+        #self.vertLayout.addLayout(self.knobLayout)
+        self.vertLayout.addWidget(self.barDivider)
+        #self.vertLayout.addLayout(self.spacerLayout)
+        #self.vertLayout.addWidget(self.bottomDivider)
+        
+        
+        self.knobLayout.setContentsMargins(40,0,3,0)
+        self.knobLayout.setSpacing(50)
+        
         self.StrWidget = KnobElements.StrWidget()
+        #self.StrWidget.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
         self.knobLayout.addWidget(self.StrWidget)
         
+        #self.knobLayout.addWidget(KnobElements.Spacer())
+        
+        self.closeButton = KnobElements.SquareButton('x')
+        self.knobLayout.addWidget(self.closeButton)
+        self.closeButton.clicked.connect(self.closeWidget)
+        
         self.name.setText(name)
+        self.name.hide()
         self.setValue(value)
 
     def setValue(self, value):
@@ -46,4 +75,6 @@ class StrKnob(Knob):
     def setChanged(self, callable):
         self.changed = callable
         self.StrWidget.textChanged.connect(self.changed)
+    def closeWidget(self):
+        self.parent.close()
        

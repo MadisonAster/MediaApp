@@ -102,6 +102,8 @@ class DockingBin(QtGui.QMainWindow):
 class PropertiesBin(QtGui.QMainWindow):
     def __init__(self):
         super(PropertiesBin, self).__init__()
+        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
+        
         self.className = self.__class__.__name__
         self.setDockOptions(False)
         
@@ -134,3 +136,5 @@ class PropertiesBin(QtGui.QMainWindow):
         self.DockingBin.unDockThisWidget(widget)
     def emptyBin(self):
         self.DockingBin.emptyBin()
+    def sizeHint(self):
+        return QtCore.QSize(200,800)

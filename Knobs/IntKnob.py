@@ -31,10 +31,11 @@ import KnobElements
 class IntKnob(Knob):
     def __init__(self, value, name = 'IntKnob'):
         super(IntKnob, self).__init__()
+        self.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
         
         self.IntWidget = KnobElements.IntWidget()
         self.knobLayout.addWidget(self.IntWidget)
-        self.knobLayout.addWidget(KnobElements.Spacer())
+        #self.knobLayout.addWidget(KnobElements.Spacer())
         
         self.name.setText(name)
         self.setValue(value)

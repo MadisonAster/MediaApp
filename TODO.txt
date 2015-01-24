@@ -36,6 +36,7 @@ Fix zooming math so that it doesn't slow down as you zoom in
 
 -Create Layers Knob Class,
 
+
 implement different node styles, simpleVertical, simpleHorizontal, verboseVertical, verboseHorizontal
 
 

@@ -33,3 +33,5 @@ from IntKnob import IntKnob
 from Spacer import Spacer
 from StrKnob import StrKnob
 from TextKnob import TextKnob
+from TitleKnob import TitleKnob
+
