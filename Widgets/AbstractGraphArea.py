@@ -23,6 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 import threading
+import math
 from time import time
 from copy import copy
 
@@ -85,6 +86,13 @@ class touchList(list):
                     found = True
             if found is False:
                 return False
+        for TouchPoint1 in other:
+            found = False
+            for TouchPoint2 in self:
+                if TouchPoint1.startPos() == TouchPoint2.startPos():
+                    found = True
+            if found is False:
+                return False
         return True
     def __ne__(self, other):
         if not isinstance(other, list):
@@ -92,6 +100,13 @@ class touchList(list):
         for TouchPoint1 in self:
             found = False
             for TouchPoint2 in other:
+                if TouchPoint1.startPos() == TouchPoint2.startPos():
+                    found = True
+            if found is False:
+                return True
+        for TouchPoint1 in other:
+            found = False
+            for TouchPoint2 in self:
                 if TouchPoint1.startPos() == TouchPoint2.startPos():
                     found = True
             if found is False:
@@ -111,16 +126,17 @@ class AbstractGraphArea(QtGui.QWidget):
         self.setAttribute(QtCore.Qt.WA_AcceptTouchEvents)
         
         #Initialize Values
-        self.modes = modeList(['None','zoomMode','panMode'])
+        self.modes = modeList(['None','zoomMode','panMode', 'touchPanMode', 'touchMultiMode'])
         self.pressedButtons = keyList()
         self.inputInterval = 0
+        self.curGraphAngle = 0.0
         
         self.addToolBarLayouts()
         self.getDictSettings()
         
         self.TabletPressure = 1.0
         self.TouchInput = False
-        self.TouchList = []
+        self.TouchList = touchList()
         
     def addToolBarLayouts(self):
         self.VBox = QtGui.QVBoxLayout()
@@ -203,7 +219,6 @@ class AbstractGraphArea(QtGui.QWidget):
     def touchEvent(self, event):
         if event.type().name == 'TouchBegin':
             self.TouchInput = True
-            print '##touch begin##'
             self.initialTouchValues(event)
             return True
         elif event.type().name == 'TouchUpdate':
@@ -213,7 +228,6 @@ class AbstractGraphArea(QtGui.QWidget):
         elif event.type().name == 'TouchEnd':
             self.TouchList = []
             self.modes.setCurrentMode('None')
-            print '##touch end##'
             self.TouchInput = None
         return False
     def tabletEvent(self, event):
@@ -283,10 +297,10 @@ class AbstractGraphArea(QtGui.QWidget):
         pass
     def setTouchMode(self, event):
         if len(event.touchPoints()) == 1:
-            self.modes.setCurrentMode('panMode')
+            self.modes.setCurrentMode('touchPanMode')
         else:   
-            self.modes.setCurrentMode('None')
-            self.subclassTouchModes()
+            self.modes.setCurrentMode('touchMultiMode')
+        self.subclassTouchModes()
     def subclassTouchModes(self): #Override me!
         pass
     def getCurrentMode(self):
@@ -297,14 +311,47 @@ class AbstractGraphArea(QtGui.QWidget):
     def initialTouchValues(self, event):
         self.TouchList = touchList(event.touchPoints())
         
-        if event.type().name == 'TouchBegin':
-            self.startMouseX = event.touchPoints()[0].startPos().x()
-            self.startMouseY = event.touchPoints()[0].startPos().y()
-        else:
-            self.startMouseX = event.touchPoints()[0].pos().x()
-            self.startMouseY = event.touchPoints()[0].pos().y()
+        self.startTouchX = []
+        self.startTouchY = []
+        for point in event.touchPoints():
+            if event.type().name == 'TouchBegin':
+                x = point.startPos().x()
+                y = point.startPos().y()
+            else:
+                x = point.pos().x()
+                y = point.pos().y()
+            self.startTouchX.append(x)
+            self.startTouchY.append(y)
+            
+        avgStartModeX, avgStartModeY = 0, 0
+        for x, y in zip(self.startTouchX, self.startTouchY):
+            mx, my = self.graphTrans.inverted()[0].map(x, y)
+            avgStartModeX += mx
+            avgStartModeY += my
+        self.startModeX = avgStartModeX/len(self.startTouchX)
+        self.startModeY = avgStartModeY/len(self.startTouchY)
         
-        self.startModeX, self.startModeY = self.graphTrans.inverted()[0].map(self.startMouseX, self.startMouseY)
+        #Calculate Center
+        sumX = 0
+        sumY = 0
+        for x, y in zip(self.startTouchX, self.startTouchY):
+            sumX += x
+            sumY += y
+        self.startTouchCenterX = float(sumX)/len(self.startTouchX)
+        self.startTouchCenterY = float(sumY)/len(self.startTouchY)
+        
+        #Calculate distance and angle of each point relative to center
+        self.startTouchDistanceX = []
+        self.startTouchDistanceY = []
+        self.startTouchAngle = []
+        for x, y in zip(self.startTouchX, self.startTouchY):
+            dx = float(x)-float(self.startTouchCenterX)
+            dy = float(y)-float(self.startTouchCenterY)
+            self.startTouchDistanceX.append(math.fabs(dx))
+            self.startTouchDistanceY.append(math.fabs(dy))
+            self.startTouchAngle.append(self.angleFromPoint(dx,dy))
+        self.startGraphAngle = self.curGraphAngle
+        
         
         self.setTouchMode(event)
         self.initialValues()
@@ -313,6 +360,7 @@ class AbstractGraphArea(QtGui.QWidget):
         AppCore.AppAttributes[self.className+'-GraphY'] = self.curGraphY
         AppCore.AppAttributes[self.className+'-GraphXS'] = self.curGraphXS
         AppCore.AppAttributes[self.className+'-GraphYS'] = self.curGraphYS
+        AppCore.AppAttributes[self.className+'-GraphAngle'] = self.curGraphAngle
         self.endModeX = self.startModeX
         self.endModeY = self.startModeY
         
@@ -343,10 +391,48 @@ class AbstractGraphArea(QtGui.QWidget):
     def subclassProgressValues(self, event): #Override me!
         pass
     def progressTouchValues(self, event):
-        self.curMouseX = event.touchPoints()[0].pos().x()
-        self.curMouseY = event.touchPoints()[0].pos().y()
-        self.curModeX, self.curModeY = self.graphTrans.inverted()[0].map(self.curMouseX, self.curMouseY)
-        self.subclassProgressValues(event)
+        self.curTouchX = []
+        self.curTouchY = []
+        for point in event.touchPoints():
+            self.curTouchX.append(point.pos().x())
+            self.curTouchY.append(point.pos().y())
+            
+        avgStartModeX, avgStartModeY = 0, 0
+        for x, y in zip(self.startTouchX, self.startTouchY):
+            mx, my = self.graphTrans.inverted()[0].map(x, y)
+            avgStartModeX += mx
+            avgStartModeY += my
+        self.startModeX = avgStartModeX/len(self.startTouchX)
+        self.startModeY = avgStartModeY/len(self.startTouchY)
+        
+        #Calculate Center
+        sumX = 0
+        sumY = 0
+        for x, y in zip(self.curTouchX, self.curTouchY):
+            sumX += x
+            sumY += y
+        self.curTouchCenterX = float(sumX)/len(self.curTouchX)
+        self.curTouchCenterY = float(sumY)/len(self.curTouchY)
+        
+        #Calculate distance and angle of each point relative to center
+        self.curTouchDistanceX = []
+        self.curTouchDistanceY = []
+        self.curTouchAngle = []
+        for x, y in zip(self.curTouchX, self.curTouchY):
+            dx = float(x)-float(self.startTouchCenterX)
+            dy = float(y)-float(self.startTouchCenterY)
+            self.curTouchDistanceX.append(math.fabs(dx))
+            self.curTouchDistanceY.append(math.fabs(dy))
+            self.curTouchAngle.append(self.angleFromPoint(dx,dy))
+            
+        #Calculate change in angle    
+        angleDelta = 0.0
+        for ca, sa in zip(self.curTouchAngle, self.startTouchAngle):
+            angleDelta += sa - ca
+        angleDelta = angleDelta/len(self.startTouchAngle)
+        self.curGraphAngle = self.startGraphAngle-angleDelta
+        
+        self.subclassProgressTouchValues(event)
     def subclassProgressTouchValues(self, event): #Override me!
         pass
     ####################
@@ -360,12 +446,11 @@ class AbstractGraphArea(QtGui.QWidget):
         else:
             self.subclassModeEvents(event)
     def TouchModeEvents(self, event):
-        if self.getCurrentMode() == 'touchZoomMode':
-            self.touchZoomEvent()
-        elif self.getCurrentMode() == 'panMode':
-            self.panEvent()
-        else:
-            self.subclassTouchModeEvents(event)
+        if self.getCurrentMode() == 'touchMultiMode':
+            self.touchMultiEvent()
+        elif self.getCurrentMode() == 'touchPanMode':
+            self.touchPanEvent()
+        self.subclassTouchModeEvents(event)
     def subclassModeEvents(self, event): #Override me!
         pass
     def subclassTouchModeEvents(self, event): #Override me!
@@ -386,7 +471,7 @@ class AbstractGraphArea(QtGui.QWidget):
         else:
             self.curGraphXS = AppCore.AppAttributes[self.className+'-GraphXS']+scaleDeltaX
             self.curGraphYS = AppCore.AppAttributes[self.className+'-GraphYS']+scaleDeltaY
-        
+        ##### Repeated below
         difScaleX = self.curGraphXS-AppCore.AppAttributes[self.className+'-GraphXS']
         difScaleY = self.curGraphYS-AppCore.AppAttributes[self.className+'-GraphYS']
         
@@ -403,6 +488,46 @@ class AbstractGraphArea(QtGui.QWidget):
             self.curGraphYS = self.lowerYZoomLimit
         else:
             self.curGraphY = AppCore.AppAttributes[self.className+'-GraphY']-(self.startModeY*difScaleY)   
+    def touchPanEvent(self):
+        self.curGraphX = AppCore.AppAttributes[self.className+'-GraphX']+(self.curTouchCenterX-self.startTouchCenterX)
+        self.curGraphY = AppCore.AppAttributes[self.className+'-GraphY']+(self.curTouchCenterY-self.startTouchCenterY)
+    def touchMultiEvent(self):
+        posDeltaX = (self.curTouchCenterX-self.startTouchCenterX)
+        posDeltaY = (self.curTouchCenterY-self.startTouchCenterY)
+        
+        scaleDeltaX = 0
+        scaleDeltaY = 0
+        for cx, sx in zip(self.curTouchDistanceX, self.startTouchDistanceX):
+            scaleDeltaX += cx/sx
+        for cy, sy in zip(self.curTouchDistanceY, self.startTouchDistanceY):
+            scaleDeltaY += cy/sy
+        scaleDeltaX = scaleDeltaX/len(self.startTouchDistanceX)
+        scaleDeltaY = scaleDeltaY/len(self.startTouchDistanceY)
+        if self.ZoomXYJoined == True:
+            self.curGraphXS = AppCore.AppAttributes[self.className+'-GraphXS']*(scaleDeltaX+scaleDeltaY)/2
+            self.curGraphYS = AppCore.AppAttributes[self.className+'-GraphYS']*(scaleDeltaX+scaleDeltaY)/2
+        else:
+            self.curGraphXS = AppCore.AppAttributes[self.className+'-GraphXS']*scaleDeltaX
+            self.curGraphYS = AppCore.AppAttributes[self.className+'-GraphYS']*scaleDeltaY
+        #### Repeated above
+        difScaleX = self.curGraphXS-AppCore.AppAttributes[self.className+'-GraphXS']
+        difScaleY = self.curGraphYS-AppCore.AppAttributes[self.className+'-GraphYS']
+        
+        if self.curGraphXS > self.upperXZoomLimit:
+            self.curGraphXS = self.upperXZoomLimit
+        elif self.curGraphXS < self.lowerXZoomLimit:
+            self.curGraphXS = self.lowerXZoomLimit
+        else:
+            self.curGraphX = AppCore.AppAttributes[self.className+'-GraphX']-(self.startModeX*difScaleX)
+            
+        if self.curGraphYS > self.upperYZoomLimit:
+            self.curGraphYS = self.upperYZoomLimit  
+        elif self.curGraphYS < self.lowerYZoomLimit:
+            self.curGraphYS = self.lowerYZoomLimit
+        else:
+            self.curGraphY = AppCore.AppAttributes[self.className+'-GraphY']-(self.startModeY*difScaleY)
+        
+        #print 'touchMultiMode'
     #################
     
     ###PaintEvents###
@@ -425,6 +550,24 @@ class AbstractGraphArea(QtGui.QWidget):
         painter.end()
     #################
 
+    ###Math Functions###
+    def angleFromPoint(self,x,y):
+        if x != 0.0:
+            slope = y/x
+        else:
+            slope = 0
+        angle = math.degrees(math.atan(slope))
+        if x > 0 and y >= 0:
+            angle += 270.0
+        elif x >= 0 and y < 0:
+            angle = 270.0-angle
+        elif x < 0 and y <= 0:
+            angle += 90.0
+        elif x <= 0 and y > 0:
+            angle = 90.0-angle
+        return angle
+    ####################
+    
     ###Other Functions###
     def addToolBar(self, ToolBarArea, ToolBar):
         if ToolBarArea == QtCore.Qt.TopToolBarArea:
