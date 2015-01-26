@@ -23,7 +23,6 @@ except:
     import __init__ as MediaApp
 import AppCore
 
-Cmd = cmd.Cmd()
 MainWindow = MediaApp.Windows.MainWindow()
 
 #Required for ViewerNode
@@ -37,7 +36,6 @@ ViewerWidget = MediaApp.Widgets.ViewerWidget()
 MainWindow.dockThisWidget(BrowserBin)
 MainWindow.dockThisWidget(PropertiesBin)
 MainWindow.dockThisWidget(ViewerWidget)
-MainWindow.dockThisWidget(TimelineWidget)
 
 
 def run():

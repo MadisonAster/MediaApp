@@ -22,15 +22,13 @@
 #    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
-
-from PySide import QtGui, QtCore
-import imageio
-
-import os, gc
+import os
 import sys
 import pprint
 import ctypes
 
+from PySide import QtGui, QtCore
+import imageio
 
 class Core(dict):
     def __init__(self, argString = ''):
@@ -317,9 +315,3 @@ class Core(dict):
         #stylesheet += "QScrollBar::add-line:vertical { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0  rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),  stop:1 rgb(32, 47, 130)); height: px; subcontrol-position: bottom; subcontrol-origin: margin;}"
         
         return stylesheet
-#Importable Singleton Magic
-Core.instance = Core() 
-import sys
-_ref = sys.modules[__name__]  # Reference to current module so it's not deleted
-sys.modules['AppCore'] = Core.instance
-

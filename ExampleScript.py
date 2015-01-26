@@ -19,20 +19,16 @@ import cmd
 import pdb
 
 import __init__ as MyApp
+import AppCore
 
 def main():
-    MyApp.run()
-
-    pNode = MyApp.Core.createNode('Clip')
+    pNode = AppCore.NodeGraph.createNode('Clip')
     pNode['xpos'].setValue(0)
     pNode['ypos'].setValue(0)
-    pNode['file'].setValue('*NWSTORAGE/Environment/AppVariables/PyPlayback/PyPlayback/ImageIO/testImages/MV_BTS_VFX_01001510/MV_BTS_VFX_01001510.######.tif')
-        
-    pNode['firstFrame'].setValue(86770)
-    pNode['lastFrame'].setValue(86785)
-
-    #sys.exit(MyApp.Core.App.exec_())
-    #MyApp.Core.App.exec_()
+    pNode['file'].setValue('*NWSTORAGE/')
     
+    AppCore.ViewerWidget.setInput(0, pNode)
+    
+    MyApp.run()
 if __name__ == '__main__':
     main()

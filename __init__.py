@@ -46,6 +46,7 @@ if LicenseFound is True:
     if CoreRun is True:  
         sys.path.append(LibDir.rsplit('/',1)[0])
         import AppCore
+        sys.modules['AppCore'] = AppCore.Core()
         import DataStructures
         sys.modules['DataStructures'] = DataStructures
         import Icons

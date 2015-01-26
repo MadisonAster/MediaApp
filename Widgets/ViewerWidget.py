@@ -241,12 +241,16 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         
         #TODO 'implement a provided timeline in the viewer'
         if str(self.inputCombiner.getValue()) == 'A Only':
-            self.cacheFrame(inputA.getImage())
+            if inputA != None:
+                self.cacheFrame(inputA.getImage())
         elif str(self.inputCombiner.getValue()) == 'B Only':
-            self.cacheFrame(inputB.getImage())
+            if imageB != None:
+                self.cacheFrame(inputB.getImage())
         else:
-            imageA = inputA.getImage()
-            imageB = inputB.getImage()
+            if inputA != None:
+                imageA = inputA.getImage()
+            if imageB != None:
+                imageB = inputB.getImage()
         if str(self.inputCombiner.getValue()) is 'Blend':    
             self.cacheFrame(self.blendImage(imageA, imageB))
         elif str(self.inputCombiner.getValue()) is 'Wipe':

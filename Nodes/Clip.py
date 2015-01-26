@@ -61,11 +61,6 @@ class Clip(ImageNode, AudioNode):
         self.leftToolBar.setMovable(False)
         
         #self.ViewerToolbars = [[QtCore.Qt.LeftToolBarArea, self.leftToolBar]]
-
-    def nodeShape(self):
-        self.polyShape = [[0,0],[100,0],[100,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
-        self.color1 = QtGui.QColor(238,238,238)
-        self.color2 = QtGui.QColor(122,122,122)
         
     def generateImage(self, *args):
         if len(args) is 1:

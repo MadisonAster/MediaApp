@@ -356,6 +356,14 @@ class GraphNode(NodeConstructor, PropertiesDockWidget):
     def inputsChanged(self):
         #overridable slot
         pass  
+    def nodeShape(self):
+        #Override Me!
+        self.polyShape = [[0,0],[70,0],[74,8],[70,16],[0,16]]
+        
+        #FLAW: add this to appPrefs/appSettings somehow
+        self.color1 = QtGui.QColor(238,238,238)
+        self.color2 = QtGui.QColor(122,122,122)
+        
 class TimelineNode(NodeConstructor, PropertiesDockWidget):
     def __init__(self, parent):
         super(TimelineNode, self).__init__(parent)
@@ -377,6 +385,10 @@ class TimelineNode(NodeConstructor, PropertiesDockWidget):
         return returnList
     def getCurrentInputIndex(self):
         return self.parent.getCurrentFrame()
+    def nodeShape(self):
+        self.polyShape = [[0,0],[100,0],[100,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
+        self.color1 = QtGui.QColor(238,238,238)
+        self.color2 = QtGui.QColor(122,122,122)
     
     def setWidth(self, *args):
         if len(args) is 1:
