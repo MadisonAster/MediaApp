@@ -246,16 +246,18 @@ class AbstractGraphArea(QtGui.QWidget):
     def touchEvent(self, event):
         event.accept()
         if event.type().name == 'TouchBegin':
-            self.initialTouchValues(event)
             self.TouchMode = True
+            self.initialTouchValues(event)
+            self.initialValues(fromTouch = True)
             return True
         elif event.type().name == 'TouchUpdate':
             if self.TouchList != event.touchPoints():
                 self.initialTouchValues(event)
+                self.initialValues(fromTouch = True)
             self.touchMoveEvent(event)
         elif event.type().name == 'TouchEnd':
-            self.TouchList = []
             self.TouchMode = False
+            self.TouchList = []
         return False
         
     def tabletEvent(self, event):
@@ -274,7 +276,6 @@ class AbstractGraphArea(QtGui.QWidget):
         #print event.type().name, event.pos().x(), event.pos().y(), event
         self.endMouseX = event.pos().x()
         self.endMouseY = event.pos().y()
-        self.endModeX, self.endModeY = self.graphTrans.inverted()[0].map(self.endMouseX, self.endMouseY)
         
         button = str(event.button()).rsplit('.', 1)[-1]
         self.clearButton(button)
@@ -342,8 +343,8 @@ class AbstractGraphArea(QtGui.QWidget):
             mx, my = self.graphTrans.inverted()[0].map(x, y)
             avgStartModeX += mx
             avgStartModeY += my
-        self.startModeX = avgStartModeX/len(self.startTouchX)
-        self.startModeY = avgStartModeY/len(self.startTouchY)
+        self.startTouchModeX = avgStartModeX/len(self.startTouchX)
+        self.startTouchModeY = avgStartModeY/len(self.startTouchY)
         
         #Calculate Center
         sumX = 0
@@ -367,18 +368,13 @@ class AbstractGraphArea(QtGui.QWidget):
             self.startTouchDistance.append(math.sqrt(dx**2+dy**2)/math.sqrt(2))
             self.startTouchAngle.append(self.angleFromPoint(dx,dy))
         self.startGraphAngle = self.curGraphAngle
-        
-        
-        self.initialValues()
-    def initialValues(self):
-        AppCore.AppAttributes[self.className+'-GraphX'] = self.curGraphX
-        AppCore.AppAttributes[self.className+'-GraphY'] = self.curGraphY
-        AppCore.AppAttributes[self.className+'-GraphXS'] = self.curGraphXS
-        AppCore.AppAttributes[self.className+'-GraphYS'] = self.curGraphYS
-        AppCore.AppAttributes[self.className+'-GraphAngle'] = self.curGraphAngle
-        self.endModeX = self.startModeX
-        self.endModeY = self.startModeY
-        
+    def initialValues(self, fromTouch = False):
+        if self.TouchMode is not True or fromTouch is True:
+            AppCore.AppAttributes[self.className+'-GraphX'] = self.curGraphX
+            AppCore.AppAttributes[self.className+'-GraphY'] = self.curGraphY
+            AppCore.AppAttributes[self.className+'-GraphXS'] = self.curGraphXS
+            AppCore.AppAttributes[self.className+'-GraphYS'] = self.curGraphYS
+            AppCore.AppAttributes[self.className+'-GraphAngle'] = self.curGraphAngle
         self.subclassInitialValues()
     def subclassInitialValues(self): #Override me!
         pass
@@ -532,14 +528,14 @@ class AbstractGraphArea(QtGui.QWidget):
             elif self.curGraphXS < self.lowerXZoomLimit:
                 self.curGraphXS = self.lowerXZoomLimit
             else:
-                self.curGraphX = self.curGraphX-(self.startModeX*difScaleX)
+                self.curGraphX = self.curGraphX-(self.startTouchModeX*difScaleX)
                 
             if self.curGraphYS > self.upperYZoomLimit:
                 self.curGraphYS = self.upperYZoomLimit  
             elif self.curGraphYS < self.lowerYZoomLimit:
                 self.curGraphYS = self.lowerYZoomLimit
             else:
-                self.curGraphY = self.curGraphY-(self.startModeY*difScaleY)
+                self.curGraphY = self.curGraphY-(self.startTouchModeY*difScaleY)
     #################
     
     ###PaintEvents###
