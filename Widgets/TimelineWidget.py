@@ -79,10 +79,10 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
     ##################
     
     ###Button Handling###
-    def subclassModes(self):
+    def subclassModes(self, event):
         if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-SelectNodes']:
             for TimeIndicator in self.TimeIndicators:
-                if QtCore.QRect(TimeIndicator.getCurrentFrame()-10,TimeIndicator.getTopPosition()*self.YPixelsPerUnit,20,1*self.YPixelsPerUnit).contains(self.startModeX,self.startModeY):
+                if QtCore.QRectF(TimeIndicator.getCurrentFrame()-10,TimeIndicator.getTopPosition(),20,1).contains(self.startModeX,self.startModeY):
                     self.modes.setCurrentMode('dragCtiMode')
                     
                     self.CTIList = [TimeIndicator]
@@ -99,7 +99,8 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
                     break
             else:
                 for node in self.allNodes():  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
-                    if node.fallsAround(self.startModeX, self.startModeY):
+                    if node.fallsAround(self.startModeX*self.XPixelsPerUnit, self.startModeY*self.YPixelsPerUnit):
+                        print 'FALL AROUND!'
                         self.modes.setCurrentMode('dragMode')
                         if node['selected'].getValue() != True:
                             for node2 in self.selectedNodes():
@@ -108,6 +109,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
                         break
                 else:
                     self.modes.setCurrentMode('marqMode')
+            self.initialValues(event)
     #####################
     
     ###ModeEvents###
@@ -122,14 +124,14 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
     def dragCtiEvent(self):
         for i in range(len(self.CTIList)):
             self.CTIList[i]
-            xpos = int(round((self.CTIxpos[i]+self.curModeX-self.startModeX)/self.XPixelsPerUnit))
-            ypos = int(round((self.CTIypos[i]+self.curModeY-self.startModeY)/self.YPixelsPerUnit))
+            xpos = int(round(self.CTIxpos[i]+self.curModeX-self.startModeX))
+            ypos = int(round(self.CTIypos[i]+self.curModeY-self.startModeY))
             self.CTIList[i].setCurrentFrame(xpos)
             self.CTIList[i].setTopPosition(ypos)
     def dragEventExtra(self):
         for node in self.dragStartPositions:
-            xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
-            ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)*self.YPixelsPerUnit
+            xpos = round(node[1]+self.curModeX-self.startModeX)
+            ypos = round(node[2]+self.curModeY-self.startModeY)
             node[0]['startAt'].setValue(xpos)
             
             length = node[0]['width'].getValue()

@@ -133,7 +133,7 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     ##################
     
     ###Button Handling###
-    def subclassModes(self):
+    def subclassModes(self, event):
         if hasattr(AppCore.getActiveNode(), 'ViewerEventExtra'):
             self.modes.setCurrentMode('extraMode')
         elif self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-marq']:
