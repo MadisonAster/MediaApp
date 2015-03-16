@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -23,8 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-
-from PySide import QtGui
+from PyQt import QtGui
 
 def IconFromColor(QColor):
     image = QtGui.QImage(64, 64, QtGui.QImage.Format_ARGB32)

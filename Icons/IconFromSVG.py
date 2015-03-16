@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -25,28 +25,28 @@
 
 import os
 
-from PySide import QtCore, QtGui, QtSvg
+from PyQt import QtCore, QtGui, QtSvg
 
 import AppCore
 
 def IconFromSVG(iconPath):
     with open(iconPath, 'r') as iconFile:
         iconText = iconFile.read()
-
-    iconText = iconText.replace('#111111', AppCore.AppPrefs['AppIconColor1'].name().encode("utf8"))
-    iconText = iconText.replace('#222222', AppCore.AppPrefs['AppIconColor2'].name().encode("utf8"))
-    iconText = iconText.replace('#333333', AppCore.AppPrefs['AppIconColor3'].name().encode("utf8"))
-    iconText = iconText.replace('#444444', AppCore.AppPrefs['AppIconColor4'].name().encode("utf8"))
-    iconText = iconText.replace('#555555', AppCore.AppPrefs['AppIconColor5'].name().encode("utf8"))
-    iconText = iconText.replace('#666666', AppCore.AppPrefs['AppIconColor6'].name().encode("utf8"))
-    iconText = iconText.replace('#777777', AppCore.AppPrefs['AppIconColor7'].name().encode("utf8"))
-    iconText = iconText.replace('#888888', AppCore.AppPrefs['AppIconColor8'].name().encode("utf8"))
-    iconText = iconText.replace('#999999', AppCore.AppPrefs['AppIconColor9'].name().encode("utf8"))
-    iconText = iconText.replace('#AAAAAA', AppCore.AppPrefs['AppIconColorA'].name().encode("utf8"))
-    iconText = iconText.replace('#BBBBBB', AppCore.AppPrefs['AppIconColorB'].name().encode("utf8"))
-    iconText = iconText.replace('#CCCCCC', AppCore.AppPrefs['AppIconColorC'].name().encode("utf8"))
-    iconText = iconText.replace('#DDDDDD', AppCore.AppPrefs['AppIconColorD'].name().encode("utf8"))
-    iconText = iconText.replace('#EEEEEE', AppCore.AppPrefs['AppIconColorE'].name().encode("utf8"))
+    
+    iconText = iconText.replace('#111111', str(AppCore.AppPrefs['AppIconColor1'].name()))
+    iconText = iconText.replace('#222222', str(AppCore.AppPrefs['AppIconColor2'].name()))
+    iconText = iconText.replace('#333333', str(AppCore.AppPrefs['AppIconColor3'].name()))
+    iconText = iconText.replace('#444444', str(AppCore.AppPrefs['AppIconColor4'].name()))
+    iconText = iconText.replace('#555555', str(AppCore.AppPrefs['AppIconColor5'].name()))
+    iconText = iconText.replace('#666666', str(AppCore.AppPrefs['AppIconColor6'].name()))
+    iconText = iconText.replace('#777777', str(AppCore.AppPrefs['AppIconColor7'].name()))
+    iconText = iconText.replace('#888888', str(AppCore.AppPrefs['AppIconColor8'].name()))
+    iconText = iconText.replace('#999999', str(AppCore.AppPrefs['AppIconColor9'].name()))
+    iconText = iconText.replace('#AAAAAA', str(AppCore.AppPrefs['AppIconColorA'].name()))
+    iconText = iconText.replace('#BBBBBB', str(AppCore.AppPrefs['AppIconColorB'].name()))
+    iconText = iconText.replace('#CCCCCC', str(AppCore.AppPrefs['AppIconColorC'].name()))
+    iconText = iconText.replace('#DDDDDD', str(AppCore.AppPrefs['AppIconColorD'].name()))
+    iconText = iconText.replace('#EEEEEE', str(AppCore.AppPrefs['AppIconColorE'].name()))
     iconStream = QtCore.QXmlStreamReader(iconText)
     svg_renderer = QtSvg.QSvgRenderer(iconStream)
 

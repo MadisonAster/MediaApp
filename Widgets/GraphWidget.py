@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -24,10 +24,11 @@
 #===============================================================================
 from time import time
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
+    
 import AppCore
 from DataStructures import NodeOwningObject
-from AbstractGraphArea import AbstractGraphArea
+from .AbstractGraphArea import AbstractGraphArea
    
 class GraphWidget(NodeOwningObject, AbstractGraphArea):
     ###Initialize Class###
@@ -51,10 +52,10 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
     
     
     ###Button Handling###
-    def subclassModes(self):
+    def subclassModes(self, event):
         if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-SelectNodes']:
             for node in reversed(self.allNodes()):  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
-                if node.fallsAround(self.startModeX, self.startModeY):
+                if node.fallsAround(self.startModeX*self.XPixelsPerUnit, self.startModeY*self.YPixelsPerUnit):
                     self.modes.setCurrentMode('dragMode')
                     if node['selected'].getValue() != True:
                         for node2 in self.selectedNodes():
@@ -63,6 +64,7 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
                     break
             else:
                 self.modes.setCurrentMode('marqMode')
+            self.initialValues(event)
         else:
             self.modes.setCurrentMode('None')
     #####################       
@@ -86,10 +88,12 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
         self.endModeY = self.curModeY
         self.marqContains()
     def marqContains(self):
-        marqX = [self.startModeX, self.endModeX]
-        marqY = [self.startModeY, self.endModeY]
+        marqX = [self.startModeX*self.XPixelsPerUnit, self.endModeX*self.XPixelsPerUnit]
+        marqY = [self.startModeY*self.YPixelsPerUnit, self.endModeY*self.YPixelsPerUnit]
+        marqX.sort()
+        marqY.sort()
         
-        marqRect = QtCore.QRectF(self.startModeX, self.startModeY, self.endModeX-self.startModeX, self.endModeY-self.startModeY)
+        marqRect = QtCore.QRectF(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0])
         for node in self.allNodes():
             if marqRect.contains(node.mappedNodeRect):
                 node.toKnob('selected').setValue(True)
@@ -99,8 +103,8 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
         for node in self.dragStartPositions:
             #xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)*self.XPixelsPerUnit
             #ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)*self.YPixelsPerUnit
-            xpos = round((node[1]+self.curModeX-self.startModeX)/self.XPixelsPerUnit)
-            ypos = round((node[2]+self.curModeY-self.startModeY)/self.YPixelsPerUnit)
+            xpos = round(node[1]+self.curModeX-self.startModeX)
+            ypos = round(node[2]+self.curModeY-self.startModeY)
             node[0]['xpos'].setValue(xpos)
             node[0]['ypos'].setValue(ypos)
             node[0].getPos()
@@ -129,8 +133,8 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
         
         #DrawMarq
         if self.modes.getCurrentMode() == 'marqMode':
-            marqX = [self.startModeX, self.endModeX]
-            marqY = [self.startModeY, self.endModeY]
+            marqX = [self.startModeX*self.XPixelsPerUnit, self.endModeX*self.XPixelsPerUnit]
+            marqY = [self.startModeY*self.YPixelsPerUnit, self.endModeY*self.YPixelsPerUnit]
             marqX.sort()
             marqY.sort()
             painter.setBrush(AppCore.AppPrefs[self.className+'-marqBoxColor'])

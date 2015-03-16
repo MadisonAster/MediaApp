@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -27,7 +27,8 @@ import sys
 import pprint
 import ctypes
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
+
 import imageio
 
 class Core(dict):
@@ -35,7 +36,9 @@ class Core(dict):
         super(Core, self).__init__()
         
         #QtGui.QApplication.setColorSpec(QtGui.QApplication.ManyColor)
-        self.App = QtGui.QApplication(argString)
+
+        self.App = QtGui.QApplication([argString])
+           
         
         self.setPaths()
         
@@ -315,3 +318,173 @@ class Core(dict):
         #stylesheet += "QScrollBar::add-line:vertical { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0  rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),  stop:1 rgb(32, 47, 130)); height: px; subcontrol-position: bottom; subcontrol-origin: margin;}"
         
         return stylesheet
+    def getEventName(self, event):
+        eventType = str(event.type())
+        if not eventType.isdigit():
+            return eventType.rsplit('.',1)[-1]
+        else:
+            enum = {
+            0 : 'None',
+            114 : 'ActionAdded',
+            113 : 'ActionChanged',
+            115 : 'ActionRemoved',
+            99 : 'ActivationChange',
+            121 : 'ApplicationActivate',
+            122 : 'ApplicationDeactivate',
+            36 : 'ApplicationFontChange',
+            37 : 'ApplicationLayoutDirectionChange',
+            38 : 'ApplicationPaletteChange',
+            214 : 'ApplicationStateChange',
+            35 : 'ApplicationWindowIconChange',
+            68 : 'ChildAdded',
+            69 : 'ChildPolished',
+            71 : 'ChildRemoved',
+            40 : 'Clipboard',
+            19 : 'Close',
+            200 : 'CloseSoftwareInputPanel',
+            178 : 'ContentsRectChange',
+            82 : 'ContextMenu',
+            183 : 'CursorChange',
+            52 : 'DeferredDelete',
+            60 : 'DragEnter',
+            62 : 'DragLeave',
+            61 : 'DragMove',
+            63 : 'Drop',
+            170 : 'DynamicPropertyChange',
+            98 : 'EnabledChange',
+            10 : 'Enter',
+            150 : 'EnterEditFocus',
+            124 : 'EnterWhatsThisMode',
+            206 : 'Expose',
+            116 : 'FileOpen',
+            8 : 'FocusIn',
+            9 : 'FocusOut',
+            23 : 'FocusAboutToChange',
+            97 : 'FontChange',
+            198 : 'Gesture',
+            202 : 'GestureOverride',
+            188 : 'GrabKeyboard',
+            186 : 'GrabMouse',
+            159 : 'GraphicsSceneContextMenu',
+            164 : 'GraphicsSceneDragEnter',
+            166 : 'GraphicsSceneDragLeave',
+            165 : 'GraphicsSceneDragMove',
+            167 : 'GraphicsSceneDrop',
+            163 : 'GraphicsSceneHelp',
+            160 : 'GraphicsSceneHoverEnter',
+            162 : 'GraphicsSceneHoverLeave',
+            161 : 'GraphicsSceneHoverMove',
+            158 : 'GraphicsSceneMouseDoubleClick',
+            155 : 'GraphicsSceneMouseMove',
+            156 : 'GraphicsSceneMousePress',
+            157 : 'GraphicsSceneMouseRelease',
+            182 : 'GraphicsSceneMove',
+            181 : 'GraphicsSceneResize',
+            168 : 'GraphicsSceneWheel',
+            18 : 'Hide',
+            27 : 'HideToParent',
+            127 : 'HoverEnter',
+            128 : 'HoverLeave',
+            129 : 'HoverMove',
+            96 : 'IconDrag',
+            101 : 'IconTextChange',
+            83 : 'InputMethod',
+            207 : 'InputMethodQuery',
+            169 : 'KeyboardLayoutChange',
+            6 : 'KeyPress',
+            7 : 'KeyRelease',
+            89 : 'LanguageChange',
+            90 : 'LayoutDirectionChange',
+            76 : 'LayoutRequest',
+            11 : 'Leave',
+            151 : 'LeaveEditFocus',
+            125 : 'LeaveWhatsThisMode',
+            88 : 'LocaleChange',
+            176 : 'NonClientAreaMouseButtonDblClick',
+            174 : 'NonClientAreaMouseButtonPress',
+            175 : 'NonClientAreaMouseButtonRelease',
+            173 : 'NonClientAreaMouseMove',
+            177 : 'MacSizeChange',
+            43 : 'MetaCall',
+            102 : 'ModifiedChange',
+            4 : 'MouseButtonDblClick',
+            2 : 'MouseButtonPress',
+            3 : 'MouseButtonRelease',
+            5 : 'MouseMove',
+            109 : 'MouseTrackingChange',
+            13 : 'Move',
+            197 : 'NativeGesture',
+            208 : 'OrientationChange',
+            12 : 'Paint',
+            39 : 'PaletteChange',
+            131 : 'ParentAboutToChange',
+            21 : 'ParentChange',
+            212 : 'PlatformPanel',
+            75 : 'Polish',
+            74 : 'PolishRequest',
+            123 : 'QueryWhatsThis',
+            106 : 'ReadOnlyChange',
+            199 : 'RequestSoftwareInputPanel',
+            14 : 'Resize',
+            204 : 'ScrollPrepare',
+            205 : 'Scroll',
+            117 : 'Shortcut',
+            51 : 'ShortcutOverride',
+            17 : 'Show',
+            26 : 'ShowToParent',
+            50 : 'SockAct',
+            192 : 'StateMachineSignal',
+            193 : 'StateMachineWrapped',
+            112 : 'StatusTip',
+            100 : 'StyleChange',
+            87 : 'TabletMove',
+            92 : 'TabletPress',
+            93 : 'TabletRelease',
+            94 : 'OkRequest',
+            171 : 'TabletEnterProximity',
+            172 : 'TabletLeaveProximity',
+            22 : 'ThreadChange',
+            1 : 'Timer',
+            120 : 'ToolBarChange',
+            110 : 'ToolTip',
+            184 : 'ToolTipChange',
+            194 : 'TouchBegin',
+            209 : 'TouchCancel',
+            196 : 'TouchEnd',
+            195 : 'TouchUpdate',
+            189 : 'UngrabKeyboard',
+            187 : 'UngrabMouse',
+            78 : 'UpdateLater',
+            77 : 'UpdateRequest',
+            111 : 'WhatsThis',
+            118 : 'WhatsThisClicked',
+            31 : 'Wheel',
+            132 : 'WinEventAct',
+            24 : 'WindowActivate',
+            103 : 'WindowBlocked',
+            25 : 'WindowDeactivate',
+            34 : 'WindowIconChange',
+            105 : 'WindowStateChange',
+            33 : 'WindowTitleChange',
+            104 : 'WindowUnblocked',
+            203 : 'WinIdChange',
+            126 : 'ZOrderChange',
+            }
+            try:
+                return enum[int(eventType)]
+            except:
+                return int(eventType)
+                
+    def getMouseButtonName(self, button):
+        if not button.isdigit():
+            return button.rsplit('.',1)[-1]
+        else:
+            enum = {
+            1 : 'LeftButton',
+            2 : 'RightButton',
+            4 : 'MiddleButton',
+            }
+            try:
+                return enum[int(button)]
+            except:
+                return int(button)

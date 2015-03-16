@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -25,14 +25,14 @@
 from time import time, sleep
 import copy
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
 
 import AppCore
 import MediaAppIcons
 import MediaAppKnobs
 import DataStructures
-from NodeLinkedWidget import *
-from AbstractGraphArea import AbstractGraphArea
+from .NodeLinkedWidget import *
+from .AbstractGraphArea import AbstractGraphArea
 
  
 class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
@@ -133,7 +133,7 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     ##################
     
     ###Button Handling###
-    def subclassModes(self):
+    def subclassModes(self, event):
         if hasattr(AppCore.getActiveNode(), 'ViewerEventExtra'):
             self.modes.setCurrentMode('extraMode')
         elif self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-marq']:
@@ -283,7 +283,7 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
             self.TimeIndicator.cacheFrames(self.generateFrames(firstFrame, lastFrame), firstFrame = firstFrame)
     
     def generateFrames(self, firstFrame, lastFrame):
-        print 'Viewer generating '+str(lastFrame-firstFrame)+' frames as QImages',
+        print('Viewer generating '+str(lastFrame-firstFrame)+' frames as QImages',)
         input = self.getInput()
         for frame in range(firstFrame, lastFrame):
             yield input.getImage(frame)

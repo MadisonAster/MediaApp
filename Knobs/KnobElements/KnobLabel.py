@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #===============================================================================
 from copy import copy
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
 
 import AppCore
 
@@ -33,6 +33,10 @@ class KnobLabel(QtGui.QLabel):
         super(KnobLabel, self).__init__()
         
         font = copy(AppCore.AppPrefs['AppFont'])
+        try:
+            font.__init__()
+        except:
+            pass
         #font.setStyle(QtGui.QFont.StyleOblique)
         font.setPointSize(font.pointSize()-3)
         self.setFont(font)
@@ -42,4 +46,12 @@ class KnobLabel(QtGui.QLabel):
         #self.labelSize = 100
     #def sizeHint(self):
     #    return QtCore.QSize(self.labelSize,18)
+       
+       
+       
+       
+       
+       
+       
+       
        

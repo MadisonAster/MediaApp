@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -23,17 +23,17 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
 
-from KnobConstructor import Knob
-import KnobElements
+from .KnobConstructor import Knob
+from . import KnobElements
 
 class BoolKnob(Knob):
     def __init__(self, value, name = 'BoolKnob'):
         super(BoolKnob, self).__init__()
         self.name.setText(name)
         self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
-        self.setLayout(self.knobLayout)
+        #self.setLayout(self.knobLayout)
         
         self.CheckBoxWidget = KnobElements.CheckBoxWidget()
         self.knobLayout.addWidget(self.CheckBoxWidget)

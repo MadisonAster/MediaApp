@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -24,13 +24,13 @@
 #===============================================================================
 import os
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
 import imageio
 
 import AppCore
 import DataStructures
-from NodeConstructor import *
 from MediaAppKnobs import *
+from .NodeConstructor import *
 
 class Clip(ImageNode, AudioNode):
     def __init__(self, parent):
@@ -68,8 +68,11 @@ class Clip(ImageNode, AudioNode):
         else:
             imagePath = self['file'].getEvaluatedPath()
         if os.path.isfile(imagePath):
+            print('imagePath', imagePath)
             image = imageio.imread(imagePath)
+            print(image)
             image = imageio.core.util.image_as_uint8(image)
+            
             
             #imageString = image.tobytes()
             imageString = image.tostring()
