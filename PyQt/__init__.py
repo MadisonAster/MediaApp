@@ -23,5 +23,37 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from .IconFromSVG import *
-from .IconFromColor import IconFromColor
+import sys
+
+versionList = reversed(range(4, 99))
+for a in versionList:
+    version = 'PyQt'+str(a)
+    try:
+        exec('import '+version)
+        sys.modules['__QtTemp__'] = sys.modules[version]
+        from . import QtCore
+        from . import QtGui
+        from __QtTemp__ import QtSvg
+        from __QtTemp__ import QtSql
+        break
+    except:
+        pass
+else:
+    try:
+        version = 'PySide'
+        import PySide
+        from PySide import QtGui, QtCore
+        from PySide import QtSvg, QtSql
+    except:
+        raise Exception('MediaApp requires some version of PyQt or PySide to be installed in your /Python/site-packages folder')
+
+print('QtWrapper: '+version)
+print(sys.version)
+
+
+#from . import QtCore
+#from . import QtGui
+#from __QtTemp__ import QtSvg
+#from __QtTemp__ import QtSql
+
+#del sys.modules['__QtTemp__']

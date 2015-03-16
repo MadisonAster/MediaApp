@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -23,16 +23,16 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from CheckBoxWidget import CheckBoxWidget
-from ComboWidget import ComboWidget
-from Divider import Divider
-from FloatWidget import FloatWidget
-from IntWidget import IntWidget
-from KnobLabel import KnobLabel
-from PathWidget import PathWidget
-from RectButton import RectButton
-from SliderWidget import SliderWidget
-from Spacer import Spacer
-from SquareButton import SquareButton
-from StrWidget import StrWidget
-from TextWidget import TextWidget
+from .CheckBoxWidget import CheckBoxWidget
+from .ComboWidget import ComboWidget
+from .Divider import Divider
+from .FloatWidget import FloatWidget
+from .IntWidget import IntWidget
+from .KnobLabel import KnobLabel
+from .PathWidget import PathWidget
+from .RectButton import RectButton
+from .SliderWidget import SliderWidget
+from .Spacer import Spacer
+from .SquareButton import SquareButton
+from .StrWidget import StrWidget
+from .TextWidget import TextWidget

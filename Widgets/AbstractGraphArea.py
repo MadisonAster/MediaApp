@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ import datetime
 
 from copy import copy
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
 
 import AppCore
 from DataStructures import KeyboardDict
@@ -206,7 +206,7 @@ class AbstractGraphArea(QtGui.QWidget):
         if event.key() in KeyboardDict.keys():
             key = KeyboardDict[event.key()]
         else:
-            print 'key '+str(event.key())+' pressed.'
+            print('key '+str(event.key())+' pressed.')
             return
         self.setButton(key)
         self.subclassPressEvents(event)
@@ -214,11 +214,16 @@ class AbstractGraphArea(QtGui.QWidget):
         if event.key() in KeyboardDict.keys():
             key = KeyboardDict[event.key()]
         else:
-            print 'key '+str(event.key())+' released.'
+            print('key '+str(event.key())+' released.')
             return
         self.clearButton(key)
     
     def event(self, event):
+        #print(event.type().__name__)
+        #print(type(event).__name__)
+        #print(QtCore.QEvent(event.type()))
+        
+        eventType = AppCore.getEventName(event)
         if type(event) is QtGui.QTouchEvent:
             for touchEvent in self.touchEventList:
                 if datetime.datetime.now()-touchEvent[0] > self.dropThreshhold:
@@ -227,7 +232,7 @@ class AbstractGraphArea(QtGui.QWidget):
                     break
             for point in event.touchPoints():
                 touchEvent = [datetime.datetime.now()]
-                if event.type().name == 'TouchBegin':
+                if eventType == 'TouchBegin':
                     touchEvent.append(point.startPos().x())
                     touchEvent.append(point.startPos().y())
                 else:
@@ -235,7 +240,7 @@ class AbstractGraphArea(QtGui.QWidget):
                     touchEvent.append(point.pos().y())
                 self.touchEventList.append(touchEvent)
             return self.touchEvent(event)
-        elif event.type().name in ['MouseButtonPress', 'MouseMove', 'MouseButtonRelease', 'MouseButtonDblClick']:
+        elif eventType in ['MouseButtonPress', 'MouseMove', 'MouseButtonRelease', 'MouseButtonDblClick']:
             for touchEvent in reversed(self.touchEventList):
                 if datetime.datetime.now()-touchEvent[0] < self.dropThreshhold:
                     if math.fabs(touchEvent[1]-event.pos().x()) < self.dropRange  and math.fabs(touchEvent[2]-event.pos().y()) < self.dropRange:
@@ -245,18 +250,19 @@ class AbstractGraphArea(QtGui.QWidget):
                     del self.touchEventList[0]
         return super(AbstractGraphArea, self).event(event)
     def touchEvent(self, event):
+        eventType = AppCore.getEventName(event)
         event.accept()
-        if event.type().name == 'TouchBegin':
+        if eventType == 'TouchBegin':
             self.TouchMode = True
             self.initialTouchValues(event)
             self.initialValues(event, fromTouch = True)
             return True
-        elif event.type().name == 'TouchUpdate':
+        elif eventType == 'TouchUpdate':
             if self.TouchList != event.touchPoints():
                 self.initialTouchValues(event)
                 self.initialValues(event, fromTouch = True)
             self.touchMoveEvent(event)
-        elif event.type().name == 'TouchEnd':
+        elif eventType == 'TouchEnd':
             self.TouchMode = False
             self.TouchList = []
         return False
@@ -265,21 +271,23 @@ class AbstractGraphArea(QtGui.QWidget):
         self.TabletPressure = event.pressure()
         event.ignore()
     def mousePressEvent(self, event):
-        print event.type().name, event.pos().x(), event.pos().y(), event
+        eventType = AppCore.getEventName(event)
         
-        button = str(event.button()).rsplit('.', 1)[-1]
+        button = AppCore.getMouseButtonName(str(event.button()))
+        print(eventType, event.pos().x(), event.pos().y(), button, event)
         self.setButton(button)
         self.initialValues(event)
         self.setMode(event)
         
         self.subclassPressEvents(event)
     def mouseReleaseEvent(self, event):
-        print event.type().name, event.pos().x(), event.pos().y(), event
+        eventType = AppCore.getEventName(event)
         self.endMouseX = event.pos().x()
         self.endMouseY = event.pos().y()
         self.endModeX, self.endModeY = self.graphTrans.inverted()[0].map(self.endMouseX, self.endMouseY)
         
-        button = str(event.button()).rsplit('.', 1)[-1]
+        button = AppCore.getMouseButtonName(str(event.button()))
+        print(eventType, event.pos().x(), event.pos().y(), button, event)
         self.clearButton(button)
         self.initialValues(event)
         self.setMode(event)
@@ -308,7 +316,7 @@ class AbstractGraphArea(QtGui.QWidget):
             else:
                 return
         
-        #print self.pressedButtons
+        #print(self.pressedButtons)
         if self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Zoom']:
             self.modes.setCurrentMode('zoomMode')
         elif self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Pan']:
@@ -330,8 +338,9 @@ class AbstractGraphArea(QtGui.QWidget):
         
         self.startTouchX = []
         self.startTouchY = []
+        eventType = AppCore.getEventName(event)
         for point in event.touchPoints():
-            if event.type().name == 'TouchBegin':
+            if eventType == 'TouchBegin':
                 x = point.startPos().x()
                 y = point.startPos().y()
             else:

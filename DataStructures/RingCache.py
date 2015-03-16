@@ -2,7 +2,7 @@
 # @Author: Thomas McVay
 # @ModuleDescription: 
 # @License:
-#    On Loan from Lit
+#    On Loan from Lit, Borrowed this as a place holder, code sucks needs a complete rewrite w/ optimizations
 #===============================================================================
 
 from collections import deque

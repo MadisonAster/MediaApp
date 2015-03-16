@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -26,14 +26,14 @@
 from collections import deque
 from time import time
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
 
 import AppCore
 import DataStructures
 import MediaAppIcons
 import MediaAppKnobs
-from NodeLinkedWidget import *
-from GraphWidget import *
+from .NodeLinkedWidget import *
+from .GraphWidget import *
 
 class TimelineWidget(GraphWidget, NodeLinkedWidget):
     def __init__(self):
@@ -100,7 +100,6 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
             else:
                 for node in self.allNodes():  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
                     if node.fallsAround(self.startModeX*self.XPixelsPerUnit, self.startModeY*self.YPixelsPerUnit):
-                        print 'FALL AROUND!'
                         self.modes.setCurrentMode('dragMode')
                         if node['selected'].getValue() != True:
                             for node2 in self.selectedNodes():
@@ -182,7 +181,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         firstFrame, lastFrame = self.getFirstLastCacheFrame()
         self.getCurrentIndicator().cacheFrames(self.generateFrames(firstFrame, lastFrame), firstFrame = firstFrame)
     def generateFrames(self, firstFrame, lastFrame):
-        print 'generating '+str(lastFrame-firstFrame)+' frames as QImages',
+        print('generating '+str(lastFrame-firstFrame)+' frames as QImages',)
         for frame in range(firstFrame, lastFrame):
             node = self.getTopNodeAtFrame(frame, top = self.getCurrentIndicator().getTopPosition())
             if node is None:

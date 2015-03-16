@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 #===============================================================================
 
 import AppCore
-from RingCache import RingCache
+from .RingCache import RingCache
 
 class TimeIndicator(object):
     def __init__(self):
@@ -76,9 +76,9 @@ class TimeCache(object):
         self.RingCache = RingCache(zero = firstFrame)
         for frame in frameIterator:
             self.RingCache.append(frame)
-            print '.',
+            #print('.',)
         self.RingCache.goto(self.getCurrentFrame())
-        print 'done'
+        print('done')
         
     def getTopPosition(self):
         return self.TimeIndicator.getTopPosition()

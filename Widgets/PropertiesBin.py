@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -23,13 +23,14 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
+    
 import AppCore
 
 class DockingBin(QtGui.QMainWindow):
     def __init__(self):
         super(DockingBin, self).__init__()
-        self.setDockOptions(False)
+        self.setDockOptions(self.DockOptions(False))
         self.setAnimated(True)
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         
@@ -105,8 +106,9 @@ class PropertiesBin(QtGui.QMainWindow):
         self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
         
         self.className = self.__class__.__name__
-        self.setDockOptions(False)
-        
+
+        self.setDockOptions(self.DockOptions(False))
+
         self.DockingBin = DockingBin()
         self.DockingBin.show()
         

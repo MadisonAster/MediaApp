@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -23,9 +23,9 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
 
-import KnobElements
+from . import KnobElements
 
 class Knob(QtGui.QWidget):
     def __init__(self):

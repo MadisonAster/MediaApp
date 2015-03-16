@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -23,9 +23,9 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
-import AppCore
+from PyQt import QtGui, QtCore
 
+import AppCore
 
 class NodeOwningObject(object):
     def __init__(self):
@@ -67,7 +67,7 @@ class NodeOwningObject(object):
         #Overridable event
         return
     def SoftDelete(self):
-        print 'Please implement this soon'
+        print('Please implement this soon')
     def getAssignedXPos(self):
         return AppCore.AppAttributes[self.className+'-GraphX']
     def getAssignedYPos(self):

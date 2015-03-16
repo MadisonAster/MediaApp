@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -40,24 +40,29 @@ elif os.path.isfile(LibDir+'/MediaApp/LICENSE'):
         licenseHash = hashlib.sha256(licenseFile.read()).hexdigest()
     if licenseHash == 'fc90421b0c8175781a7744dd573e032924a2c70dc02f7c6f49b0a8705e580c3f':
         LicenseFound = True
-
 if LicenseFound is True:
+    
+    
     #MediaApp Imports if this is MediaApp Library
     if CoreRun is True:  
         sys.path.append(LibDir.rsplit('/',1)[0])
-        import AppCore
+        
+        from . import PyQt
+        sys.modules['PyQt'] = PyQt
+        
+        from . import AppCore
         sys.modules['AppCore'] = AppCore.Core()
-        import DataStructures
+        from . import DataStructures
         sys.modules['DataStructures'] = DataStructures
-        import Icons
+        from . import Icons
         sys.modules['MediaAppIcons'] = Icons
-        import Knobs
+        from . import Knobs
         sys.modules['MediaAppKnobs'] = Knobs
-        import Nodes
+        from . import Nodes
         sys.modules['MediaAppNodes'] = Nodes
-        import Widgets
+        from . import Widgets
         sys.modules['MediaAppWidgets'] = Widgets
-        import Windows
+        from . import Windows
         sys.modules['MediaAppWindows'] = Windows
     else:
         import MediaApp

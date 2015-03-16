@@ -23,5 +23,15 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from .IconFromSVG import *
-from .IconFromColor import IconFromColor
+import sys
+
+from __QtTemp__ import QtCore
+sys.modules['__Temp_QtCore__'] = QtCore
+from __Temp_QtCore__ import *
+del sys.modules['__Temp_QtCore__']
+
+try:
+    Signal = pyqtSignal
+    Slot = pyqtSlot
+except:
+    pass

@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -23,11 +23,13 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
+import re
+
+from PyQt import QtGui, QtCore
 
 import AppCore
-from KnobConstructor import Knob
-import KnobElements
+from .KnobConstructor import Knob
+from . import KnobElements
 
 
 class FileKnob(Knob):
@@ -99,10 +101,24 @@ class FileKnob(Knob):
             frame = firstFrame+offset
         ####################
         
-        #TODO fix this
-        text = self.getValue().replace('######', str(frame).zfill(6))
-        
+        text = self.patternFill(self.getValue(), frame)
         return text
+        
+    def patternFill(self, pattern, frame):
+        splitList = re.split("(#*)", pattern[::-1], maxsplit=1)[::-1]
+        for a in range(len(splitList)):
+            splitList[a] = splitList[a][::-1]
+        if len(splitList) != 1:
+            forePattern = splitList[0]
+            frameDigits = len(splitList[1])
+            aftPattern = splitList[2]
+        else:
+            forePattern = pattern.rsplit('%',1)[0]
+            frameDigits = int(pattern.rsplit('%',1)[-1].split('d',1)[0])
+            aftPattern = pattern.rsplit('%',1)[-1].split('d',1)[-1]
+        
+        frame = str(frame).zfill(frameDigits)
+        return forePattern+frame+aftPattern
         
         
         

@@ -13,7 +13,7 @@
 #    Lesser General Public License for more details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
 import cmd
 import threading
 

@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
 
 class TextWidget(QtGui.QTextEdit):
     def __init__(self):

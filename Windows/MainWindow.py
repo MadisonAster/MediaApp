@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -25,7 +25,8 @@
 
 import sys
 
-from PySide import QtGui, QtCore
+from PyQt import QtGui, QtCore
+
 import AppCore
 
 
@@ -92,7 +93,7 @@ class MainWindow(QtGui.QMainWindow):
             versionNum = int(args[0])
         else:
             versionNum = int(self.sender().text()[-1])
-        print 'Saving Layout', versionNum
+        print('Saving Layout', versionNum)
         self.layoutSettings.setValue("geometry"+str(versionNum), self.saveGeometry())
         self.layoutSettings.setValue("windowState"+str(versionNum), self.saveState())
     def restoreLayoutN(self, *args):
@@ -100,7 +101,7 @@ class MainWindow(QtGui.QMainWindow):
             versionNum = int(args[0])
         else:
             versionNum = int(self.sender().text()[-1])
-        print 'Restoring Layout', versionNum
+        print('Restoring Layout', versionNum)
         self.restoreGeometry(self.layoutSettings.value("geometry"+str(versionNum)))
         self.restoreState(self.layoutSettings.value("windowState"+str(versionNum)))
     def dockThisWidget(self, widget, dockArea = QtCore.Qt.RightDockWidgetArea):

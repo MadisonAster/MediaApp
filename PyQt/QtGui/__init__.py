@@ -23,5 +23,17 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from .IconFromSVG import *
-from .IconFromColor import IconFromColor
+import sys
+
+from __QtTemp__ import QtGui
+sys.modules['__Temp_QtGui__'] = QtGui
+from __Temp_QtGui__ import *
+del sys.modules['__Temp_QtGui__']
+        
+try:
+    from __QtTemp__ import QtWidgets
+    sys.modules['__Temp_QtWidgets__'] = QtWidgets
+    from __Temp_QtWidgets__ import *
+    del sys.modules['__Temp_QtWidgets__']
+except:
+    pass

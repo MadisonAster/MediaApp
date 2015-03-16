@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PySide Library
+#                       Applications with PyQt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -23,15 +23,15 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from ArrayKnob import ArrayKnob
-from BoolKnob import BoolKnob
-from ColorKnob import ColorKnob
-from ComboKnob import ComboKnob
-from FileKnob import FileKnob
-from FloatKnob import FloatKnob
-from IntKnob import IntKnob
-from Spacer import Spacer
-from StrKnob import StrKnob
-from TextKnob import TextKnob
-from TitleKnob import TitleKnob
+from .ArrayKnob import ArrayKnob
+from .BoolKnob import BoolKnob
+from .ColorKnob import ColorKnob
+from .ComboKnob import ComboKnob
+from .FileKnob import FileKnob
+from .FloatKnob import FloatKnob
+from .IntKnob import IntKnob
+from .Spacer import Spacer
+from .StrKnob import StrKnob
+from .TextKnob import TextKnob
+from .TitleKnob import TitleKnob
 
