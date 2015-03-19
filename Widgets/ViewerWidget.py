@@ -203,9 +203,6 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
             pen.setCosmetic(True)
             painter.setPen(pen)
             painter.drawRect(QtCore.QRectF(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0]))
-        
-        #Finished
-        painter.end()
     #################
 
     ###Other Functions###

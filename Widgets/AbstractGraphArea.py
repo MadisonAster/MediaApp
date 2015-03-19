@@ -586,9 +586,15 @@ class AbstractGraphArea(QtGui.QWidget):
         self.graphTrans.scale(self.curGraphXS+1, self.curGraphYS+1)
         painter.setTransform(self.graphTrans)
         
+        self.visibleLeft, self.visibleTop = self.graphTrans.inverted()[0].map(0, 0)
+        self.visibleRight, self.visibleBottom = self.graphTrans.inverted()[0].map(self.widgetSize.width(), self.widgetSize.height())
+        
         self.subclassPaintEvent(pEvent, painter)
-    def subclassPaintEvent(self, pEvent, painter): #Override me!
+        
+        #Finished
         painter.end()
+    def subclassPaintEvent(self, pEvent, painter): #Override me!
+        pass
     #################
 
     ###Math Functions###

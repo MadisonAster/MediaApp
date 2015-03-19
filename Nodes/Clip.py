@@ -67,10 +67,11 @@ class Clip(ImageNode, AudioNode):
             imagePath = self['file'].getEvaluatedPath(args[0])
         else:
             imagePath = self['file'].getEvaluatedPath()
+        
         if os.path.isfile(imagePath):
-            print('imagePath', imagePath)
+            #print('#######imagePath', imagePath, end = "")
             image = imageio.imread(imagePath)
-            print(image)
+            #print(image)
             image = imageio.core.util.image_as_uint8(image)
             
             
@@ -84,7 +85,8 @@ class Clip(ImageNode, AudioNode):
             
             bytesPerLine = channels * width
             if channels == 4:
-                QImage = DataStructures.QImage(imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
+                #QImage = DataStructures.QImage(imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32).rgbSwapped()
+                QImage = DataStructures.QImage(imageString, width, height, bytesPerLine, QtGui.QImage.Format_ARGB32)
             elif channels == 3:
                 QImage = DataStructures.QImage(imageString, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
             

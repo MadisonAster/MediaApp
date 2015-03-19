@@ -116,9 +116,6 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
     
     ###PaintEvents###
     def subclassPaintEvent(self, pEvent, painter):
-        self.visibleLeft, self.visibleTop = self.graphTrans.inverted()[0].map(0, 0)
-        self.visibleRight, self.visibleBottom = self.graphTrans.inverted()[0].map(self.widgetSize.width(), self.widgetSize.height())
-
         #DrawGrid
         self.paintGrid(painter)
         
@@ -127,9 +124,6 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
         for node in self.allNodes():
             node.drawNode(painter)
             #painter.setTransform(self.graphTrans)
-            
-        #DrawExtra
-        self.paintExtra(painter)
         
         #DrawMarq
         if self.modes.getCurrentMode() == 'marqMode':
@@ -143,8 +137,9 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
             painter.setPen(pen)
             painter.drawRect(QtCore.QRectF(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0])) 
         
-        #Finished
-        painter.end()
+        #DrawExtra
+        self.paintExtra(painter)
+        
     def paintGrid(self, painter):
         pen = AppCore.AppPrefs[self.className+'-gridPen']
         pen.setCosmetic(True)

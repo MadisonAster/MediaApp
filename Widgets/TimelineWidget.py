@@ -247,7 +247,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
     def getCache(self):
         return self.getCurrentIndicator()
     #####################
-        
+    
     pass
     
     

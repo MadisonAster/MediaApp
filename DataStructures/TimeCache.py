@@ -22,6 +22,7 @@
 #    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
+import sys
 
 import AppCore
 from .RingCache import RingCache
@@ -74,11 +75,13 @@ class TimeCache(object):
 
     def cacheFrames(self, frameIterator, firstFrame = 0):
         self.RingCache = RingCache(zero = firstFrame)
+        FrameCounter = 0
         for frame in frameIterator:
+            FrameCounter += 1
             self.RingCache.append(frame)
-            #print('.',)
+            sys.stdout.write("\rReading Frame "+str(FrameCounter))
         self.RingCache.goto(self.getCurrentFrame())
-        print('done')
+        print('...done!')
         
     def getTopPosition(self):
         return self.TimeIndicator.getTopPosition()
