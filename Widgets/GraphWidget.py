@@ -44,29 +44,26 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
     ######################
     
     ###Input Events###
-    def subclassPressEvents(self, event):
-        if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-OpenNode']:
-            for node in self.selectedNodes():
-                AppCore.PropertiesBin.dockThisWidget(node)
+    #def subclassPressEvents(self, event):
+    #    if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-OpenNode']:
+    #        for node in self.selectedNodes():
+    #            AppCore.PropertiesBin.dockThisWidget(node)
     ##################
     
     
     ###Button Handling###
     def subclassModes(self, event):
-        if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-SelectNodes']:
-            for node in reversed(self.allNodes()):  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
-                if node.fallsAround(self.startModeX*self.XPixelsPerUnit, self.startModeY*self.YPixelsPerUnit):
-                    self.modes.setCurrentMode('dragMode')
-                    if node['selected'].getValue() != True:
-                        for node2 in self.selectedNodes():
-                            node2['selected'].setValue(False)
-                        node['selected'].setValue(True)
-                    break
-            else:
-                self.modes.setCurrentMode('marqMode')
-            self.initialValues(event)
+        for node in reversed(self.allNodes()):  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
+            if node.fallsAround(self.startModeX*self.XPixelsPerUnit, self.startModeY*self.YPixelsPerUnit):
+                self.modes.setCurrentMode('dragMode')
+                if node['selected'].getValue() != True:
+                    for node2 in self.selectedNodes():
+                        node2['selected'].setValue(False)
+                    node['selected'].setValue(True)
+                break
         else:
-            self.modes.setCurrentMode('None')
+            self.modes.setCurrentMode('marqMode')
+        self.initialValues(event)
     #####################       
     
     ###InitalValues###
@@ -171,4 +168,7 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
         for node in self.allNodes():
             if node.fallsAround(dx, dy):
                 AppCore.PropertiesBin.dockThisWidget(node)
+    def openNodes(self):
+        for node in AppCore.selectedNodes():
+            AppCore.PropertiesBin.dockThisWidget(node)    
     #####################

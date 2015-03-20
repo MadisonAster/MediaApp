@@ -116,28 +116,13 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     ######################
     
     ###Input Events###
-    def subclassPressEvents(self, event):
-        if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-frameBackward']:
-            self.getInput().moveCurrentFrame(-1)
-            self.update()
-            self.getInput().repaint()
-        if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-frameForward']:
-            self.getInput().moveCurrentFrame(1)
-            self.update()
-            self.getInput().repaint()
-        if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-cacheFrames']:
-            self.cacheFrames()
-            self.update()
-        if self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-playForward']:
-            self.playForward()
+    #def subclassPressEvents(self, event):
     ##################
     
     ###Button Handling###
     def subclassModes(self, event):
         if hasattr(AppCore.getActiveNode(), 'ViewerEventExtra'):
             self.modes.setCurrentMode('extraMode')
-        elif self.pressedButtons == AppCore.AppPrefs['ViewerWidget-Shortcuts-marq']:
-            self.modes.setCurrentMode('marqMode')
     #####################
     
     ###InitalValues###        
@@ -171,9 +156,9 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     def subclassPaintEvent(self, pEvent, painter):
         #DrawImage
         
-        #if self.frameCache is None or self.frameCacheFrame != AppCore.getCurrentFrame():
+        #if self.frameCache is None or self.frameCacheFrame != AppCore.getCurrentFrameNumber():
         #    self.frameCache =  self.node.getImage()
-        #    self.frameCacheFrame = AppCore.getCurrentFrame()
+        #    self.frameCacheFrame = AppCore.getCurrentFrameNumber()
         
         #self.frameCache =  self.node.getImage()
         painter.drawImage(QtCore.QRect(0,0,self.frameCache.width(),self.frameCache.height()), self.frameCache)
@@ -218,7 +203,7 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
                 
             self.frameCache = image
             #Maybe some overhead here
-            cache.moveCurrentFrame(1, playback = True)
+            cache.moveCurrentFrameNumber(1, playback = True)
             self.repaint()
             
             nextframe += frameperiod
@@ -287,5 +272,14 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     
     def sizeHint(self):
         return QtCore.QSize(1920,1080)
+    
+    def frameForward(self):
+        self.getInput().moveCurrentFrameNumber(1)
+        self.update()
+        self.getInput().repaint()
+    def frameBackward(self):
+        self.getInput().moveCurrentFrameNumber(-1)
+        self.update()
+        self.getInput().repaint()
     #####################
     

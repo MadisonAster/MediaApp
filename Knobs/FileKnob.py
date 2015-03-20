@@ -67,7 +67,7 @@ class FileKnob(Knob):
         if len(args) is 1:
             currentFrame = args[0]
         else:
-            currentFrame = self.parent.getCurrentFrame()
+            currentFrame = self.parent.getCurrentFrameNumber()
         startAt = self.parent['startAt'].getValue()
         offset = currentFrame-startAt
         

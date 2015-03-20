@@ -234,19 +234,6 @@ class Core(dict):
         self.AppAttributes = eval(str_AppAttributes)
         self.Nodes = eval(str_Nodes)
     
-    #def getCurrentFrame(self):
-    #    return self.AppAttributes['ctiTop'][0]
-    #def setCurrentFrame(self, value):
-    #    self.AppAttributes['ctiTop'][0] = value
-    #    self.AppAttributes['ctiBot'][0] = value
-    #def moveCurrentFrame(self, value, playback = False):
-    #    self.AppAttributes['ctiTop'][0] += value
-    #    self.AppAttributes['ctiBot'][0] += value
-    #    if playback is False:
-    #        for item in self.data.items():
-    #            #FLAW figure out how to override deque.rotate() nonintrusively
-    #            item[1].softRotate(-value)
-    
     def generateBlack(self):
         return QtGui.QImage(self.AppAttributes['ResolutionWidth'], self.AppAttributes['ResolutionHeight'], QtGui.QImage.Format_ARGB32)
     
@@ -488,3 +475,18 @@ class Core(dict):
                 return enum[int(button)]
             except:
                 return int(button)
+    
+    def getClassPrefs(self, object):
+        returnList = []
+        classList = []
+        for classObject in object.__class__.__mro__:
+            classList.append(classObject.__name__)
+        
+        for key1 in self.AppPrefs.keys():
+            if key1.split('-',1)[0] in classList:
+                for key2 in returnList:
+                    if key2.split('-',1)[1] == key1.split('-',1)[1]:
+                        break
+                else:
+                    returnList.append(key1)
+        return returnList

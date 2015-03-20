@@ -382,7 +382,7 @@ class TimelineNode(NodeConstructor, PropertiesDockWidget):
             returnList.appened(self.parent.getTopNodeAtFrame(frame, notNode = self))
         return returnList
     def getCurrentInputIndex(self):
-        return self.parent.getCurrentFrame()
+        return self.parent.getCurrentFrameNumber()
     def nodeShape(self):
         self.polyShape = [[0,0],[100,0],[100,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
         self.color1 = QtGui.QColor(238,238,238)

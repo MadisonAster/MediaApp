@@ -209,6 +209,7 @@ class AbstractGraphArea(QtGui.QWidget):
             print('key '+str(event.key())+' pressed.')
             return
         self.setButton(key)
+        self.callShortcuts()
         self.subclassPressEvents(event)
     def keyReleaseEvent(self, event):    
         if event.key() in KeyboardDict.keys():
@@ -278,7 +279,7 @@ class AbstractGraphArea(QtGui.QWidget):
         self.setButton(button)
         self.initialValues(event)
         self.setMode(event)
-        
+        self.callShortcuts()
         self.subclassPressEvents(event)
     def mouseReleaseEvent(self, event):
         eventType = AppCore.getEventName(event)
@@ -291,7 +292,13 @@ class AbstractGraphArea(QtGui.QWidget):
         self.clearButton(button)
         self.initialValues(event)
         self.setMode(event)
-        
+    
+    def callShortcuts(self):
+        for pref in AppCore.getClassPrefs(self):
+            if 'Shortcuts' in pref and 'Mode' not in pref:
+                if self.pressedButtons == AppCore.AppPrefs[pref]:
+                    getattr(self, pref.rsplit('-',1)[-1])()
+        self.update()
     def subclassPressEvents(self, event): #Override me!
         pass
     ##################
@@ -315,12 +322,13 @@ class AbstractGraphArea(QtGui.QWidget):
                 self.inputInterval = 0
             else:
                 return
-        
-        #print(self.pressedButtons)
-        if self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Zoom']:
-            self.modes.setCurrentMode('zoomMode')
-        elif self.pressedButtons == AppCore.AppPrefs['AbstractGraphArea-Shortcuts-Pan']:
-            self.modes.setCurrentMode('panMode')
+        for pref in AppCore.getClassPrefs(self):
+            if 'Shortcuts' in pref and 'Mode' in pref:
+                if self.pressedButtons == AppCore.AppPrefs[pref]:
+                    self.modes.setCurrentMode(pref.rsplit('-',1)[-1])
+                    if pref.split('-',1)[0] != 'AbstractGraphArea':
+                        self.subclassModes(event)
+                    break
         else:
             self.modes.setCurrentMode('None')
             self.subclassModes(event)

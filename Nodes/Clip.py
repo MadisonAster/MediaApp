@@ -100,8 +100,8 @@ class Clip(ImageNode, AudioNode):
     
     
     ###Pointer Functions###
-    def getCurrentFrame(self):
-        return self.parent.getCurrentFrame()
+    def getCurrentFrameNumber(self):
+        return self.parent.getCurrentFrameNumber()
         
         
         

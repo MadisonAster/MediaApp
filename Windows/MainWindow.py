@@ -61,12 +61,12 @@ class MainWindow(QtGui.QMainWindow):
         exitAction.setStatusTip('Exit application')
         exitAction.triggered.connect(self.close)
         
-        restoreLayout = QtGui.QAction('Restore Layout 1', self)
+        restoreLayout = QtGui.QAction('Restore Layout 0', self)
         restoreLayout.setShortcut('Shift+F1')
         restoreLayout.setStatusTip('Restore Saved Layout')
         restoreLayout.triggered.connect(self.restoreLayoutN)
         
-        saveLayout = QtGui.QAction('Save Layout 1', self)
+        saveLayout = QtGui.QAction('Save Layout 0', self)
         saveLayout.setShortcut('Ctrl+F1')
         saveLayout.setStatusTip('Save Layout')
         saveLayout.triggered.connect(self.saveLayoutN)
@@ -86,7 +86,7 @@ class MainWindow(QtGui.QMainWindow):
         layoutMenu.addAction(prefsWindow)
              
         self.show()
-        self.restoreLayoutN(1)
+        self.restoreLayoutN(0)
     
     def saveLayoutN(self, *args):
         if len(args) == 1:
