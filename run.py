@@ -42,13 +42,13 @@ def run():
     MainWindow.show()
     appThreadCall()
 if __name__ == '__main__':
-    if os.path.abspath(__file__).split('\\')[-2] == 'MediaApp':
+    if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
         if __package__ != 'MediaApp':
             import __init__ as MediaApp
         else:
             import MediaApp
         
-    if os.path.abspath(__file__).split('\\')[-2] == 'MediaApp':
+    if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
         run()
     else:
         import MediaApp

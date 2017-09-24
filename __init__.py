@@ -29,7 +29,7 @@ import hashlib
 
 sys.path.append(os.path.abspath(__package__))
 
-if os.path.abspath(__file__).split('\\')[-2] == 'MediaApp':
+if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
     sys.modules['MediaApp'] = sys.modules[__name__]
     import PyQt
     sys.modules['PyQt'] = PyQt
