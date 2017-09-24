@@ -22,9 +22,10 @@
 #    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
+import sys
+from collections import deque
 
 import AppCore
-from .RingCache import RingCache
 
 class TimeIndicator(object):
     def __init__(self):
@@ -32,68 +33,106 @@ class TimeIndicator(object):
         
         self.Position = 0
         self.Top = 0
-    def getCurrentFrame(self):
+    def getCurrentFrameNumber(self):
         return self.Position
     def getTopPosition(self):
         return self.Top
-    def setCurrentFrame(self, value):
+    def setCurrentFrameNumber(self, value):
         self.Position = value
     def setTopPosition(self, value):
         self.Top = value
         
-    def moveCurrentFrame(self, value):
+    def moveCurrentFrameNumber(self, value):
         self.Position += value
     
     
-class TimeCache(object):
+class TimeCache(deque):
     def __init__(self):
         super(TimeCache, self).__init__()
         
-        self.RingCache = RingCache()
-        self.RingCache.append(None)
+        self.append(None)
+        self.zeroFrame = 0
+        self.rotateCounter = 0
         
         self.TimeIndicator = TimeIndicator()
         
         #FLAW: need to keep track of frameCache size in AppCore somehow
         #AppCore.data['frameCache'] = 
         #AppCore.data['frameCache'].append(AppCore.generateBlack())
-    def __iter__(self):
-        for frame in self.RingCache:
-            yield frame
-    def getCurrentFrame(self):
-        return self.TimeIndicator.getCurrentFrame()
-    def setCurrentFrame(self, value):
-        self.TimeIndicator.setCurrentFrame(value)
-        self.RingCache.goto(value)
-    def setTopPosition(self, value):
-        self.TimeIndicator.setTopPosition(value)
-    def moveCurrentFrame(self, value, playback = False):
-        self.TimeIndicator.moveCurrentFrame(value)
+
+    #Overridden Functions###
+    def __contains__(self, frame):
+        if frame >= self.zeroFrame and frame < self.zeroFrame+len(self):
+            return True
+        else:
+            return False
+    def pop(self, *args):
+        returnList = []
+        if len(args) is 1:
+            frames = args[0]
+        else:
+            frames = 1
+        for i in range(frames):
+            returnList.append(super(TimeCache, self).pop())
+            if self.rotateCounter < 0:
+                self.rotateCounter += 1
+        return returnList
+    def rotate(self, value):
+        super(TimeCache, self).rotate(value)
+        self.rotateCounter += value
+    def reset(self):
+        self.rotate(-self.rotateCounter)
+    #######################
+    
+    def gotoFrameNumber(self, frameNumber, end = False):
+        rotationAmount = frameNumber - self.zeroFrame + self.rotateCounter
+        self.rotate(-rotationAmount-end)  
+    def moveCurrentFrameNumber(self, value, playback = False):
+        self.TimeIndicator.moveCurrentFrameNumber(value)
         if playback is False:
-            self.RingCache.rotate(-value)
-
-    def cacheFrames(self, frameIterator, firstFrame = 0):
-        self.RingCache = RingCache(zero = firstFrame)
-        for frame in frameIterator:
-            self.RingCache.append(frame)
-            #print('.',)
-        self.RingCache.goto(self.getCurrentFrame())
-        print('done')
-        
-    def getTopPosition(self):
-        return self.TimeIndicator.getTopPosition()
-
-    def getFrame(self):
-        if self.getCurrentFrame() in self.RingCache:
-            return self.RingCache[0]
+            self.rotate(-value)
+    def getCurrentImage(self):
+        if self.getCurrentFrameNumber() in self:
+            return self[0]
         else:
             return None
-    def getFrameAt(self, frame):
-        if frame in self.RingCache:
-            currentFrame = self.getCurrentFrame()
-            self.RingCache.goto(frame)
-            returnVal = self.RingCache[0]
-            self.RingCache.goto(currentFrame)
+    def getCacheList(self):
+        return list(range(self.zeroFrame, len(self)))
+    
+    def getImageAt(self, frame):
+        if frame in self:
+            currentFrame = self.getCurrentFrameNumber()
+            self.gotoFrameNumber(frame)
+            returnVal = self[0]
+            self.gotoFrameNumber(currentFrame)
             return returnVal
         else:
             return None
+            
+    def cacheFrames(self, imageIterator, firstFrame = 0):
+        self.clear()
+        self.zeroFrame = firstFrame
+        self.rotateCounter = 0
+        print('zeroFrame', self.zeroFrame)
+        
+        FrameCounter = 0
+        for image in imageIterator:
+            FrameCounter += 1
+            self.append(image)
+            sys.stdout.write("\rReading Frame "+str(FrameCounter))
+        self.gotoFrameNumber(self.getCurrentFrameNumber())
+        print('...done!')
+    
+    ###Pointer Functions###
+    def getCurrentFrameNumber(self):
+        return self.TimeIndicator.getCurrentFrameNumber()
+    def getTopPosition(self):
+        return self.TimeIndicator.getTopPosition()
+    def setTopPosition(self, value):
+        self.TimeIndicator.setTopPosition(value)
+    def setCurrentFrameNumber(self, value):
+        self.TimeIndicator.setCurrentFrameNumber(value)
+        self.gotoFrameNumber(value)
+    #####################
+    
+   

@@ -46,8 +46,8 @@ class TimelineNode(ImageNode, AudioNode, WidgetLinkedNode):
         self.color2 = QtGui.QColor(122,122,122)
         
     ###Pointer Functions###
-    def moveCurrentFrame(self, value, playback = False):
-        self.getLinkedWidget().moveCurrentFrame(value, playback = playback)
+    def moveCurrentFrameNumber(self, value, playback = False):
+        self.getLinkedWidget().moveCurrentFrameNumber(value, playback = playback)
     def repaint(self):
         self.getLinkedWidget().repaint()
     def getImage(self):

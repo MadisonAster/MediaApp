@@ -61,54 +61,37 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         self.addToolBar(QtCore.Qt.LeftToolBarArea, self.leftToolBar)
         
     ###Input Events###
-    def subclassPressEvents(self, event):
-        if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-OpenNode']:
-            for node in AppCore.selectedNodes():
-                AppCore.PropertiesBin.dockThisWidget(node)    
-        elif self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-frameBackward']:
-            self.moveCurrentFrame(-1)
-            AppCore.ViewerWidget.updateFrame()
-            AppCore.ViewerWidget.repaint()
-        elif self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-frameForward']:
-            self.moveCurrentFrame(1)
-            AppCore.ViewerWidget.updateFrame()
-            AppCore.ViewerWidget.repaint()
-        elif self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-cacheFrames']:
-            self.cacheFrames()
-        self.repaint()
+    #def subclassPressEvents(self, event):
     ##################
     
     ###Button Handling###
     def subclassModes(self, event):
-        if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-SelectNodes']:
-            for TimeIndicator in self.TimeIndicators:
-                if QtCore.QRectF(TimeIndicator.getCurrentFrame()-10,TimeIndicator.getTopPosition(),20,1).contains(self.startModeX,self.startModeY):
-                    self.modes.setCurrentMode('dragCtiMode')
-                    
-                    self.CTIList = [TimeIndicator]
-                    self.CTIxpos = [TimeIndicator.getCurrentFrame()]
-                    self.CTIypos = [TimeIndicator.getTopPosition()]
-
-                    for indicator in self.TimeIndicators:
-                        if indicator.getCurrentFrame() == self.CTIxpos[0]:
-                            if indicator != TimeIndicator:
-                                self.CTIList.append(indicator)
-                                self.CTIxpos.append(indicator.getCurrentFrame())
-                                self.CTIypos.append(indicator.getTopPosition())
-                    
+        for TimeIndicator in self.TimeIndicators:
+            if QtCore.QRectF(TimeIndicator.getCurrentFrameNumber()-10,TimeIndicator.getTopPosition(),20,1).contains(self.startModeX,self.startModeY):
+                self.modes.setCurrentMode('dragCtiMode')
+                
+                self.CTIList = [TimeIndicator]
+                self.CTIxpos = [TimeIndicator.getCurrentFrameNumber()]
+                self.CTIypos = [TimeIndicator.getTopPosition()]
+                for indicator in self.TimeIndicators:
+                    if indicator.getCurrentFrameNumber() == self.CTIxpos[0]:
+                        if indicator != TimeIndicator:
+                            self.CTIList.append(indicator)
+                            self.CTIxpos.append(indicator.getCurrentFrameNumber())
+                            self.CTIypos.append(indicator.getTopPosition())
+                break
+        else:
+            for node in self.allNodes():  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
+                if node.fallsAround(self.startModeX*self.XPixelsPerUnit, self.startModeY*self.YPixelsPerUnit):
+                    self.modes.setCurrentMode('dragMode')
+                    if node['selected'].getValue() != True:
+                        for node2 in self.selectedNodes():
+                            node2['selected'].setValue(False)
+                        node['selected'].setValue(True)
                     break
             else:
-                for node in self.allNodes():  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
-                    if node.fallsAround(self.startModeX*self.XPixelsPerUnit, self.startModeY*self.YPixelsPerUnit):
-                        self.modes.setCurrentMode('dragMode')
-                        if node['selected'].getValue() != True:
-                            for node2 in self.selectedNodes():
-                                node2['selected'].setValue(False)
-                            node['selected'].setValue(True)
-                        break
-                else:
-                    self.modes.setCurrentMode('marqMode')
-            self.initialValues(event)
+                self.modes.setCurrentMode('marqMode')
+        self.initialValues(event)
     #####################
     
     ###ModeEvents###
@@ -125,8 +108,10 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
             self.CTIList[i]
             xpos = int(round(self.CTIxpos[i]+self.curModeX-self.startModeX))
             ypos = int(round(self.CTIypos[i]+self.curModeY-self.startModeY))
-            self.CTIList[i].setCurrentFrame(xpos)
+            self.CTIList[i].setCurrentFrameNumber(xpos)
             self.CTIList[i].setTopPosition(ypos)
+        AppCore.ViewerWidget.updateFrame()
+        AppCore.ViewerWidget.repaint()
     def dragEventExtra(self):
         for node in self.dragStartPositions:
             xpos = round(node[1]+self.curModeX-self.startModeX)
@@ -158,9 +143,9 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
         penColor.setAlpha(128)
         painter.setBrush(QtGui.QBrush(penColor))
         for TimeIndicator in self.TimeIndicators:
-            painter.drawLine(TimeIndicator.getCurrentFrame(),TimeIndicator.getTopPosition()*self.YPixelsPerUnit, TimeIndicator.getCurrentFrame(),self.visibleBottom)
-            painter.drawLine(TimeIndicator.getCurrentFrame()+1,TimeIndicator.getTopPosition()*self.YPixelsPerUnit, TimeIndicator.getCurrentFrame()+1,self.visibleBottom)
-            painter.drawRect(TimeIndicator.getCurrentFrame()-10,TimeIndicator.getTopPosition()*self.YPixelsPerUnit,20,1*self.YPixelsPerUnit)
+            painter.drawLine(TimeIndicator.getCurrentFrameNumber(),TimeIndicator.getTopPosition()*self.YPixelsPerUnit, TimeIndicator.getCurrentFrameNumber(),self.visibleBottom)
+            painter.drawLine(TimeIndicator.getCurrentFrameNumber()+1,TimeIndicator.getTopPosition()*self.YPixelsPerUnit, TimeIndicator.getCurrentFrameNumber()+1,self.visibleBottom)
+            painter.drawRect(TimeIndicator.getCurrentFrameNumber()-10,TimeIndicator.getTopPosition()*self.YPixelsPerUnit,20,1*self.YPixelsPerUnit)
             
             penColor.setHsv(penColor.hue()+66, 255, 255)
             penColor.setAlpha(255)
@@ -201,7 +186,7 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
                 lastFrame = node['xpos'].getValue()+node['width'].getValue()
         return firstFrame, lastFrame
     def getTopNodeForCurrentFrame(self, notNode = None):
-        return self.getTopNodeAtFrame(self.getCurrentFrame(), notNode = notNode)
+        return self.getTopNodeAtFrame(self.getCurrentFrameNumber(), notNode = notNode)
     def getTopNodeAtFrame(self, Frame, notNode = None, top = None):
         nodeStack = self.getNodesAtPos(Frame)
         
@@ -227,27 +212,39 @@ class TimelineWidget(GraphWidget, NodeLinkedWidget):
             if node.fallsAround(XPos, None):
                 nodeStack.append(node)
         return nodeStack
+    
+    def frameForward(self):
+        self.moveCurrentFrameNumber(1)
+        AppCore.ViewerWidget.updateFrame()
+        AppCore.ViewerWidget.repaint()
+    def frameBackward(self):
+        self.moveCurrentFrameNumber(-1)
+        AppCore.ViewerWidget.updateFrame()
+        AppCore.ViewerWidget.repaint()
+    def openNodes(self):
+        for node in AppCore.selectedNodes():
+            AppCore.PropertiesBin.dockThisWidget(node)
     #####################
         
     ###Pointer Functions###
-    def getCurrentFrame(self):
-        return self.getCurrentIndicator().getCurrentFrame()
-    def setCurrentFrame(self, value):
-        self.getCurrentIndicator().setCurrentFrame(value)
+    def getCurrentFrameNumber(self):
+        return self.getCurrentIndicator().getCurrentFrameNumber()
+    def setCurrentFrameNumber(self, value):
+        self.getCurrentIndicator().setCurrentFrameNumber(value)
         self.update()
-    def moveCurrentFrame(self, value, playback = False):
-        self.getCurrentIndicator().moveCurrentFrame(value, playback = playback)
+    def moveCurrentFrameNumber(self, value, playback = False):
+        self.getCurrentIndicator().moveCurrentFrameNumber(value, playback = playback)
     def getImage(self):
-        image = self.getCurrentIndicator().getFrame()
+        image = self.getCurrentIndicator().getCurrentImage()
         if image is None:
             image = AppCore.generateBlack()
         return image
     def getImageAt(self, frame):
-        return self.getCurrentIndicator().getFrameAt(frame)
+        return self.getCurrentIndicator().getImageAt(frame)
     def getCache(self):
         return self.getCurrentIndicator()
     #####################
-        
+    
     pass
     
     

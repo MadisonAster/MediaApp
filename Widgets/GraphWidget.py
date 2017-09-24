@@ -44,29 +44,26 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
     ######################
     
     ###Input Events###
-    def subclassPressEvents(self, event):
-        if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-OpenNode']:
-            for node in self.selectedNodes():
-                AppCore.PropertiesBin.dockThisWidget(node)
+    #def subclassPressEvents(self, event):
+    #    if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-OpenNode']:
+    #        for node in self.selectedNodes():
+    #            AppCore.PropertiesBin.dockThisWidget(node)
     ##################
     
     
     ###Button Handling###
     def subclassModes(self, event):
-        if self.pressedButtons == AppCore.AppPrefs[self.className+'-Shortcuts-SelectNodes']:
-            for node in reversed(self.allNodes()):  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
-                if node.fallsAround(self.startModeX*self.XPixelsPerUnit, self.startModeY*self.YPixelsPerUnit):
-                    self.modes.setCurrentMode('dragMode')
-                    if node['selected'].getValue() != True:
-                        for node2 in self.selectedNodes():
-                            node2['selected'].setValue(False)
-                        node['selected'].setValue(True)
-                    break
-            else:
-                self.modes.setCurrentMode('marqMode')
-            self.initialValues(event)
+        for node in reversed(self.allNodes()):  #TODO-005: change AppCore.Nodes to an ordered dict so that nodes will be looped top to bottom here
+            if node.fallsAround(self.startModeX*self.XPixelsPerUnit, self.startModeY*self.YPixelsPerUnit):
+                self.modes.setCurrentMode('dragMode')
+                if node['selected'].getValue() != True:
+                    for node2 in self.selectedNodes():
+                        node2['selected'].setValue(False)
+                    node['selected'].setValue(True)
+                break
         else:
-            self.modes.setCurrentMode('None')
+            self.modes.setCurrentMode('marqMode')
+        self.initialValues(event)
     #####################       
     
     ###InitalValues###
@@ -116,9 +113,6 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
     
     ###PaintEvents###
     def subclassPaintEvent(self, pEvent, painter):
-        self.visibleLeft, self.visibleTop = self.graphTrans.inverted()[0].map(0, 0)
-        self.visibleRight, self.visibleBottom = self.graphTrans.inverted()[0].map(self.widgetSize.width(), self.widgetSize.height())
-
         #DrawGrid
         self.paintGrid(painter)
         
@@ -127,9 +121,6 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
         for node in self.allNodes():
             node.drawNode(painter)
             #painter.setTransform(self.graphTrans)
-            
-        #DrawExtra
-        self.paintExtra(painter)
         
         #DrawMarq
         if self.modes.getCurrentMode() == 'marqMode':
@@ -143,8 +134,9 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
             painter.setPen(pen)
             painter.drawRect(QtCore.QRectF(marqX[0], marqY[0], marqX[1]-marqX[0], marqY[1]-marqY[0])) 
         
-        #Finished
-        painter.end()
+        #DrawExtra
+        self.paintExtra(painter)
+        
     def paintGrid(self, painter):
         pen = AppCore.AppPrefs[self.className+'-gridPen']
         pen.setCosmetic(True)
@@ -176,4 +168,7 @@ class GraphWidget(NodeOwningObject, AbstractGraphArea):
         for node in self.allNodes():
             if node.fallsAround(dx, dy):
                 AppCore.PropertiesBin.dockThisWidget(node)
+    def openNodes(self):
+        for node in AppCore.selectedNodes():
+            AppCore.PropertiesBin.dockThisWidget(node)    
     #####################
