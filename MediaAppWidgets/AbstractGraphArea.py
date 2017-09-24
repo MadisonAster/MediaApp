@@ -132,7 +132,7 @@ class AbstractGraphArea(QtGui.QWidget):
         self.setAttribute(QtCore.Qt.WA_AcceptTouchEvents)
         
         #Initialize Values
-        self.modes = modeList(['None','zoomMode','panMode'])
+        self.modes = modeList(['None','zoom','pan'])
         self.pressedButtons = keyList()
         self.inputInterval = 0
         self.curGraphAngle = 0.0
@@ -220,10 +220,6 @@ class AbstractGraphArea(QtGui.QWidget):
         self.clearButton(key)
     
     def event(self, event):
-        #print(event.type().__name__)
-        #print(type(event).__name__)
-        #print(QtCore.QEvent(event.type()))
-        
         eventType = AppCore.getEventName(event)
         if type(event) is QtGui.QTouchEvent:
             for touchEvent in self.touchEventList:
@@ -323,7 +319,7 @@ class AbstractGraphArea(QtGui.QWidget):
             else:
                 return
         for pref in AppCore.getClassPrefs(self):
-            if 'Shortcuts' in pref and 'Mode' in pref:
+            if 'Shortcuts' in pref and type(AppCore.AppPrefs[pref]) == list:
                 if self.pressedButtons == AppCore.AppPrefs[pref]:
                     self.modes.setCurrentMode(pref.rsplit('-',1)[-1])
                     if pref.split('-',1)[0] != 'AbstractGraphArea':
@@ -417,6 +413,7 @@ class AbstractGraphArea(QtGui.QWidget):
             if time() > self.releaseTime+self.inputInterval:
                 self.inputInterval = 0
                 self.initialValues(event)
+                print('move setmode')
                 self.setMode(event)
             else:
                 return
@@ -483,10 +480,10 @@ class AbstractGraphArea(QtGui.QWidget):
     
     ###ModeEvents###
     def ModeEvents(self, event):
-        if self.getCurrentMode() == 'zoomMode':
-            self.zoomEvent()
-        elif self.getCurrentMode() == 'panMode':
-            self.panEvent()
+        if self.getCurrentMode() == 'zoom':
+            self.zoom()
+        elif self.getCurrentMode() == 'pan':
+            self.pan()
         else:
             self.subclassModeEvents(event)
     def TouchModeEvents(self, event):
@@ -498,10 +495,10 @@ class AbstractGraphArea(QtGui.QWidget):
     def subclassTouchModeEvents(self, event): #Override me!
         pass
         
-    def panEvent(self):
+    def pan(self):
         self.curGraphX = AppCore.AppAttributes[self.className+'-GraphX']+(self.curMouseX-self.startMouseX)
         self.curGraphY = AppCore.AppAttributes[self.className+'-GraphY']+(self.curMouseY-self.startMouseY)
-    def zoomEvent(self):
+    def zoom(self):
         posDeltaX = (self.curMouseX-self.startMouseX)
         posDeltaY = (self.curMouseY-self.startMouseY)
         scaleDeltaX = posDeltaX/self.zoomSensitivity
