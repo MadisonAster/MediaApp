@@ -27,7 +27,7 @@ import os, sys
 import cmd, threading
 import hashlib
 
-sys.path.append(os.path.abspath(__package__))
+#sys.path.append(os.path.abspath(__package__))
 
 if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
     sys.modules['MediaApp'] = sys.modules[__name__]
