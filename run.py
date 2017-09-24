@@ -14,11 +14,8 @@
 #===============================================================================
 
 import sys, os
-if os.path.abspath(__file__).split('\\')[-2] == 'MediaApp':
-    if __package__ != 'MediaApp':
-        import __init__ as MediaApp
-    else:
-        import MediaApp
+if 'MediaApp' in sys.modules:
+    import MediaApp
 
 def DefaultSetup():
     global MainWindow, NodeGraph, BrowserBin, PropertiesBin, ViewerWidget
@@ -45,6 +42,12 @@ def run():
     MainWindow.show()
     appThreadCall()
 if __name__ == '__main__':
+    if os.path.abspath(__file__).split('\\')[-2] == 'MediaApp':
+        if __package__ != 'MediaApp':
+            import __init__ as MediaApp
+        else:
+            import MediaApp
+        
     if os.path.abspath(__file__).split('\\')[-2] == 'MediaApp':
         run()
     else:
