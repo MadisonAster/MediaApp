@@ -13,48 +13,40 @@
 #    Lesser General Public License for more details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
-import cmd
-import threading
+import sys, os
+if os.path.abspath(__file__).split('\\')[-2] == 'MediaApp':
+    if __package__ != 'MediaApp':
+        import __init__ as MediaApp
+    else:
+        import MediaApp
 
-try:
-    import MediaApp
-except:
-    import __init__ as MediaApp
-import AppCore
-
-MainWindow = MediaApp.Windows.MainWindow()
-
-#Required for ViewerNode
-NodeGraph = MediaApp.Widgets.NodeGraph()
-MainWindow.dockThisWidget(NodeGraph)
-
-BrowserBin = MediaApp.Widgets.BrowserBin()
-PropertiesBin = MediaApp.Widgets.PropertiesBin()
-ViewerWidget = MediaApp.Widgets.ViewerWidget()
-
-MainWindow.dockThisWidget(BrowserBin)
-MainWindow.dockThisWidget(PropertiesBin)
-MainWindow.dockThisWidget(ViewerWidget)
-
+def DefaultSetup():
+    global MainWindow, NodeGraph, BrowserBin, PropertiesBin, ViewerWidget
+    MainWindow = MediaApp.Windows.MainWindow()
+    
+    #Required for ViewerNode
+    NodeGraph = MediaApp.Widgets.NodeGraph()
+    MainWindow.dockThisWidget(NodeGraph)
+    
+    BrowserBin = MediaApp.Widgets.BrowserBin()
+    PropertiesBin = MediaApp.Widgets.PropertiesBin()
+    ViewerWidget = MediaApp.Widgets.ViewerWidget()
+    
+    MainWindow.dockThisWidget(BrowserBin)
+    MainWindow.dockThisWidget(PropertiesBin)
+    MainWindow.dockThisWidget(ViewerWidget)
 
 def run():
-    def cmdThreadCall():
-        Cmd.cmdloop()
+    DefaultSetup()
     def appThreadCall():
+        import AppCore
         AppCore.App.exec_()
-        
     MainWindow.initUI()
     MainWindow.show()
-        
-    #cmdThread = threading.Thread(target=cmdThreadCall)
-    #cmdThread.start()
-    
     appThreadCall()
-    #appThread = threading.Thread(target=appThreadCall)
-    #appThread.start()
-    #appThread.join(timeout)
-    #if appThread.isAlive():
-    #    print 'Terminating process'
 if __name__ == '__main__':
-    run()
+    if os.path.abspath(__file__).split('\\')[-2] == 'MediaApp':
+        run()
+    else:
+        import MediaApp
+        MediaApp.run()

@@ -59,6 +59,6 @@ def IconFromSVG(iconPath):
 
     return QtGui.QIcon(pixmap)
     
-for file in os.listdir(AppCore['CoreDirectory']+'/Icons/'):
+for file in os.listdir(AppCore['CoreDirectory']+'/MediaAppIcons/'):
     if file.rsplit('.',1)[-1] == 'svg':
-        exec('def '+file.rsplit('.',1)[0]+'(): return IconFromSVG(AppCore["CoreDirectory"]+"/Icons/'+file+'")')
+        exec('def '+file.rsplit('.',1)[0]+'(): return IconFromSVG(AppCore["CoreDirectory"]+"/MediaAppIcons/'+file+'")')
