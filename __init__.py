@@ -41,28 +41,25 @@ elif os.path.isfile(LibDir+'/MediaApp/LICENSE'):
     if licenseHash == 'fc90421b0c8175781a7744dd573e032924a2c70dc02f7c6f49b0a8705e580c3f':
         LicenseFound = True
 if LicenseFound is True:
-    
-    
     #MediaApp Imports if this is MediaApp Library
     if CoreRun is True:  
         sys.path.append(LibDir.rsplit('/',1)[0])
         
-        from . import PyQt
+        import PyQt
         sys.modules['PyQt'] = PyQt
-        
-        from . import AppCore
+        import AppCore
         sys.modules['AppCore'] = AppCore.Core()
-        from . import DataStructures
+        import DataStructures
         sys.modules['DataStructures'] = DataStructures
-        from . import Icons
+        import Icons
         sys.modules['MediaAppIcons'] = Icons
-        from . import Knobs
+        import Knobs
         sys.modules['MediaAppKnobs'] = Knobs
-        from . import Nodes
+        import Nodes
         sys.modules['MediaAppNodes'] = Nodes
-        from . import Widgets
+        import Widgets
         sys.modules['MediaAppWidgets'] = Widgets
-        from . import Windows
+        import Windows
         sys.modules['MediaAppWindows'] = Windows
     else:
         import MediaApp

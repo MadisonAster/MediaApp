@@ -56,3 +56,5 @@ def run():
     #appThread.join(timeout)
     #if appThread.isAlive():
     #    print 'Terminating process'
+if __name__ == '__main__':
+    run()
