@@ -20,6 +20,7 @@ if 'MediaApp' in sys.modules:
 def DefaultSetup():
     global MainWindow, NodeGraph, BrowserBin, PropertiesBin, ViewerWidget
     MainWindow = MediaApp.Windows.MainWindow()
+    MediaApp.MainWindow = MainWindow
     
     #Required for ViewerNode
     NodeGraph = MediaApp.Widgets.NodeGraph()
@@ -51,5 +52,6 @@ if __name__ == '__main__':
     if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
         run()
     else:
+        import __init__ as MyApp
         import MediaApp
-        MediaApp.run()
+        run()
