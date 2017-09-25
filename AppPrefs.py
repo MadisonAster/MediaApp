@@ -16,7 +16,7 @@
 {
 #'*NWSTORAGE' : 'C:/',
 '*NWSTORAGE' : os.getenv('*NWSTORAGE'),
-'*BLACK' : 'somePath',
+'*BLACK' : None,
 
 'AppFont' : QtGui.QFont('Times', 10, QtGui.QFont.Bold),
 'AppIconColor1' : QtGui.QColor(17,17,17),

@@ -53,15 +53,17 @@ class PathWidget(StrWidget):
     def unTranslatePath(self, path):
         path = path.replace('\\','/')
         for key in AppCore.AppPrefs['GLOBALS']:
-            repVal = AppCore.AppPrefs[key].replace('\\','/').rstrip('/')
-            path = path.replace(key, repVal)
+            if(AppCore.AppPrefs[key]):
+                repVal = AppCore.AppPrefs[key].replace('\\','/').rstrip('/')
+                path = path.replace(key, repVal)
         return path
         
     def TranslatePath(self, path):
         path = path.replace('\\','/')
         for key in AppCore.AppPrefs['GLOBALS']:
-            repVal = AppCore.AppPrefs[key].replace('\\','/').rstrip('/')
-            path = path.replace(repVal, key)
+            if(AppCore.AppPrefs[key]):
+                repVal = AppCore.AppPrefs[key].replace('\\','/').rstrip('/')
+                path = path.replace(repVal, key)
         return path
 
     
