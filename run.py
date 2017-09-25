@@ -13,45 +13,12 @@
 #    Lesser General Public License for more details.
 #===============================================================================
 
-import sys, os
-if 'MediaApp' in sys.modules:
-    import MediaApp
-
-def DefaultSetup():
-    global MainWindow, NodeGraph, BrowserBin, PropertiesBin, ViewerWidget
-    MainWindow = MediaApp.Windows.MainWindow()
-    MediaApp.MainWindow = MainWindow
-    
-    #Required for ViewerNode
-    NodeGraph = MediaApp.Widgets.NodeGraph()
-    MainWindow.dockThisWidget(NodeGraph)
-    
-    BrowserBin = MediaApp.Widgets.BrowserBin()
-    PropertiesBin = MediaApp.Widgets.PropertiesBin()
-    ViewerWidget = MediaApp.Widgets.ViewerWidget()
-    
-    MainWindow.dockThisWidget(BrowserBin)
-    MainWindow.dockThisWidget(PropertiesBin)
-    MainWindow.dockThisWidget(ViewerWidget)
-
-def run():
-    DefaultSetup()
-    def appThreadCall():
-        import AppCore
-        AppCore.App.exec_()
-    MainWindow.initUI()
-    MainWindow.show()
-    appThreadCall()
+import os
 if __name__ == '__main__':
     if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
-        if __package__ != 'MediaApp':
-            import __init__ as MediaApp
-        else:
-            import MediaApp
-        
-    if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
-        run()
+        import __init__ as MediaApp
+        MediaApp.run()
     else:
+        ##### Rename MyApp to your App's name here #####
         import __init__ as MyApp
-        import MediaApp
-        run()
+        MyApp.run()

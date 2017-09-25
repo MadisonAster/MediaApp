@@ -24,39 +24,74 @@
 #===============================================================================
 
 import os, sys
-import cmd, threading
-import hashlib
-
-#sys.path.append(os.path.abspath(__package__))
-
 if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
     sys.modules['MediaApp'] = sys.modules[__name__]
-    import PyQt
-    sys.modules['PyQt'] = PyQt
-    from PyQt import QtGui
-    sys.modules['QtGui'] = QtGui
-    from PyQt import QtCore
-    sys.modules['QtCore'] = QtCore
-    import AppCoreX
-    sys.modules['AppCore'] = AppCoreX.Core()
-    import DataStructures
-    sys.modules['DataStructures'] = DataStructures
-    import MediaAppIcons as Icons
-    sys.modules['MediaAppIcons'] = Icons
-    import MediaAppKnobs as Knobs
-    sys.modules['MediaAppKnobs'] = Knobs
-    import MediaAppNodes as Nodes
-    sys.modules['MediaAppNodes'] = Nodes
-    import MediaAppWidgets as Widgets
-    sys.modules['MediaAppWidgets'] = Widgets
-    import MediaAppWindows as Windows
-    sys.modules['MediaAppWindows'] = Windows
-    try:
-        from .run import *
-    except:
-        from run import *
-else:
-    import MediaApp
+    if __name__ == '__init__':
+        import PyQt
+        sys.modules['PyQt'] = PyQt
+        from PyQt import QtGui
+        sys.modules['QtGui'] = QtGui
+        from PyQt import QtCore
+        sys.modules['QtCore'] = QtCore
+        import AppCoreX
+        AppCore = AppCoreX.Core()
+        sys.modules['AppCore'] = AppCore
+        
+        import DataStructures
+        sys.modules['DataStructures'] = DataStructures
+        import MediaAppIcons as Icons
+        sys.modules['MediaAppIcons'] = Icons
+        import MediaAppKnobs as Knobs
+        sys.modules['MediaAppKnobs'] = Knobs
+        import MediaAppNodes as Nodes
+        sys.modules['MediaAppNodes'] = Nodes
+        import MediaAppWidgets as Widgets
+        sys.modules['MediaAppWidgets'] = Widgets
+        import MediaAppWindows as Windows
+        sys.modules['MediaAppWindows'] = Windows
+    else:
+        from . import PyQt
+        sys.modules['PyQt'] = PyQt
+        from PyQt import QtGui
+        sys.modules['QtGui'] = QtGui
+        from PyQt import QtCore
+        sys.modules['QtCore'] = QtCore
+        from . import AppCoreX
+        AppCore = AppCoreX.Core()
+        sys.modules['AppCore'] = AppCore
+        
+        from . import DataStructures
+        sys.modules['DataStructures'] = DataStructures
+        from . import MediaAppIcons as Icons
+        sys.modules['MediaAppIcons'] = Icons
+        from . import MediaAppKnobs as Knobs
+        sys.modules['MediaAppKnobs'] = Knobs
+        from . import MediaAppNodes as Nodes
+        sys.modules['MediaAppNodes'] = Nodes
+        from . import MediaAppWidgets as Widgets
+        sys.modules['MediaAppWidgets'] = Widgets
+        from . import MediaAppWindows as Windows
+        sys.modules['MediaAppWindows'] = Windows
+    
+    MainWindow = Windows.MainWindow()
+    NodeGraph = Widgets.NodeGraph()
+    AppCore.NodeGraph = NodeGraph
+    BrowserBin = Widgets.BrowserBin()
+    PropertiesBin = Widgets.PropertiesBin()
+    ViewerWidget = Widgets.ViewerWidget()
+    MainWindow.dockThisWidget(NodeGraph)
+    MainWindow.dockThisWidget(BrowserBin)
+    MainWindow.dockThisWidget(PropertiesBin)
+    MainWindow.dockThisWidget(ViewerWidget)
     def run():
-        MediaApp.run()
+        MainWindow.initUI()
+        MainWindow.show()
+        AppCore.App.exec_()
+else:
+    if __name__ == '__init__':
+        from MediaApp import *
+    else:
+        from .MediaApp import *
+    ##### Add your App's import statements here #####
+    
     
