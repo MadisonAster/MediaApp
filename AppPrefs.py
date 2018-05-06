@@ -97,6 +97,6 @@
 'ColorKnob-DefaultColor' : QtGui.QColor(255,255,255),
 
 'AbstractGraphArea-inputInterval' : 0.1,
-'AbstractGraphArea-Shortcuts-zoom' : ['MiddleButton', 'LeftButton'],
-'AbstractGraphArea-Shortcuts-pan' : ['MiddleButton'],
+'AbstractGraphArea-Shortcuts-zoom' : ['MidButton', 'LeftButton'],
+'AbstractGraphArea-Shortcuts-pan' : ['MidButton'],
 }

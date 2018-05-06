@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 import AppCore
 from .StrWidget import StrWidget

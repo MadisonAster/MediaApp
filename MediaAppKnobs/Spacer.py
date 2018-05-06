@@ -23,11 +23,11 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class Spacer(QtGui.QWidget):
+class Spacer(QtWidgets.QWidget):
     def __init__(self):
         super(Spacer, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
+        self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
     def sizeHint(self):
         return QtCore.QSize(0,0)

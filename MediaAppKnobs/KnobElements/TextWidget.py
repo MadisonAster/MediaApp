@@ -23,9 +23,9 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class TextWidget(QtGui.QTextEdit):
+class TextWidget(QtWidgets.QTextEdit):
     def __init__(self):
         super(TextWidget, self).__init__()
         self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)

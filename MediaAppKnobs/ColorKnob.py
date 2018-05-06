@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 import AppCore
 from . import KnobConstructor
@@ -32,7 +32,7 @@ from .FloatKnob import FloatKnob
 
 import MediaAppIcons
 
-class ColorKnob(QtGui.QWidget):
+class ColorKnob(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
         if 'name' in kwargs.keys():
             name = kwargs['name']
@@ -45,12 +45,12 @@ class ColorKnob(QtGui.QWidget):
         
         self.name = KnobElements.KnobLabel()
         self.name.setText(name)
-        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         
-        self.knobLayout = QtGui.QHBoxLayout()
+        self.knobLayout = QtWidgets.QHBoxLayout()
         self.knobLayout.addWidget(self.name)
         
-        self.button = QtGui.QPushButton()
+        self.button = QtWidgets.QPushButton()
         self.knobLayout.addWidget(self.button)
 
         if len(args) > 0:

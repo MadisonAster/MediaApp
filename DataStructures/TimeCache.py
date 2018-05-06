@@ -47,12 +47,22 @@ class TimeIndicator(object):
     
     
 class TimeCache(deque):
-    def __init__(self):
+    def __init__(self, *kwargs):
         super(TimeCache, self).__init__()
         
         self.append(None)
         self.zeroFrame = 0
         self.rotateCounter = 0
+        #self.RingCache = RingCache()
+        #self.RingCache.append(None)
+        
+        self.append(None)
+        self.zeroFrame = 0
+        if 'zero' in kwargs:
+            self.zeroFrame = kwargs['zero']
+        self.rotateCounter = 0
+        
+        
         
         self.TimeIndicator = TimeIndicator()
         
@@ -114,6 +124,35 @@ class TimeCache(deque):
         self.zeroFrame = firstFrame
         self.rotateCounter = 0
         print('zeroFrame', self.zeroFrame)
+
+    def __iter__(self):
+        for frame in self.RingCache:
+            yield frame
+    def __contains__(self, frame):
+        if frame >= self.zeroFrame and frame < self.zeroFrame+len(self):
+            return True
+        else:
+            return False
+    def goto(self, frameNumber, end = False):
+        rotationAmount = frameNumber - self.zeroFrame + self.rotateCounter
+        self.rotate(-rotationAmount-end)  
+            
+            
+    def getCurrentFrame(self):
+        return self.TimeIndicator.getCurrentFrame()
+    def setCurrentFrame(self, value):
+        self.TimeIndicator.setCurrentFrame(value)
+        self.RingCache.goto(value)
+    def setTopPosition(self, value):
+        self.TimeIndicator.setTopPosition(value)
+    def moveCurrentFrame(self, value, playback = False):
+        self.TimeIndicator.moveCurrentFrame(value)
+        if playback is False:
+            self.RingCache.rotate(-value)
+
+    def cacheFrames(self, frameIterator, firstFrame = 0):
+        #self.RingCache = RingCache(zero = firstFrame)
+        self.clear()
         
         FrameCounter = 0
         for image in imageIterator:

@@ -23,35 +23,35 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
     
 import AppCore
 
-class BrowserBin(QtGui.QWidget):
+class BrowserBin(QtWidgets.QWidget):
     def __init__(self):
         super(BrowserBin, self).__init__()
         #self.setAccessibleName('BrowserBin')  #override visible name here
         ##################################
-        self.binLayout = QtGui.QVBoxLayout()
+        self.binLayout = QtWidgets.QVBoxLayout()
         self.setLayout(self.binLayout)
         
-        self.fileTree = QtGui.QTreeWidget()
+        self.fileTree = QtWidgets.QTreeWidget()
         self.fileTree.setColumnCount(3)
         self.fileTree.setHeaderLabels(['Name','Path','Size','Date']) 
         
         items = []
         for i in range(10):
-            items.append(QtGui.QTreeWidgetItem(None, ['item_'+str(i),'W:/item_'+str(i),'0kb','142312']))
+            items.append(QtWidgets.QTreeWidgetItem(None, ['item_'+str(i),'W:/item_'+str(i),'0kb','142312']))
         self.fileTree.addTopLevelItems(items)
         self.binLayout.addWidget(self.fileTree)
         
-        self.buttonLayout = QtGui.QHBoxLayout()
+        self.buttonLayout = QtWidgets.QHBoxLayout()
         
-        Import_Button = QtGui.QPushButton("Import",self)
-        ChangeName_Button = QtGui.QPushButton("ChangeName",self)
-        ChangePath_Button = QtGui.QPushButton("ChangePath",self)
-        SellectAssociated_Button = QtGui.QPushButton("SellectAssociated",self)
-        Remove_Button = QtGui.QPushButton("Remove",self)
+        Import_Button = QtWidgets.QPushButton("Import",self)
+        ChangeName_Button = QtWidgets.QPushButton("ChangeName",self)
+        ChangePath_Button = QtWidgets.QPushButton("ChangePath",self)
+        SellectAssociated_Button = QtWidgets.QPushButton("SellectAssociated",self)
+        Remove_Button = QtWidgets.QPushButton("Remove",self)
         
         self.buttonLayout.addWidget(Import_Button)
         self.buttonLayout.addWidget(ChangeName_Button)

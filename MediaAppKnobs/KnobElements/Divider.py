@@ -23,24 +23,24 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class Divider(QtGui.QWidget):
+class Divider(QtWidgets.QWidget):
     def __init__(self, vertical = False, horizontal = False):
         super(Divider, self).__init__()
         
         if vertical == True:
             self.width = 1
-            verticalPolicy = QtGui.QSizePolicy.Expanding
+            verticalPolicy = QtWidgets.QSizePolicy.Expanding
         else:
             self.width = 0
-            verticalPolicy = QtGui.QSizePolicy.Fixed
+            verticalPolicy = QtWidgets.QSizePolicy.Fixed
         if horizontal == True:
             self.height = 1
-            horizontalPolicy = QtGui.QSizePolicy.Expanding
+            horizontalPolicy = QtWidgets.QSizePolicy.Expanding
         else:
             self.height = 0
-            horizontalPolicy = QtGui.QSizePolicy.Fixed
+            horizontalPolicy = QtWidgets.QSizePolicy.Fixed
         self.setSizePolicy(horizontalPolicy, verticalPolicy)
             
             

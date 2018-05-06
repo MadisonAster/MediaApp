@@ -23,13 +23,13 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class IntWidget(QtGui.QLineEdit):
+class IntWidget(QtWidgets.QLineEdit):
     def __init__(self):
         super(IntWidget, self).__init__()
         
-        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         self.setAlignment(QtCore.Qt.AlignLeft)
     def setValue(self, value):
         self.setText(str(value))

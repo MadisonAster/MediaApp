@@ -23,14 +23,14 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 
 
-class StrWidget(QtGui.QLineEdit):
+class StrWidget(QtWidgets.QLineEdit):
     def __init__(self):
         super(StrWidget, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
     def setValue(self, value):
         self.setText(value)
     def getValue(self):

@@ -23,9 +23,9 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class SliderWidget(QtGui.QSlider):
+class SliderWidget(QtWidgets.QSlider):
     def __init__(self):
         super(SliderWidget, self).__init__()
         self.setValue(value)

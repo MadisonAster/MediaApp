@@ -23,31 +23,31 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 import AppCore
 from MediaAppKnobs import *
 
-class PrefsWindow(QtGui.QWidget):
+class PrefsWindow(QtWidgets.QWidget):
     def __init__(self):
         super(PrefsWindow, self).__init__()
         AppCore.RegisterObject(self)
         
-        self.panelLayout = QtGui.QVBoxLayout()
+        self.panelLayout = QtWidgets.QVBoxLayout()
         self.setLayout(self.panelLayout)
         
-        self.ScrollWidget = QtGui.QScrollArea()
+        self.ScrollWidget = QtWidgets.QScrollArea()
         self.EnumeratedPrefs = EnumeratedPrefs()
         self.ScrollWidget.setWidget(self.EnumeratedPrefs)
         self.panelLayout.addWidget(self.ScrollWidget)
         
-        self.buttonsLayout = QtGui.QHBoxLayout()
+        self.buttonsLayout = QtWidgets.QHBoxLayout()
         
-        saveButton = QtGui.QPushButton('SavePrefs')
+        saveButton = QtWidgets.QPushButton('SavePrefs')
         saveButton.clicked.connect(self.SavePrefs)
-        defaultsButton = QtGui.QPushButton('RestoreDefaults')
+        defaultsButton = QtWidgets.QPushButton('RestoreDefaults')
         defaultsButton.clicked.connect(self.RestoreDefaults)
-        closeButton = QtGui.QPushButton('Close')
+        closeButton = QtWidgets.QPushButton('Close')
         closeButton.clicked.connect(self.close)
         
         self.buttonsLayout.addWidget(saveButton)
@@ -59,10 +59,10 @@ class PrefsWindow(QtGui.QWidget):
         pass
     def RestoreDefaults(self):
         pass
-class EnumeratedPrefs(QtGui.QWidget):
+class EnumeratedPrefs(QtWidgets.QWidget):
     def __init__(self):
         super(EnumeratedPrefs, self).__init__()
-        self.panelLayout = QtGui.QVBoxLayout()
+        self.panelLayout = QtWidgets.QVBoxLayout()
         self.setLayout(self.panelLayout)
         
         self.knobs = []

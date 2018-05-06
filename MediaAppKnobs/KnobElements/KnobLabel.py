@@ -24,11 +24,11 @@
 #===============================================================================
 from copy import copy
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 import AppCore
 
-class KnobLabel(QtGui.QLabel):
+class KnobLabel(QtWidgets.QLabel):
     def __init__(self):
         super(KnobLabel, self).__init__()
         

@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 from .KnobConstructor import Knob
 from . import KnobElements
@@ -32,7 +32,7 @@ class BoolKnob(Knob):
     def __init__(self, value, name = 'BoolKnob'):
         super(BoolKnob, self).__init__()
         self.name.setText(name)
-        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         #self.setLayout(self.knobLayout)
         
         self.CheckBoxWidget = KnobElements.CheckBoxWidget()

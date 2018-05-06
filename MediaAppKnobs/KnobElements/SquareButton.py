@@ -23,15 +23,15 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class SquareButton(QtGui.QPushButton):
+class SquareButton(QtWidgets.QPushButton):
     def __init__(self, *args):
         if type(args[0]) is str:
             text = args[0]
         else:
             text = ''
         super(SquareButton, self).__init__(text)
-        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
     def sizeHint(self):
         return QtCore.QSize(24,24)

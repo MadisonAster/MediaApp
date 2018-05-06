@@ -29,7 +29,7 @@ import datetime
 
 from copy import copy
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 import AppCore
 from DataStructures import KeyboardDict
@@ -115,7 +115,7 @@ class touchList(list):
                 return True
         return False
 
-class AbstractGraphArea(QtGui.QWidget):
+class AbstractGraphArea(QtWidgets.QWidget):
     ###Initialize Class###
     def __init__(self):
         self.dropThreshhold = datetime.timedelta(1.0/24/60/60*0.02)
@@ -146,12 +146,12 @@ class AbstractGraphArea(QtGui.QWidget):
         self.TouchMode = False
         
     def addToolBarLayouts(self):
-        self.VBox = QtGui.QVBoxLayout()
-        self.HBox = QtGui.QHBoxLayout()
-        self.topToolBars = QtGui.QVBoxLayout()
-        self.bottomToolBars = QtGui.QVBoxLayout()
-        self.leftToolBars = QtGui.QHBoxLayout()
-        self.rightToolBars = QtGui.QHBoxLayout()
+        self.VBox = QtWidgets.QVBoxLayout()
+        self.HBox = QtWidgets.QHBoxLayout()
+        self.topToolBars = QtWidgets.QVBoxLayout()
+        self.bottomToolBars = QtWidgets.QVBoxLayout()
+        self.leftToolBars = QtWidgets.QHBoxLayout()
+        self.rightToolBars = QtWidgets.QHBoxLayout()
         
         self.VBox.setContentsMargins(0, 0, 0, 0)
         self.HBox.setContentsMargins(0, 0, 0, 0)
@@ -175,9 +175,9 @@ class AbstractGraphArea(QtGui.QWidget):
         self.VBox.addLayout(self.HBox)
         self.HBox.addLayout(self.leftToolBars)
         
-        spacer = QtGui.QWidget()
+        spacer = QtWidgets.QWidget()
         spacer.setMouseTracking(True)
-        spacer.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        spacer.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.HBox.addWidget(spacer)
         
         self.HBox.addLayout(self.rightToolBars)

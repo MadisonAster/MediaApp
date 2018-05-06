@@ -27,7 +27,7 @@ import sys
 import pprint
 import ctypes
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 import imageio
 
@@ -37,8 +37,10 @@ class Core(dict):
         
         #QtGui.QApplication.setColorSpec(QtGui.QApplication.ManyColor)
 
-        self.App = QtGui.QApplication([argString])
-           
+        try:
+            self.App = QtWidgets.QApplication([argString])
+        except:
+            self.App = QtGui.QApplication([argString])
         
         self.setPaths()
         

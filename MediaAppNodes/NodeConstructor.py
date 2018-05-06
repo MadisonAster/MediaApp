@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
     
 import math
 
@@ -31,23 +31,23 @@ import AppCore
 from MediaAppKnobs import *
 
 
-class PropertiesWidget(QtGui.QWidget):
+class PropertiesWidget(QtWidgets.QWidget):
     def __init__(self):
         super(PropertiesWidget, self).__init__()
         #self.setAccessibleName('PropertiesWidget')   #override visible name here or elsewhere
         ##################################
-        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Fixed)
-        #QtGui.QSizePolicy.MinimumExpanding
+        self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Fixed)
+        #QtWidgets.QSizePolicy.MinimumExpanding
         #self.setMaximumSize(200,200)
         
-        self.panelLayout = QtGui.QVBoxLayout()
+        self.panelLayout = QtWidgets.QVBoxLayout()
         self.setLayout(self.panelLayout)
   
     def addKnob(widget):
         self.panelLayout.addWidget(widget)
     def sizeHint(self):
         return QtCore.QSize(100,400)
-class PropertiesDockWidget(QtGui.QDockWidget):
+class PropertiesDockWidget(QtWidgets.QDockWidget):
     def __init__(self):
         super(PropertiesDockWidget, self).__init__()
         ##################################
@@ -296,7 +296,7 @@ class NodeConstructor(object):
         #for widget in self.widget().panelLayout.findChildren(object):
         #    self.widget().panelLayout.removeWidget(widget)
         LineList = []
-        LineLayout = QtGui.QHBoxLayout()
+        LineLayout = QtWidgets.QHBoxLayout()
         LineLayout.setContentsMargins(0,0,0,0)
         LineLayout.setSpacing(0)
         for knob in self:
@@ -307,7 +307,7 @@ class NodeConstructor(object):
                             if self.hasStretch(LineLayout) is False:
                                 LineLayout.addWidget(Spacer())
                             LineList.append(LineLayout)
-                            LineLayout = QtGui.QHBoxLayout()
+                            LineLayout = QtWidgets.QHBoxLayout()
                             LineLayout.setContentsMargins(0,0,0,0)
                             LineLayout.setSpacing(0)
                         LineLayout.addWidget(knob)
@@ -319,11 +319,11 @@ class NodeConstructor(object):
             self.widget().panelLayout.addLayout(layout)
     def hasStretch(self, layout):
         for index in range(layout.count()):
-            if layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtGui.QSizePolicy.MinimumExpanding:
+            if layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtWidgets.QSizePolicy.MinimumExpanding:
                 return True
-            elif layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtGui.QSizePolicy.Expanding:
+            elif layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtWidgets.QSizePolicy.Expanding:
                 return True
-            elif layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtGui.QSizePolicy.Preferred:
+            elif layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtWidgets.QSizePolicy.Preferred:
                 return True
         else:
             return False

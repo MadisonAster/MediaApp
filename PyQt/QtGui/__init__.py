@@ -30,10 +30,10 @@ sys.modules['__Temp_QtGui__'] = QtGui
 from __Temp_QtGui__ import *
 del sys.modules['__Temp_QtGui__']
         
-try:
-    from __QtTemp__ import QtWidgets
-    sys.modules['__Temp_QtWidgets__'] = QtWidgets
-    from __Temp_QtWidgets__ import *
-    del sys.modules['__Temp_QtWidgets__']
-except:
-    pass
+#try:
+#    from __QtTemp__ import QtWidgets
+#    sys.modules['__Temp_QtWidgets__'] = QtWidgets
+#    from __Temp_QtWidgets__ import *
+#    del sys.modules['__Temp_QtWidgets__']
+#except:
+#    pass

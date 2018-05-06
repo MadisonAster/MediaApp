@@ -25,12 +25,12 @@
 
 import sys
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 import AppCore
 
 
-class MainWindow(QtGui.QMainWindow):
+class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         AppCore.RegisterObject(self)
@@ -51,27 +51,27 @@ class MainWindow(QtGui.QMainWindow):
         self.setWindowIcon(QtGui.QIcon(AppCore.AppSettings['AppIcon']))   
         self.AllowNestedDocks
         self.ForceTabbedDocks
-        self.setTabPosition(QtCore.Qt.AllDockWidgetAreas, QtGui.QTabWidget.North)
-        self.setTabShape(QtGui.QTabWidget.Triangular)
+        self.setTabPosition(QtCore.Qt.AllDockWidgetAreas, QtWidgets.QTabWidget.North)
+        self.setTabShape(QtWidgets.QTabWidget.Triangular)
         self.setDockNestingEnabled(True)
         
         #Menu Actions#
-        exitAction = QtGui.QAction('Exit', self)
+        exitAction = QtWidgets.QAction('Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.setStatusTip('Exit application')
         exitAction.triggered.connect(self.close)
         
-        restoreLayout = QtGui.QAction('Restore Layout 0', self)
+        restoreLayout = QtWidgets.QAction('Restore Layout 0', self)
         restoreLayout.setShortcut('Shift+F1')
         restoreLayout.setStatusTip('Restore Saved Layout')
         restoreLayout.triggered.connect(self.restoreLayoutN)
         
-        saveLayout = QtGui.QAction('Save Layout 0', self)
+        saveLayout = QtWidgets.QAction('Save Layout 0', self)
         saveLayout.setShortcut('Ctrl+F1')
         saveLayout.setStatusTip('Save Layout')
         saveLayout.triggered.connect(self.saveLayoutN)
         
-        prefsWindow = QtGui.QAction('Preferences', self)
+        prefsWindow = QtWidgets.QAction('Preferences', self)
         prefsWindow.setStatusTip('Edit Preferences')
         prefsWindow.triggered.connect(AppCore.PrefsWindow.show)
         
@@ -108,7 +108,7 @@ class MainWindow(QtGui.QMainWindow):
         widgetName = widget.accessibleName()
         if widgetName == '':
             widgetName = type(widget).__name__
-        dockWidget = QtGui.QDockWidget()
+        dockWidget = QtWidgets.QDockWidget()
         dockWidget.setWidget(widget)
         dockWidget.setObjectName(widgetName)
         dockWidget.setWindowTitle(widgetName)
@@ -118,10 +118,10 @@ class MainWindow(QtGui.QMainWindow):
         AppCore.RegisterObject(widget)
         
     def closeEvent(self, event):
-        reply = QtGui.QMessageBox.question(self, 'Message', 
-        'Are you sure you want to quit?', QtGui.QMessageBox.Yes |
-        QtGui.QMessageBox.No, QtGui.QMessageBox.No)        
-        if reply == QtGui.QMessageBox.Yes:
+        reply = QtWidgets.QMessageBox.question(self, 'Message', 
+        'Are you sure you want to quit?', QtWidgets.QMessageBox.Yes |
+        QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)        
+        if reply == QtWidgets.QMessageBox.Yes:
             event.accept()
             quit()
         else:

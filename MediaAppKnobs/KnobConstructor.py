@@ -23,11 +23,11 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 from . import KnobElements
 
-class Knob(QtGui.QWidget):
+class Knob(QtWidgets.QWidget):
     def __init__(self):
         self.name = KnobElements.KnobLabel()
         super(Knob, self).__init__()
@@ -38,12 +38,12 @@ class Knob(QtGui.QWidget):
         self.newline = True
         self.shown = True
         
-        self.vertLayout = QtGui.QVBoxLayout()
+        self.vertLayout = QtWidgets.QVBoxLayout()
         self.vertLayout.setContentsMargins(0,0,0,0)
         self.vertLayout.setSpacing(0)
         self.vertLayout.addWidget(self.name)
         
-        self.knobLayout = QtGui.QHBoxLayout()
+        self.knobLayout = QtWidgets.QHBoxLayout()
         self.knobLayout.setContentsMargins(3,0,3,0)
         self.knobLayout.setSpacing(0)
         self.vertLayout.addLayout(self.knobLayout)

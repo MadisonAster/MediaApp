@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 from .KnobConstructor import Knob
 from . import KnobElements
@@ -32,7 +32,7 @@ class ComboKnob(Knob):
     def __init__(self, values, name = 'ComboKnob'):
         super(ComboKnob, self).__init__()
         self.name.setText(name)
-        self.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
         
         self.ComboWidget = KnobElements.ComboWidget()
         self.knobLayout.addWidget(self.ComboWidget)

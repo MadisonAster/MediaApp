@@ -25,7 +25,7 @@
 
 import sys
 
-versionList = reversed(range(4, 99))
+versionList = reversed(range(2, 99))
 for a in versionList:
     version = 'PyQt'+str(a)
     try:
@@ -45,7 +45,14 @@ else:
         from PySide import QtGui, QtCore
         from PySide import QtSvg, QtSql
     except:
-        raise Exception('MediaApp requires some version of PyQt or PySide to be installed in your /Python/site-packages folder')
+        #try:
+        version = 'PySide2'
+        import PySide2
+        from PySide2 import QtGui, QtCore
+        from PySide2 import QtSvg, QtSql
+        from PySide2 import QtWidgets
+        #except:
+        #    raise Exception('MediaApp requires some version of PyQt or PySide to be installed in your /Python/site-packages folder')
 
 print('QtWrapper: '+version)
 print(sys.version)

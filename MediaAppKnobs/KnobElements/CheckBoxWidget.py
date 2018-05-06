@@ -23,13 +23,13 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class CheckBoxWidget(QtGui.QCheckBox):
+class CheckBoxWidget(QtWidgets.QCheckBox):
     def __init__(self):
         super(CheckBoxWidget, self).__init__()
         
-        self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
     def sizeHint(self):
         return QtCore.QSize(16,16)
     def setValue(self, value):

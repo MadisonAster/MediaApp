@@ -23,13 +23,13 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class FloatWidget(QtGui.QLineEdit):
+class FloatWidget(QtWidgets.QLineEdit):
     def __init__(self):
         super(FloatWidget, self).__init__()
         
-        self.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
     def setValue(self, value):
         self.setText(str(value))
         self.update()

@@ -23,12 +23,12 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class ComboWidget(QtGui.QComboBox):
+class ComboWidget(QtWidgets.QComboBox):
     def __init__(self):
         super(ComboWidget, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
         #self.setAlignment(QtCore.Qt.AlignLeft)
     def sizeHint(self):
         return QtCore.QSize(150,16)

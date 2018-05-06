@@ -23,11 +23,11 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
     
 import AppCore
 
-class DockingBin(QtGui.QMainWindow):
+class DockingBin(QtWidgets.QMainWindow):
     def __init__(self):
         super(DockingBin, self).__init__()
         self.setDockOptions(self.DockOptions(False))
@@ -39,7 +39,7 @@ class DockingBin(QtGui.QMainWindow):
         #QtGui.QScrollArea does not appear to care what size policy you set, it always treats
         #the sizeHint you return here as QtGui.QSizePolicy.Fixed
         XHint, YHint = 200, 200
-        for child in self.findChildren(QtGui.QDockWidget):
+        for child in self.findChildren(QtWidgets.QDockWidget):
             if child.isVisible() is True:
                 YHint += child.sizeHint().height()
                 if child.sizeHint().width() > XHint:
@@ -95,15 +95,15 @@ class DockingBin(QtGui.QMainWindow):
             
     def getDockedWidgets(self):
         returnList = []
-        for child in self.findChildren(QtGui.QDockWidget):
+        for child in self.findChildren(QtWidgets.QDockWidget):
             if child.docked is True:
                 returnList.append(child)
         return returnList
         
-class PropertiesBin(QtGui.QMainWindow):
+class PropertiesBin(QtWidgets.QMainWindow):
     def __init__(self):
         super(PropertiesBin, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         
         self.className = self.__class__.__name__
 
@@ -112,7 +112,7 @@ class PropertiesBin(QtGui.QMainWindow):
         self.DockingBin = DockingBin()
         self.DockingBin.show()
         
-        self.ScrollBin = QtGui.QScrollArea()
+        self.ScrollBin = QtWidgets.QScrollArea()
         self.ScrollBin.setWidgetResizable(True)
         self.ScrollBin.setWidget(self.DockingBin)    
         self.ScrollBin.show()
@@ -123,7 +123,7 @@ class PropertiesBin(QtGui.QMainWindow):
         toolbar = self.addToolBar('test')
         toolbar.setMovable(False)
         
-        EmptyBin = QtGui.QAction('EmptyBin', self)
+        EmptyBin = QtWidgets.QAction('EmptyBin', self)
         EmptyBin.setStatusTip('Close All the widgets in the bin.')
         EmptyBin.triggered.connect(self.emptyBin)
         

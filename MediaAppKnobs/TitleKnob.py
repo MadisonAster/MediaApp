@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 from .KnobConstructor import Knob
 from . import KnobElements
@@ -31,7 +31,7 @@ from . import KnobElements
 class TitleKnob(Knob):
     def __init__(self, value, name = 'TitleKnob'):
         super(TitleKnob, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
 
         self.topDivider = KnobElements.Divider(horizontal = True)
         self.barDivider = KnobElements.Divider(horizontal = True)
@@ -39,7 +39,7 @@ class TitleKnob(Knob):
         self.leftDivider = KnobElements.Divider(vertical = True)
         self.rightDivider = KnobElements.Divider(vertical = True)
         
-        self.spacerLayout = QtGui.QHBoxLayout()
+        self.spacerLayout = QtWidgets.QHBoxLayout()
         self.spacerLayout.addWidget(self.leftDivider)
         self.spacerLayout.addWidget(KnobElements.Spacer())
         self.spacerLayout.addWidget(self.rightDivider)

@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 from .KnobConstructor import Knob
 from . import KnobElements
@@ -31,7 +31,7 @@ from . import KnobElements
 class IntKnob(Knob):
     def __init__(self, value, name = 'IntKnob'):
         super(IntKnob, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
         
         self.IntWidget = KnobElements.IntWidget()
         self.knobLayout.addWidget(self.IntWidget)

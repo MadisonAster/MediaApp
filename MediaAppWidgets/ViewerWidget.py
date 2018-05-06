@@ -25,7 +25,7 @@
 from time import time, sleep
 import copy
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
 import AppCore
 import MediaAppIcons
@@ -39,7 +39,7 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     ###Initialize Class###
     def __init__(self):
         super(ViewerWidget, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         
         self.setMouseTracking(True)
         self.modes.append('marqMode')
@@ -56,10 +56,10 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         
         self.addToolBars()
     def addToolBars(self):
-        self.topToolBar = QtGui.QToolBar('Top Tool Bar')
-        self.leftToolBar = QtGui.QToolBar('Left Tool Bar')
-        self.rightToolBar = QtGui.QToolBar('Right Tool Bar')
-        self.bottomToolBar = QtGui.QToolBar('Bottom Tool Bar')
+        self.topToolBar = QtWidgets.QToolBar('Top Tool Bar')
+        self.leftToolBar = QtWidgets.QToolBar('Left Tool Bar')
+        self.rightToolBar = QtWidgets.QToolBar('Right Tool Bar')
+        self.bottomToolBar = QtWidgets.QToolBar('Bottom Tool Bar')
         
         self.addToolBar(QtCore.Qt.TopToolBarArea, self.topToolBar)
         #self.addToolBar(QtCore.Qt.LeftToolBarArea, self.leftToolBar)
@@ -84,31 +84,31 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         self.topToolBar.addWidget(MediaAppKnobs.Spacer())
         self.bottomToolBar.addWidget(MediaAppKnobs.Spacer())
 
-        RNext = QtGui.QAction(MediaAppIcons.RNext(), 'RNext', self)
+        RNext = QtWidgets.QAction(MediaAppIcons.RNext(), 'RNext', self)
         RNext.triggered.connect(self.playForward)
         self.bottomToolBar.addAction(RNext)
         
-        RPlay = QtGui.QAction(MediaAppIcons.RPlay(), 'RPlay', self)
+        RPlay = QtWidgets.QAction(MediaAppIcons.RPlay(), 'RPlay', self)
         RPlay.triggered.connect(self.playForward)
         self.bottomToolBar.addAction(RPlay)
         
-        RAdvance = QtGui.QAction(MediaAppIcons.RAdvance(), 'RAdvance', self)
+        RAdvance = QtWidgets.QAction(MediaAppIcons.RAdvance(), 'RAdvance', self)
         RAdvance.triggered.connect(self.playForward)
         self.bottomToolBar.addAction(RAdvance)
         
-        Stop = QtGui.QAction(MediaAppIcons.Stop(), 'Stop', self)
+        Stop = QtWidgets.QAction(MediaAppIcons.Stop(), 'Stop', self)
         Stop.triggered.connect(self.updateFrame)
         self.bottomToolBar.addAction(Stop)
         
-        Advance = QtGui.QAction(MediaAppIcons.Advance(), 'Advance', self)
+        Advance = QtWidgets.QAction(MediaAppIcons.Advance(), 'Advance', self)
         Advance.triggered.connect(self.playForward)
         self.bottomToolBar.addAction(Advance)
         
-        Play = QtGui.QAction(MediaAppIcons.Play(), 'Play', self)
+        Play = QtWidgets.QAction(MediaAppIcons.Play(), 'Play', self)
         Play.triggered.connect(self.playForward)
         self.bottomToolBar.addAction(Play)
         
-        Next = QtGui.QAction(MediaAppIcons.Next(), 'Next', self)
+        Next = QtWidgets.QAction(MediaAppIcons.Next(), 'Next', self)
         Next.triggered.connect(self.playForward)
         self.bottomToolBar.addAction(Next)
         

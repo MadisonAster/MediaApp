@@ -23,9 +23,9 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from PyQt import QtGui, QtCore, QtWidgets
 
-class RectButton(QtGui.QPushButton):
+class RectButton(QtWidgets.QPushButton):
     def __init__(self, *args):
         if type(args[0]) is str:
             text = args[0]
