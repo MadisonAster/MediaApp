@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PyQt Library
+#                       Applications with Qt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ import sys
 import pprint
 import ctypes
 
-from PyQt import QtGui, QtCore, QtWidgets
+from Qt import QtGui, QtCore, QtWidgets, QtCompat
 
 import imageio
 
@@ -95,6 +95,37 @@ class Core(dict):
             self['AppDirectory'] = self['CoreDirectory']
         self['AppDataDirectory'] = os.getenv('APPDATA')+'/MediaApp/'+self['AppDirectory'].rsplit('/',1)[1]
         self['UserAppPrefs'] = self['AppDataDirectory']+'/'+'UserAppPrefs.py'
+    
+    def LoadUI(self, obj):
+        print('classname', obj.__class__.__name__)
+        import inspect, os
+        path = inspect.getsourcefile(obj.__class__)
+        print('inspection!!!', path)
+        
+        uipath = path.rsplit('.',1)[0]+'.ui'
+        
+        print('uipath', uipath)
+        print('pathexists', os.path.exists(uipath))
+        
+        
+        
+        if os.path.exists(uipath):
+            QtCompat.loadUi(uipath, baseinstance=obj)
+            #QtCompat.loadUi(uipath, obj)
+        return
+        
+        
+        
+        if os.path.exists(uipath):
+        
+            loader = QtUiTools.QUiLoader()
+            file = QtCore.QFile(uipath)
+            file.open(QtCore.QFile.ReadOnly)
+            myWidget = loader.load(file, obj)
+            print('obj', type(obj), obj)
+            print('myWidget', type(myWidget), myWidget)
+            file.close()
+        
     
     def ctypesMagic(self):
         #Windows Taskbar icon work around

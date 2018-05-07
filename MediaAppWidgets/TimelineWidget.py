@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PyQt Library
+#                       Applications with Qt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 from collections import deque
 from time import time
 
-from PyQt import QtGui, QtCore
+from Qt import QtGui, QtCore
 
 import AppCore
 import DataStructures

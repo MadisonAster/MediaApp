@@ -79,6 +79,11 @@
 'ViewerWidget-Shortcuts-cacheFrames' : ['C'],
 'ViewerWidget-Shortcuts-frameForward' : ['Right'],
 'ViewerWidget-Shortcuts-frameBackward' : ['Left'],
+'ViewerWidget-Features-3DView' : True,
+'ViewerWidget-Features-2DView' : True,
+'ViewerWidget-Defaults-Show3DView' : True,
+
+
 
 'TimelineWidget-bgColor' : QtGui.QColor(50,50,50),
 'TimelineWidget-nodeTrimPen' : QtGui.QPen(QtGui.QColor(0,0,0), .5),

@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PyQt Library
+#                       Applications with Qt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 from time import time, sleep
 import copy
 
-from PyQt import QtGui, QtCore, QtWidgets
+from Qt import QtGui, QtCore, QtWidgets
 
 import AppCore
 import MediaAppIcons
@@ -67,6 +67,11 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         self.addToolBar(QtCore.Qt.BottomToolBarArea, self.bottomToolBar)
         
         
+        ###Top Toolbar###
+        self.DimensionSwitcher = MediaAppKnobs.ComboKnob(['3D View','2D View'])
+        self.DimensionSwitcher.showName(False)
+        self.topToolBar.addWidget(self.DimensionSwitcher)
+        
         self.topToolBar.addWidget(MediaAppKnobs.Spacer())
         
         self.inputSelectorA = MediaAppKnobs.ComboKnob([])
@@ -82,7 +87,15 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         self.topToolBar.addWidget(self.inputSelectorB)
 
         self.topToolBar.addWidget(MediaAppKnobs.Spacer())
+        
+        self.UpdateButton = MediaAppKnobs.ComboKnob(['PUSHBUTTON?'])
+        self.UpdateButton.showName(False)
+        self.topToolBar.addWidget(self.UpdateButton)
+        
+        ##################
+        
         self.bottomToolBar.addWidget(MediaAppKnobs.Spacer())
+        
 
         RNext = QtWidgets.QAction(MediaAppIcons.RNext(), 'RNext', self)
         RNext.triggered.connect(self.playForward)

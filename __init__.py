@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PyQt Library
+#                       Applications with Qt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -27,12 +27,12 @@ import os, sys
 if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
     sys.modules['MediaApp'] = sys.modules[__name__]
     if __name__ == '__init__':
-        import PyQt
-        sys.modules['PyQt'] = PyQt
-        from PyQt import QtGui
-        sys.modules['QtGui'] = QtGui
-        from PyQt import QtCore
-        sys.modules['QtCore'] = QtCore
+        #import Qt
+        #sys.modules['Qt'] = Qt
+        #from Qt import QtGui
+        #sys.modules['QtGui'] = QtGui
+        #from Qt import QtCore
+        #sys.modules['QtCore'] = QtCore
         import AppCoreX
         AppCore = AppCoreX.Core()
         sys.modules['AppCore'] = AppCore
@@ -50,12 +50,12 @@ if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
         import MediaAppWindows as Windows
         sys.modules['MediaAppWindows'] = Windows
     else:
-        from . import PyQt
-        sys.modules['PyQt'] = PyQt
-        from PyQt import QtGui
-        sys.modules['QtGui'] = QtGui
-        from PyQt import QtCore
-        sys.modules['QtCore'] = QtCore
+        #from . import Qt
+        #sys.modules['Qt'] = Qt
+        #from Qt import QtGui
+        #sys.modules['QtGui'] = QtGui
+        #from Qt import QtCore
+        #sys.modules['QtCore'] = QtCore
         from . import AppCoreX
         AppCore = AppCoreX.Core()
         sys.modules['AppCore'] = AppCore

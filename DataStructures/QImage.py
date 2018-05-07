@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from PyQt import QtGui, QtCore
+from Qt import QtGui, QtCore
 
 class QImage(QtGui.QImage):
     def __init__(self, *args, **kwargs):

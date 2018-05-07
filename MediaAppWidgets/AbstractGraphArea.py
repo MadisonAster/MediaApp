@@ -3,7 +3,7 @@
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
-#                       Applications with PyQt Library
+#                       Applications with Qt Library
 #    Copyright (C) 2013 Thomas McVay
 #    
 #    This library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ import datetime
 
 from copy import copy
 
-from PyQt import QtGui, QtCore, QtWidgets
+from Qt import QtGui, QtCore, QtWidgets
 
 import AppCore
 from DataStructures import KeyboardDict
@@ -125,6 +125,8 @@ class AbstractGraphArea(QtWidgets.QWidget):
         super(AbstractGraphArea, self).__init__()
         self.className = self.__class__.__name__
         
+        AppCore.LoadUI(self)
+        
         #QWidget Settings
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         self.setMinimumSize(0, 0)
@@ -144,6 +146,7 @@ class AbstractGraphArea(QtWidgets.QWidget):
         
         self.TouchList = touchList()
         self.TouchMode = False
+        
         
     def addToolBarLayouts(self):
         self.VBox = QtWidgets.QVBoxLayout()
