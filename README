@@ -1,0 +1,11 @@
+Requirements:
+
+Qt.py with one of the following:
+    PySide
+    PySide2
+    PyQt4
+    PyQt5
+    
+pip install Qt.py
+pip install PySide2
+
