@@ -31,14 +31,14 @@
 'NodeGraph-PaintXGridLines' : False,
 'NodeGraph-PaintYGridLines' : False,
 
-'ViewerWidget-zoomSensitivity' : 1.0,
-'ViewerWidget-upperXZoomLimit' : 10,
-'ViewerWidget-upperYZoomLimit' : 10,
-'ViewerWidget-lowerXZoomLimit' : -0.9,
-'ViewerWidget-lowerYZoomLimit' : -0.9,
-'ViewerWidget-ZoomXYJoined' : True,
-'ViewerWidget-XPixelsPerUnit' : 1,
-'ViewerWidget-YPixelsPerUnit' : 1,
+'ViewerWidget2D-zoomSensitivity' : 1.0,
+'ViewerWidget2D-upperXZoomLimit' : 10,
+'ViewerWidget2D-upperYZoomLimit' : 10,
+'ViewerWidget2D-lowerXZoomLimit' : -0.9,
+'ViewerWidget2D-lowerYZoomLimit' : -0.9,
+'ViewerWidget2D-ZoomXYJoined' : True,
+'ViewerWidget2D-XPixelsPerUnit' : 1,
+'ViewerWidget2D-YPixelsPerUnit' : 1,
 
 
 'TimelineWidget-zoomSensitivity' : 1.0,

@@ -28,10 +28,10 @@
 'NodeGraph-GraphXS' : 0,
 'NodeGraph-GraphYS' : 0,
 
-'ViewerWidget-GraphX' : 0,
-'ViewerWidget-GraphY' : 0,
-'ViewerWidget-GraphXS' : 0,
-'ViewerWidget-GraphYS' : 0,
+'ViewerWidget2D-GraphX' : 0,
+'ViewerWidget2D-GraphY' : 0,
+'ViewerWidget2D-GraphXS' : 0,
+'ViewerWidget2D-GraphYS' : 0,
 
 'TimelineWidget-GraphX' : 0,
 'TimelineWidget-GraphY' : 0,

@@ -60,12 +60,11 @@ class Knob(QtWidgets.QWidget):
     def setChanged(self, callable):
         self.changed = callable
         
-        #BUG: add some isinstance calls here
-        self.textChanged.connect(self.changed)
     def showName(self, value):
         if value is True:
             self.name.show()
         else:
             self.name.hide()
         
-    
+    def ValueChanged(self):
+        self.changed()

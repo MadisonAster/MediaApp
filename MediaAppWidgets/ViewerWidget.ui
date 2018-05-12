@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>474</width>
+    <width>453</width>
     <height>382</height>
    </rect>
   </property>
@@ -47,20 +47,7 @@
       <layout class="QHBoxLayout" name="leftToolBars"/>
      </item>
      <item>
-      <widget class="QFrame" name="frame">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="CentralLayout"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="rightToolBars"/>

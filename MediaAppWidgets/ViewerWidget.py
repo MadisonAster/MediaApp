@@ -34,28 +34,33 @@ import DataStructures
 from .NodeLinkedWidget import *
 from .AbstractGraphArea import AbstractGraphArea
 
- 
-class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
-    ###Initialize Class###
+class ViewerWidget(QtWidgets.QWidget, NodeLinkedWidget):
     def __init__(self):
         super(ViewerWidget, self).__init__()
-        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         AppCore.LoadUI(self)
+        print('Spacer', self.CentralLayout)
         
-        self.setMouseTracking(True)
-        self.modes.append('marqMode')
-        self.modes.append('extraMode')
+        self.ViewerWidget3D = ViewerWidget3D()
+        self.ViewerWidget2D = ViewerWidget2D()
+        self.addToolBars()
         
-        #Initialize Values
-        self.frameCache = AppCore.generateBlack()
-        self.AccessoryToolBars = []
-        
+        self.SetCentralWidget(self.ViewerWidget2D)
         
         self.setLinkedNode(AppCore.NodeGraph.createNode('ViewerNode'))
-        self.TimeIndicator = DataStructures.TimeCache()
         
+    def SetCentralWidget(self, Widget):
+        for i in range(self.CentralLayout.count()):
+            self.CentralLayout.itemAt(i).widget().hide()
+            self.CentralLayout.removeItem(self.CentralLayout.itemAt(i))
+        self.CentralLayout.addWidget(Widget)
+        Widget.show()
         
-        self.addToolBars()
+    def ChangeDimensions(self):
+        if self.DimensionSwitcher.getValue() == '2D View':
+            self.SetCentralWidget(self.ViewerWidget2D)
+        elif self.DimensionSwitcher.getValue() == '3D View':
+            self.SetCentralWidget(self.ViewerWidget3D)
+        
     def addToolBars(self):
         self.topToolBar = QtWidgets.QToolBar('Top Tool Bar')
         self.leftToolBar = QtWidgets.QToolBar('Left Tool Bar')
@@ -69,8 +74,10 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         
         
         ###Top Toolbar###
-        self.DimensionSwitcher = MediaAppKnobs.ComboKnob(['3D View','2D View'])
+        self.DimensionSwitcher = MediaAppKnobs.ComboKnob(['2D View','3D View'])
+        
         self.DimensionSwitcher.showName(False)
+        self.DimensionSwitcher.setChanged(self.ChangeDimensions)
         self.topToolBar.addWidget(self.DimensionSwitcher)
         
         self.topToolBar.addWidget(MediaAppKnobs.Spacer())
@@ -99,34 +106,78 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
         
 
         RNext = QtWidgets.QAction(MediaAppIcons.RNext(), 'RNext', self)
-        RNext.triggered.connect(self.playForward)
+        RNext.triggered.connect(self.ViewerWidget2D.playForward)
         self.bottomToolBar.addAction(RNext)
         
         RPlay = QtWidgets.QAction(MediaAppIcons.RPlay(), 'RPlay', self)
-        RPlay.triggered.connect(self.playForward)
+        RPlay.triggered.connect(self.ViewerWidget2D.playForward)
         self.bottomToolBar.addAction(RPlay)
         
         RAdvance = QtWidgets.QAction(MediaAppIcons.RAdvance(), 'RAdvance', self)
-        RAdvance.triggered.connect(self.playForward)
+        RAdvance.triggered.connect(self.ViewerWidget2D.playForward)
         self.bottomToolBar.addAction(RAdvance)
         
         Stop = QtWidgets.QAction(MediaAppIcons.Stop(), 'Stop', self)
-        Stop.triggered.connect(self.updateFrame)
+        Stop.triggered.connect(self.ViewerWidget2D.updateFrame)
         self.bottomToolBar.addAction(Stop)
         
         Advance = QtWidgets.QAction(MediaAppIcons.Advance(), 'Advance', self)
-        Advance.triggered.connect(self.playForward)
+        Advance.triggered.connect(self.ViewerWidget2D.playForward)
         self.bottomToolBar.addAction(Advance)
         
         Play = QtWidgets.QAction(MediaAppIcons.Play(), 'Play', self)
-        Play.triggered.connect(self.playForward)
+        Play.triggered.connect(self.ViewerWidget2D.playForward)
         self.bottomToolBar.addAction(Play)
         
         Next = QtWidgets.QAction(MediaAppIcons.Next(), 'Next', self)
-        Next.triggered.connect(self.playForward)
+        Next.triggered.connect(self.ViewerWidget2D.playForward)
         self.bottomToolBar.addAction(Next)
         
         self.bottomToolBar.addWidget(MediaAppKnobs.Spacer())
+    
+    ###Other Functions###
+    def addToolBar(self, ToolBarArea, ToolBar):
+        if ToolBarArea == QtCore.Qt.TopToolBarArea:
+            self.topToolBars.addWidget(ToolBar)
+        if ToolBarArea == QtCore.Qt.BottomToolBarArea:
+            self.bottomToolBars.addWidget(ToolBar)
+        if ToolBarArea == QtCore.Qt.LeftToolBarArea:
+            ToolBar.setOrientation(QtCore.Qt.Vertical)
+            self.leftToolBars.addWidget(ToolBar)
+        if ToolBarArea == QtCore.Qt.RightToolBarArea:
+            ToolBar.setOrientation(QtCore.Qt.Vertical)
+            self.rightToolBars.addWidget(ToolBar)
+    def removeToolBar(self, ToolBar):
+        self.topToolBars.removeWidget(ToolBar)
+        self.bottomToolBars.removeWidget(ToolBar)
+        self.leftToolBars.removeWidget(ToolBar)
+        self.rightToolBars.removeWidget(ToolBar)
+        ToolBar.hide()
+    #####################
+        
+class ViewerWidget3D(QtWidgets.QWidget):
+    def __init__(self):
+        super(ViewerWidget3D, self).__init__()
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+ 
+class ViewerWidget2D(AbstractGraphArea):
+    ###Initialize Class###
+    def __init__(self):
+        super(ViewerWidget2D, self).__init__()
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        
+        
+        self.setMouseTracking(True)
+        self.modes.append('marqMode')
+        self.modes.append('extraMode')
+        
+        #Initialize Values
+        self.frameCache = AppCore.generateBlack()
+        self.AccessoryToolBars = []
+        
+        self.TimeIndicator = DataStructures.TimeCache()
+        
+
     ######################
     
     ###Input Events###
@@ -232,14 +283,14 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
             #For now just return input A, because there's no current method for connecting to two caches at once.
             return self.getLinkedNode().getInput(self.inputSelectorA.currentIndex())
     def updateFrame(self):
-        inputA = self.getLinkedNode().getInput(self.inputSelectorA.currentIndex())
-        inputB = self.getLinkedNode().getInput(self.inputSelectorB.currentIndex())
+        inputA = self.parent().getLinkedNode().getInput(self.parent().inputSelectorA.currentIndex())
+        inputB = self.parent().getLinkedNode().getInput(self.parent().inputSelectorB.currentIndex())
         
         #TODO 'implement a provided timeline in the viewer'
-        if str(self.inputCombiner.getValue()) == 'A Only':
+        if str(self.parent().inputCombiner.getValue()) == 'A Only':
             if inputA != None:
                 self.cacheFrame(inputA.getImage())
-        elif str(self.inputCombiner.getValue()) == 'B Only':
+        elif str(self.parent().inputCombiner.getValue()) == 'B Only':
             if imageB != None:
                 self.cacheFrame(inputB.getImage())
         else:
@@ -247,14 +298,14 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
                 imageA = inputA.getImage()
             if imageB != None:
                 imageB = inputB.getImage()
-        if str(self.inputCombiner.getValue()) is 'Blend':    
+        if str(self.parent().inputCombiner.getValue()) is 'Blend':    
             self.cacheFrame(self.blendImage(imageA, imageB))
-        elif str(self.inputCombiner.getValue()) is 'Wipe':
+        elif str(self.parent().inputCombiner.getValue()) is 'Wipe':
             self.cacheFrame(self.wipeImage(imageA, imageB))
     
     def update(self):
         self.updateFrame()
-        super(ViewerWidget, self).update()
+        super(ViewerWidget2D, self).update()
     def dumpAccessoryToolbars(self):
         for toolbar in self.AccessoryToolBars:
             self.removeToolBar(toolbar)

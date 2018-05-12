@@ -36,6 +36,8 @@ class TextKnob(Knob):
         self.TextWidget = KnobElements.TextWidget()
         self.knobLayout.addWidget(self.TextWidget)
         
+        self.TextWidget.textChanged.connect(self.ValueChanged)
+        
         self.name.setText(name)
         self.setValue(value)
 

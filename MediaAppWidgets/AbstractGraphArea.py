@@ -125,8 +125,6 @@ class AbstractGraphArea(QtWidgets.QWidget):
         super(AbstractGraphArea, self).__init__()
         self.className = self.__class__.__name__
         
-        
-        
         #QWidget Settings
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         self.setMinimumSize(0, 0)
@@ -146,47 +144,6 @@ class AbstractGraphArea(QtWidgets.QWidget):
         
         self.TouchList = touchList()
         self.TouchMode = False
-        
-        
-    def addToolBarLayouts(self):
-        self.VBox = QtWidgets.QVBoxLayout()
-        self.HBox = QtWidgets.QHBoxLayout()
-        self.topToolBars = QtWidgets.QVBoxLayout()
-        self.bottomToolBars = QtWidgets.QVBoxLayout()
-        self.leftToolBars = QtWidgets.QHBoxLayout()
-        self.rightToolBars = QtWidgets.QHBoxLayout()
-        
-        self.VBox.setContentsMargins(0, 0, 0, 0)
-        self.HBox.setContentsMargins(0, 0, 0, 0)
-        self.topToolBars.setContentsMargins(0, 0, 0, 0)
-        self.bottomToolBars.setContentsMargins(0, 0, 0, 0)
-        self.leftToolBars.setContentsMargins(0, 0, 0, 0)
-        self.rightToolBars.setContentsMargins(0, 0, 0, 0)
-        
-        self.VBox.setSpacing(0)
-        self.HBox.setSpacing(0)
-        self.topToolBars.setSpacing(0)
-        self.bottomToolBars.setSpacing(0)
-        self.leftToolBars.setSpacing(0)
-        self.rightToolBars.setSpacing(0)
-        
-        self.setLayout(self.VBox)
-        
-        ###Widget ToolBarLayouts###
-        self.VBox.addLayout(self.topToolBars)
-        
-        self.VBox.addLayout(self.HBox)
-        self.HBox.addLayout(self.leftToolBars)
-        
-        spacer = QtWidgets.QWidget()
-        spacer.setMouseTracking(True)
-        spacer.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.HBox.addWidget(spacer)
-        
-        self.HBox.addLayout(self.rightToolBars)
-
-        self.VBox.addLayout(self.bottomToolBars)
-    ####################
         
     def getDictSettings(self):
         self.ZoomXYJoined = AppCore.AppSettings[self.className+'-ZoomXYJoined']
@@ -623,23 +580,5 @@ class AbstractGraphArea(QtWidgets.QWidget):
         return angle
     ####################
     
-    ###Other Functions###
-    def addToolBar(self, ToolBarArea, ToolBar):
-        if ToolBarArea == QtCore.Qt.TopToolBarArea:
-            self.topToolBars.addWidget(ToolBar)
-        if ToolBarArea == QtCore.Qt.BottomToolBarArea:
-            self.bottomToolBars.addWidget(ToolBar)
-        if ToolBarArea == QtCore.Qt.LeftToolBarArea:
-            ToolBar.setOrientation(QtCore.Qt.Vertical)
-            self.leftToolBars.addWidget(ToolBar)
-        if ToolBarArea == QtCore.Qt.RightToolBarArea:
-            ToolBar.setOrientation(QtCore.Qt.Vertical)
-            self.rightToolBars.addWidget(ToolBar)
-    def removeToolBar(self, ToolBar):
-        self.topToolBars.removeWidget(ToolBar)
-        self.bottomToolBars.removeWidget(ToolBar)
-        self.leftToolBars.removeWidget(ToolBar)
-        self.rightToolBars.removeWidget(ToolBar)
-        ToolBar.hide()
-    #####################
+
     pass

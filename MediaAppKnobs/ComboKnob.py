@@ -36,6 +36,8 @@ class ComboKnob(Knob):
         
         self.ComboWidget = KnobElements.ComboWidget()
         self.knobLayout.addWidget(self.ComboWidget)
+        
+        self.ComboWidget.currentIndexChanged.connect(self.ValueChanged)
 
         if type(values) is list:
             self.ComboWidget.setItems(values)
