@@ -36,7 +36,7 @@ class MainWindow(QtWidgets.QMainWindow):
         AppCore.RegisterObject(self)
         
         #Get LayoutSettings
-        self.defaultLayoutsPath = AppCore['AppDirectory']+'/'+'MainWindow_defaultLayouts.ini'
+        self.defaultLayoutsPath = AppCore.GetOverriddenPath('MainWindow_defaultLayouts.ini')
         self.userLayoutsPath = AppCore['AppDataDirectory']+'/'+'MainWindow_userLayouts.ini'
         self.layoutSettings = QtCore.QSettings(self.defaultLayoutsPath, QtCore.QSettings.IniFormat)
         #if os.path.exists(self.userLayoutsPath):

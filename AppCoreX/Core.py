@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 import os
-import sys
+import sys, inspect
 import pprint
 import ctypes
 
@@ -79,53 +79,34 @@ class Core(dict):
         
     def setPaths(self):
         self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',2)[0]
-        self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0]
+        self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0] #We can do better than this...
         
-        
-        #See if app specific pref files exist, otherwise use defaults in core directory
-        foundCount = 0
         for fileName in ['AppAttributes.py', 'AppPrefs.py', 'AppSettings.py']:
-            if os.path.isfile(self['AppDirectory']+'/'+fileName) == True:
-                self[fileName.rsplit('.',1)[0]] = self['AppDirectory']+'/'+fileName
-                foundCount += 1
-            else:
-                self[fileName.rsplit('.',1)[0]] = self['CoreDirectory']+'/'+fileName
+            p = self.GetOverriddenPath(fileName)
+            self[fileName.rsplit('.',1)[0]] = p
+            if p.rsplit('/',1)[0] == self['CoreDirectory']: #We can do better than this...
+                self['AppDirectory'] = self['CoreDirectory']
                 
-        if foundCount == 0:
-            self['AppDirectory'] = self['CoreDirectory']
         self['AppDataDirectory'] = os.getenv('APPDATA')+'/MediaApp/'+self['AppDirectory'].rsplit('/',1)[1]
         self['UserAppPrefs'] = self['AppDataDirectory']+'/'+'UserAppPrefs.py'
     
+    def GetOverriddenPath(self, RelativePath):
+        #Takes: RelativePath as path to file
+        #Performs: Checks to see if file exists in wrapper application
+        #Returns: Path to the wrapper app's version of the file if it exists
+        RelativePath = RelativePath.replace('\\','/').strip('/')
+        if os.path.isfile(self['AppDirectory']+'/'+RelativePath) == True:
+            return self['AppDirectory']+'/'+RelativePath
+        else:
+            return self['CoreDirectory']+'/'+RelativePath
+    
     def LoadUI(self, obj):
-        print('classname', obj.__class__.__name__)
-        import inspect, os
-        path = inspect.getsourcefile(obj.__class__)
-        print('inspection!!!', path)
-        
-        uipath = path.rsplit('.',1)[0]+'.ui'
-        
-        print('uipath', uipath)
-        print('pathexists', os.path.exists(uipath))
-        
-        
+        path = inspect.getsourcefile(obj.__class__).replace('\\','/')
+        relpath = path.split(self['CoreDirectory'],1)[-1].rsplit('.',1)[0]+'.ui'
+        uipath = self.GetOverriddenPath(relpath)
         
         if os.path.exists(uipath):
             QtCompat.loadUi(uipath, baseinstance=obj)
-            #QtCompat.loadUi(uipath, obj)
-        return
-        
-        
-        
-        if os.path.exists(uipath):
-        
-            loader = QtUiTools.QUiLoader()
-            file = QtCore.QFile(uipath)
-            file.open(QtCore.QFile.ReadOnly)
-            myWidget = loader.load(file, obj)
-            print('obj', type(obj), obj)
-            print('myWidget', type(myWidget), myWidget)
-            file.close()
-        
     
     def ctypesMagic(self):
         #Windows Taskbar icon work around

@@ -125,7 +125,7 @@ class AbstractGraphArea(QtWidgets.QWidget):
         super(AbstractGraphArea, self).__init__()
         self.className = self.__class__.__name__
         
-        AppCore.LoadUI(self)
+        
         
         #QWidget Settings
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
@@ -139,7 +139,7 @@ class AbstractGraphArea(QtWidgets.QWidget):
         self.inputInterval = 0
         self.curGraphAngle = 0.0
         
-        self.addToolBarLayouts()
+        #self.addToolBarLayouts()
         self.getDictSettings()
         
         self.TabletPressure = 1.0

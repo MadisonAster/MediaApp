@@ -40,6 +40,7 @@ class ViewerWidget(AbstractGraphArea, NodeLinkedWidget):
     def __init__(self):
         super(ViewerWidget, self).__init__()
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        AppCore.LoadUI(self)
         
         self.setMouseTracking(True)
         self.modes.append('marqMode')

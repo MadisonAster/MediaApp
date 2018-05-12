@@ -15,7 +15,7 @@
 
 {
 'AppTitle' : 'MediaApp',
-'AppIcon' : self['AppDirectory']+'/'+'MediaApp.ico',
+'AppIcon' : self['CoreDirectory']+'/'+'MediaApp.ico',
 'AppID' : 'ThomasMcVay.MediaApp.Framework.v0.1',
 'FocusPolicy' : QtCore.Qt.ClickFocus,
 
