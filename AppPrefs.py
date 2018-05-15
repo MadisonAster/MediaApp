@@ -17,10 +17,10 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #    Lesser General Public License for more details.
 #===============================================================================
+import os, AppCore
+from Qt import QtCore, QtGui
 
-
-
-{
+Data = {
 #'*NWSTORAGE' : 'C:/',
 '*NWSTORAGE' : os.getenv('*NWSTORAGE'),
 '*BLACK' : None,

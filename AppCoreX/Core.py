@@ -22,7 +22,7 @@
 #    See LICENSE in the root directory of this library for copy of
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
-import os
+import os, imp
 import sys, inspect
 import pprint
 import ctypes
@@ -34,7 +34,7 @@ import imageio
 class Core(dict):
     def __init__(self, argString = ''):
         super(Core, self).__init__()
-        
+        sys.modules['AppCore'] = self
         #QtGui.QApplication.setColorSpec(QtGui.QApplication.ManyColor)
 
         try:
@@ -44,12 +44,12 @@ class Core(dict):
         
         self.setPaths()
         
-        self.AppAttributes = self.parseFile(self['AppAttributes'])
-        self.AppSettings = self.parseFile(self['AppSettings'])
+        self.AppAttributes = self.ParsePrefDicts(self['AppAttributes'])
+        self.AppSettings = self.ParsePrefDicts(self['AppSettings'])
         try:
-            self.AppPrefs = self.parseFile(self['UserAppPrefs'])
+            self.AppPrefs = self.ParsePrefDicts(self['UserAppPrefs'])
         except:
-            self.AppPrefs = self.parseFile(self['AppPrefs'])
+            self.AppPrefs = self.ParsePrefDicts(self['AppPrefs'])
             
         self.setImpliedAppAttributes()
         self.setImpliedAppPrefs()
@@ -60,17 +60,13 @@ class Core(dict):
         #self.AppSettings = Settings that change on per app basis, graph functions, widgets, font availability, preferences window etc
         
         self.App.setPalette(self.getPalette('App'))
-        
-        
         self.App.setStyleSheet(self.generateStyleSheet())
         
         #Nodes go here
         self.Nodes = {}
         
-        
         #iterable temp containers go here
         self.data = {}
-        
         self.ctypesMagic()
         
         #A sensitive node modifies it's behavior based on the active node (ie viewer paints activeNode.ViewerOverlays)
@@ -79,24 +75,30 @@ class Core(dict):
         
     def setPaths(self):
         self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',2)[0]
-        self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0] #We can do better than this...
+        self['AppDirectory'] = self['CoreDirectory']
         
-        for fileName in ['AppAttributes.py', 'AppPrefs.py', 'AppSettings.py']:
-            p = self.GetOverriddenPath(fileName)
-            self[fileName.rsplit('.',1)[0]] = p
-            if p.rsplit('/',1)[0] == self['CoreDirectory']: #We can do better than this...
-                self['AppDirectory'] = self['CoreDirectory']
-                
+        for fileName in os.listdir(self['CoreDirectory']):
+            if fileName.rsplit('.',1)[-1] == 'py':
+                if fileName not in ['__init__.py', 'run.py', 'ExampleScript.py']:
+                    self[fileName.rsplit('.',1)[0]] = self.GetOverriddenFiles(fileName)
+        
         self['AppDataDirectory'] = os.getenv('APPDATA')+'/MediaApp/'+self['AppDirectory'].rsplit('/',1)[1]
         self['UserAppPrefs'] = self['AppDataDirectory']+'/'+'UserAppPrefs.py'
+    
+    def GetOverriddenFiles(self, FileName):
+        PathList = [self['CoreDirectory']+'/'+FileName] #Put Core version of file first so that overridden values are given priority
+        if os.path.isfile(self['CoreDirectory'].rsplit('/',1)[0]+'/'+FileName) == True:
+            PathList.append(self['CoreDirectory'].rsplit('/',1)[0]+'/'+FileName)
+        return PathList
     
     def GetOverriddenPath(self, RelativePath):
         #Takes: RelativePath as path to file
         #Performs: Checks to see if file exists in wrapper application
         #Returns: Path to the wrapper app's version of the file if it exists
         RelativePath = RelativePath.replace('\\','/').strip('/')
-        if os.path.isfile(self['AppDirectory']+'/'+RelativePath) == True:
-            return self['AppDirectory']+'/'+RelativePath
+        if os.path.isfile(self['CoreDirectory'].rsplit('/',1)[0]+'/'+RelativePath) == True:
+            self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0] #We can do better than this...
+            return self['CoreDirectory'].rsplit('/',1)[0]+'/'+RelativePath
         else:
             return self['CoreDirectory']+'/'+RelativePath
     
@@ -118,10 +120,14 @@ class Core(dict):
             objectString = type(objectPointer).__name__
         exec('self.'+objectString+' = objectPointer')
         
-    def parseFile(self, filePath):
-        with open(filePath, 'r') as file:
-            fileText = file.read()
-        return eval(fileText)
+    def ParsePrefDicts(self, FilePaths):
+        DataDict = {}
+        for path in FilePaths:
+            module = imp.load_source('module.name', path)
+            for key in module.Data.keys():
+                DataDict[key] = module.Data[key]
+                
+        return DataDict
        
     def setImpliedAppAttributes(self):
         pass

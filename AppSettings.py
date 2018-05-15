@@ -16,10 +16,12 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #    Lesser General Public License for more details.
 #===============================================================================
+import os, AppCore
+from Qt import QtCore, QtGui
 
-{
+Data = {
 'AppTitle' : 'MediaApp',
-'AppIcon' : self['CoreDirectory']+'/'+'MediaApp.ico',
+'AppIcon' : AppCore['CoreDirectory']+'/'+'MediaApp.ico',
 'AppID' : 'ThomasMcVay.MediaApp.Framework.v0.1',
 'FocusPolicy' : QtCore.Qt.ClickFocus,
 

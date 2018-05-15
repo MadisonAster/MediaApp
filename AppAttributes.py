@@ -12,9 +12,10 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #    Lesser General Public License for more details.
 #===============================================================================
+import os, AppCore
+from Qt import QtCore, QtGui
 
-{
-#HMMM think about how root will be displayed
+Data = {
 'ProjectPath' : '',
 'GraphXPos' : 0,
 'GraphYPos' : 0,
@@ -37,5 +38,4 @@
 'TimelineWidget-GraphY' : 0,
 'TimelineWidget-GraphXS' : 0,
 'TimelineWidget-GraphYS' : 0,
-
 }

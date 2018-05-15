@@ -58,7 +58,7 @@ if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
         #sys.modules['QtCore'] = QtCore
         from . import AppCoreX
         AppCore = AppCoreX.Core()
-        sys.modules['AppCore'] = AppCore
+        #sys.modules['AppCore'] = AppCore #The Module does this now
         
         from . import DataStructures
         sys.modules['DataStructures'] = DataStructures
