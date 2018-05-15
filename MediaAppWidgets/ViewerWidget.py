@@ -41,7 +41,7 @@ class ViewerWidget(QtWidgets.QWidget, NodeLinkedWidget):
     def __init__(self):
         super(ViewerWidget, self).__init__()
         AppCore.LoadUI(self)
-        print('Spacer', self.CentralLayout)
+        #print('Spacer', self.CentralLayout)
         
         self.ViewerWidget3D = ViewerWidget3D()
         self.ViewerWidget2D = ViewerWidget2D()

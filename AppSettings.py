@@ -25,6 +25,13 @@ Data = {
 'AppID' : 'ThomasMcVay.MediaApp.Framework.v0.1',
 'FocusPolicy' : QtCore.Qt.ClickFocus,
 
+'IconDirectories' : ['/Icons', '/MediaAppIcons'],
+'KnobDirectories' : ['/Knobs', '/MediaAppKnobs'],
+'NodeDirectories' : ['/Nodes', '/MediaAppNodes'],
+'PluginDirectories' : ['/Plugins', '/MediaAppPlugins'],
+'WidgetDirectories' : ['/Widgets', '/MediaAppWidgets'],
+'WindowDirectories' : ['/Windows', '/MediaAppWindows'],
+
 'NodeGraph-zoomSensitivity' : 1.0,
 'NodeGraph-upperXZoomLimit' : 10,
 'NodeGraph-upperYZoomLimit' : 10,

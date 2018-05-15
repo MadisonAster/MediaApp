@@ -23,10 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-import os
-
 from Qt import QtCore, QtGui, QtSvg
-
 import AppCore
 
 def IconFromSVG(iconPath):
@@ -59,6 +56,3 @@ def IconFromSVG(iconPath):
 
     return QtGui.QIcon(pixmap)
     
-for file in os.listdir(AppCore['CoreDirectory']+'/MediaAppIcons/'):
-    if file.rsplit('.',1)[-1] == 'svg':
-        exec('def '+file.rsplit('.',1)[0]+'(): return IconFromSVG(AppCore["CoreDirectory"]+"/MediaAppIcons/'+file+'")')

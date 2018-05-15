@@ -34,7 +34,7 @@ if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
         #from Qt import QtCore
         #sys.modules['QtCore'] = QtCore
         import AppCoreX
-        AppCore = AppCoreX.Core()
+        AppCore = AppCoreX.Core(CoreRun = True)
         sys.modules['AppCore'] = AppCore
         
         import DataStructures
@@ -49,6 +49,8 @@ if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
         sys.modules['MediaAppWidgets'] = Widgets
         import MediaAppWindows as Windows
         sys.modules['MediaAppWindows'] = Windows
+        import MediaAppPlugins as Plugins
+        sys.modules['MediaAppPlugins'] = Plugins
     else:
         #from . import Qt
         #sys.modules['Qt'] = Qt
@@ -57,7 +59,7 @@ if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
         #from Qt import QtCore
         #sys.modules['QtCore'] = QtCore
         from . import AppCoreX
-        AppCore = AppCoreX.Core()
+        AppCore = AppCoreX.Core(CoreRun = False)
         #sys.modules['AppCore'] = AppCore #The Module does this now
         
         from . import DataStructures
@@ -72,6 +74,8 @@ if os.path.abspath(__file__).split(os.sep)[-2] == 'MediaApp':
         sys.modules['MediaAppWidgets'] = Widgets
         from . import MediaAppWindows as Windows
         sys.modules['MediaAppWindows'] = Windows
+        from . import MediaAppPlugins as Plugins
+        sys.modules['MediaAppPlugins'] = Plugins
     
     MainWindow = Windows.MainWindow()
     NodeGraph = Widgets.NodeGraph()

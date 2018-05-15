@@ -32,11 +32,13 @@ from Qt import QtGui, QtCore, QtWidgets, QtCompat
 import imageio
 
 class Core(dict):
-    def __init__(self, argString = ''):
+    def __init__(self, argString = '', CoreRun = False):
         super(Core, self).__init__()
         sys.modules['AppCore'] = self
         #QtGui.QApplication.setColorSpec(QtGui.QApplication.ManyColor)
-
+        
+        self['CoreRun'] = CoreRun
+        
         try:
             self.App = QtWidgets.QApplication([argString])
         except:
@@ -73,22 +75,30 @@ class Core(dict):
         self.SensitiveObjects = []
         self.activeNode = None
         
+    def ImportPlugins(self):
+        pass
+        
+        
     def setPaths(self):
         self['CoreDirectory'] = __file__.replace('\\','/').rsplit('/',2)[0]
         self['AppDirectory'] = self['CoreDirectory']
+        self['BaseDirectories'] = [self['CoreDirectory']]
         
         for fileName in os.listdir(self['CoreDirectory']):
             if fileName.rsplit('.',1)[-1] == 'py':
                 if fileName not in ['__init__.py', 'run.py', 'ExampleScript.py']:
                     self[fileName.rsplit('.',1)[0]] = self.GetOverriddenFiles(fileName)
-        
         self['AppDataDirectory'] = os.getenv('APPDATA')+'/MediaApp/'+self['AppDirectory'].rsplit('/',1)[1]
         self['UserAppPrefs'] = self['AppDataDirectory']+'/'+'UserAppPrefs.py'
-    
+        
     def GetOverriddenFiles(self, FileName):
         PathList = [self['CoreDirectory']+'/'+FileName] #Put Core version of file first so that overridden values are given priority
-        if os.path.isfile(self['CoreDirectory'].rsplit('/',1)[0]+'/'+FileName) == True:
-            PathList.append(self['CoreDirectory'].rsplit('/',1)[0]+'/'+FileName)
+        if not self['CoreRun']:
+            if os.path.isfile(self['CoreDirectory'].rsplit('/',1)[0]+'/'+FileName) == True:
+                if self['AppDirectory'] == self['CoreDirectory']:
+                    self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0]
+                    self['BaseDirectories'].append(self['AppDirectory'])
+                PathList.append(self['CoreDirectory'].rsplit('/',1)[0]+'/'+FileName)
         return PathList
     
     def GetOverriddenPath(self, RelativePath):
@@ -97,7 +107,6 @@ class Core(dict):
         #Returns: Path to the wrapper app's version of the file if it exists
         RelativePath = RelativePath.replace('\\','/').strip('/')
         if os.path.isfile(self['CoreDirectory'].rsplit('/',1)[0]+'/'+RelativePath) == True:
-            self['AppDirectory'] = self['CoreDirectory'].rsplit('/',1)[0] #We can do better than this...
             return self['CoreDirectory'].rsplit('/',1)[0]+'/'+RelativePath
         else:
             return self['CoreDirectory']+'/'+RelativePath
@@ -106,6 +115,10 @@ class Core(dict):
         path = inspect.getsourcefile(obj.__class__).replace('\\','/')
         relpath = path.split(self['CoreDirectory'],1)[-1].rsplit('.',1)[0]+'.ui'
         uipath = self.GetOverriddenPath(relpath)
+        print('path', path)
+        print('self[CoreDirectory]', self['CoreDirectory'])
+        print('relpath', relpath)
+        print('uipath', uipath)
         
         if os.path.exists(uipath):
             QtCompat.loadUi(uipath, baseinstance=obj)
@@ -153,37 +166,39 @@ class Core(dict):
         for object in self.getSensitiveObjects():
             object.setActiveNode(self.activeNode)
 
-    def createNode(self, nodeClass, parent = None, baseClass = None):
+    def createNode(self, NodeClassName, parent = None, baseClass = None):
+        #Takes: NodeClassName as str 
+        #Performs:
+        #Returns:
         import MediaAppNodes
+        NodeClass = getattr(MediaAppNodes, NodeClassName)
+        print('NodeClass', NodeClass)
         
-        ###arg 1###
-        evalString = 'MediaAppNodes.'+nodeClass
-        #Check to see if developer has exposed their own Nodes package
-        if 'Nodes' in sys.modules:
-            import Nodes
-            if hasattr(Nodes, nodeClass):
-                evalString = 'Nodes.'+nodeClass
-        nodeClass = eval(evalString)
-        ###########
         
-        ###arg 2###
+        #evalString = 'MediaAppNodes.'+nodeClass
+        #if 'Nodes' in sys.modules:
+        #    import Nodes
+        #    if hasattr(Nodes, nodeClass):
+        #        evalString = 'Nodes.'+nodeClass
+        #nodeClass = eval(evalString)
+        
         if parent is None:
             parent = self
-        ###########
         
-        ###arg 3###        
-        if baseClass is None:
-            baseClass = MediaAppNodes.NodeConstructor.GraphNode
-        elif type(baseClass) is str:
-            baseClass = eval ('MediaAppNodes.NodeConstructor.'+baseClass)
-        ###########    
+        #if baseClass is None:
+        #    baseClass = MediaAppNodes.NodeConstructor.GraphNode
+        #elif type(baseClass) is str:
+        #    baseClass = eval ('MediaAppNodes.NodeConstructor.'+baseClass)
         
-        ConstructedClass = type(nodeClass.__name__, (nodeClass, baseClass, object), {})
+        #ConstructedClass = type(nodeClass.__name__, (nodeClass, baseClass, object), {})
+        
         #class ConstructedClass(nodeClass, baseClass):
         #    def __init__(self, parent):
         #        super(ConstructedClass, self).__init__(parent)
                 
-        node = ConstructedClass(parent)
+        #node = ConstructedClass(parent)
+        
+        node = NodeClass(parent)
         self.Nodes[node.name()] = node
         return node
     def removeNode(self, node):

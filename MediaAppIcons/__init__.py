@@ -25,3 +25,16 @@
 
 from .IconFromSVG import *
 from .IconFromColor import IconFromColor
+
+import os, sys, types
+import AppCore
+           
+for BaseDirectory in AppCore['BaseDirectories']:
+    for SubDirectory in AppCore.AppSettings['IconDirectories']:
+        if os.path.isdir(BaseDirectory+SubDirectory):
+            for file in os.listdir(BaseDirectory+SubDirectory):
+                if file.rsplit('.',1)[-1] == 'svg':
+                    ThisModule = sys.modules[__name__]
+                    FunctionName = file.rsplit('.',1)[0]
+                    NewMethod = types.MethodType(IconFromSVG, BaseDirectory+SubDirectory+'/'+file)
+                    setattr(ThisModule, FunctionName, NewMethod)

@@ -23,15 +23,16 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from .ArrayKnob import ArrayKnob
-from .BoolKnob import BoolKnob
-from .ColorKnob import ColorKnob
-from .ComboKnob import ComboKnob
-from .FileKnob import FileKnob
-from .FloatKnob import FloatKnob
-from .IntKnob import IntKnob
-from .Spacer import Spacer
-from .StrKnob import StrKnob
-from .TextKnob import TextKnob
-from .TitleKnob import TitleKnob
+import os, sys, imp
+import AppCore
+
+for BaseDirectory in AppCore['BaseDirectories']:
+    for SubDirectory in AppCore.AppSettings['KnobDirectories']:
+        if os.path.isdir(BaseDirectory+SubDirectory):
+            for file in os.listdir(BaseDirectory+SubDirectory):
+                if file.rsplit('.',1)[-1] == 'py':
+                    ThisModule = sys.modules[__name__]
+                    FunctionName = file.rsplit('.',1)[0]
+                    exec('from .'+FunctionName+' import *') #TODO: make imp work
+                    #imp.load_source(FunctionName, BaseDirectory+SubDirectory+'/'+file)
 

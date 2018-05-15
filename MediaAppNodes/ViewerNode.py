@@ -27,7 +27,7 @@ import AppCore
 from MediaAppKnobs import *
 from .NodeConstructor import *
 
-class ViewerNode(ImageNode, WidgetLinkedNode):
+class ViewerNode(ImageNode):
     def __init__(self, parent):
         super(ViewerNode, self).__init__(parent)
         self['ClassName'] = 'ViewerNode'

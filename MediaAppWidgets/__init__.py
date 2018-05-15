@@ -25,8 +25,21 @@
 
 #from GraphWidget import *
 
-from .NodeGraph import NodeGraph
-from .BrowserBin import BrowserBin
-from .PropertiesBin import PropertiesBin
-from .TimelineWidget import TimelineWidget
-from .ViewerWidget import ViewerWidget
+#from .NodeGraph import NodeGraph
+#from .BrowserBin import BrowserBin
+#from .PropertiesBin import PropertiesBin
+#from .TimelineWidget import TimelineWidget
+#from .ViewerWidget import ViewerWidget
+
+import os, sys, imp
+import AppCore
+
+for BaseDirectory in AppCore['BaseDirectories']:
+    for SubDirectory in AppCore.AppSettings['WidgetDirectories']:
+        if os.path.isdir(BaseDirectory+SubDirectory):
+            for file in os.listdir(BaseDirectory+SubDirectory):
+                if file.rsplit('.',1)[-1] == 'py':
+                    ThisModule = sys.modules[__name__]
+                    FunctionName = file.rsplit('.',1)[0]
+                    exec('from .'+FunctionName+' import *') #TODO: make imp work
+                    #imp.load_source(FunctionName, BaseDirectory+SubDirectory+'/'+file)

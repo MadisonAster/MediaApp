@@ -30,44 +30,6 @@ import math
 import AppCore
 from MediaAppKnobs import *
 
-
-class PropertiesWidget(QtWidgets.QWidget):
-    def __init__(self):
-        super(PropertiesWidget, self).__init__()
-        #self.setAccessibleName('PropertiesWidget')   #override visible name here or elsewhere
-        ##################################
-        self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Fixed)
-        #QtWidgets.QSizePolicy.MinimumExpanding
-        #self.setMaximumSize(200,200)
-        
-        self.panelLayout = QtWidgets.QVBoxLayout()
-        self.setLayout(self.panelLayout)
-  
-    def addKnob(widget):
-        self.panelLayout.addWidget(widget)
-    def sizeHint(self):
-        return QtCore.QSize(100,400)
-class PropertiesDockWidget(QtWidgets.QDockWidget):
-    def __init__(self):
-        super(PropertiesDockWidget, self).__init__()
-        ##################################
-        self.setWidget(PropertiesWidget())
-        self.widget().setPalette(AppCore.App.palette())
-        
-        #self.visibilityChanged.triggered.connect(self.unDock)
-        #self.toggleViewAction().triggered.connect(self.unDock)
-        self.setAcceptDrops(True)
-        self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
-        
-        self.setAllowedAreas(QtCore.Qt.TopDockWidgetArea)
-        
-        #Parent child relationship workaround
-        self.docked = False
-    def closeEvent(self, event):
-        AppCore.PropertiesBin.unDockThisWidget(self)
-    def focusInEvent(self, event):
-        AppCore.setActiveNode(self)
-        
 class NodeConstructor(object):
     def __init__(self, parent):
         super(NodeConstructor, self).__init__()
@@ -290,8 +252,8 @@ class NodeConstructor(object):
                 
     def setName(self, value):
         self['nodeName'].setValue(value)
-        self.setObjectName(value)
-        self.setWindowTitle(value)
+        #self.setObjectName(value)
+        #self.setWindowTitle(value)
     def attachKnobs(self):
         #for widget in self.widget().panelLayout.findChildren(object):
         #    self.widget().panelLayout.removeWidget(widget)
@@ -333,7 +295,57 @@ class NodeConstructor(object):
     def update(self):
         self.parent.update()
         
-class GraphNode(NodeConstructor, PropertiesDockWidget):
+    def setCurrentInputIndex(self, index):
+        self.currentInput = index
+class PropertiesWidget(QtWidgets.QWidget):
+    def __init__(self):
+        super(PropertiesWidget, self).__init__()
+        #self.setAccessibleName('PropertiesWidget')   #override visible name here or elsewhere
+        ##################################
+        self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Fixed)
+        #QtWidgets.QSizePolicy.MinimumExpanding
+        #self.setMaximumSize(200,200)
+        
+        self.panelLayout = QtWidgets.QVBoxLayout()
+        self.setLayout(self.panelLayout)
+  
+    def addKnob(widget):
+        self.panelLayout.addWidget(widget)
+    def sizeHint(self):
+        return QtCore.QSize(100,400)
+class PropertiesDockWidget(QtWidgets.QDockWidget):
+    def __init__(self):
+        super(PropertiesDockWidget, self).__init__()
+        ##################################
+        self.setWidget(PropertiesWidget())
+        self.widget().setPalette(AppCore.App.palette())
+        
+        #self.visibilityChanged.triggered.connect(self.unDock)
+        #self.toggleViewAction().triggered.connect(self.unDock)
+        self.setAcceptDrops(True)
+        self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
+        
+        self.setAllowedAreas(QtCore.Qt.TopDockWidgetArea)
+        
+        #Parent child relationship workaround
+        self.docked = False
+    def closeEvent(self, event):
+        AppCore.PropertiesBin.unDockThisWidget(self)
+    def focusInEvent(self, event):
+        AppCore.setActiveNode(self)
+class WidgetLinkedNode(NodeConstructor, PropertiesDockWidget):
+    def __init__(self, parent):
+        super(WidgetLinkedNode, self).__init__(parent)
+        self.LinkedWidget = None
+    def setLinkedWidget(self, widget):
+        self.LinkedWidget = widget
+        if self.LinkedWidget.getLinkedNode() != self:
+            self.LinkedWidget.setLinkedNode(self)
+    def getLinkedWidget(self):
+        return self.LinkedWidget        
+
+        
+class GraphNode(WidgetLinkedNode):
     def __init__(self, parent):
         super(GraphNode, self).__init__(parent)
         self.setTitleBarWidget(self['nodeName'])
@@ -361,8 +373,7 @@ class GraphNode(NodeConstructor, PropertiesDockWidget):
         #FLAW: add this to appPrefs/appSettings somehow
         self.color1 = QtGui.QColor(238,238,238)
         self.color2 = QtGui.QColor(122,122,122)
-        
-class TimelineNode(NodeConstructor, PropertiesDockWidget):
+class TimelineNode(WidgetLinkedNode):
     def __init__(self, parent):
         super(TimelineNode, self).__init__(parent)
         self.setTitleBarWidget(self['nodeName'])
@@ -398,17 +409,8 @@ class TimelineNode(NodeConstructor, PropertiesDockWidget):
         self.polyShape = [[0,0],[value,0],[value,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
         self.mapNodeShape()
         
-class WidgetLinkedNode(object):
-    def __init__(self, parent):
-        super(WidgetLinkedNode, self).__init__(parent)
-        self.LinkedWidget = None
-    def setLinkedWidget(self, widget):
-        self.LinkedWidget = widget
-        if self.LinkedWidget.getLinkedNode() != self:
-            self.LinkedWidget.setLinkedNode(self)
-    def getLinkedWidget(self):
-        return self.LinkedWidget
-class ImageNode(object):
+
+class ImageNode(GraphNode):
     def __init__(self, parent):
         super(ImageNode, self).__init__(parent)
         #self.extension()
@@ -424,13 +426,13 @@ class ImageNode(object):
             return AppCore.generateBlack()
         else:
             return self.getInput().getImage(*args)
-class AudioNode(object):
+class AudioNode(GraphNode):
     def __init__(self, parent):
         super(AudioNode, self).__init__(parent)
-class GeometryNode(object):
+class GeometryNode(GraphNode):
     def __init__(self, parent):
         super(GeometryNode, self).__init__(parent)
-class ArrayDataNode(object):
+class ArrayDataNode(GraphNode):
     def __init__(self, parent):
         super(ArrayDataNode, self).__init__(parent)
         

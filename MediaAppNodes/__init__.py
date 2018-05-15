@@ -23,7 +23,22 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from .Clip import Clip
-from .ViewerNode import ViewerNode
-from .TimelineNode import TimelineNode
-from . import NodeConstructor
+#from .Clip import Clip
+#from .ViewerNode import ViewerNode
+#from .TimelineNode import TimelineNode
+
+
+import os, sys, imp
+import AppCore
+
+for BaseDirectory in AppCore['BaseDirectories']:
+    for SubDirectory in AppCore.AppSettings['NodeDirectories']:
+        if os.path.isdir(BaseDirectory+SubDirectory):
+            for file in os.listdir(BaseDirectory+SubDirectory):
+                if file.rsplit('.',1)[-1] == 'py':
+                    ThisModule = sys.modules[__name__]
+                    FunctionName = file.rsplit('.',1)[0]
+                    exec('from .'+FunctionName+' import *') #TODO: make imp work
+                    #imp.load_source(FunctionName, BaseDirectory+SubDirectory+'/'+file)
+                    
+#from . import NodeConstructor
