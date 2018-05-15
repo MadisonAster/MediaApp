@@ -1,4 +1,9 @@
 #===============================================================================
+# @Author: Thomas McVay
+# @ModuleDescription: User End Preferences that can be edited and overridden via the 
+#                     Preferences Menu. Default prefs can be overridden by wrapper
+#                     Apps by copying this file from the MediaApp directory to the
+#                     App Level directory and customizing it.
 # @License: 
 #    This example file is public domain. See ADDENDUM section in LICENSE.
 #    You may do the following things with this file without restrictions or conditions:
@@ -12,6 +17,8 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #    Lesser General Public License for more details.
 #===============================================================================
+
+
 
 {
 #'*NWSTORAGE' : 'C:/',
@@ -104,4 +111,24 @@
 'AbstractGraphArea-inputInterval' : 0.1,
 'AbstractGraphArea-Shortcuts-zoom' : ['MidButton', 'LeftButton'],
 'AbstractGraphArea-Shortcuts-pan' : ['MidButton'],
+
+'FileMenu-Shortcuts-NewAction' : ['Ctrl+N'],
+'FileMenu-Shortcuts-OpenAction' : ['Ctrl+O'],
+'FileMenu-Shortcuts-ReloadAction' : ['Ctrl+R'],
+'FileMenu-Shortcuts-SaveAction' : ['Ctrl+S'],
+'FileMenu-Shortcuts-SaveAsAction' : ['Ctrl+Alt+S'],
+'FileMenu-Shortcuts-CloseAction' : ['Ctrl+W'],
+'FileMenu-Shortcuts-QuitAction' : ['Ctrl+Q'],
+
+'EditMenu-Shortcuts-UndoAction' : ['Ctrl+Z'],
+'EditMenu-Shortcuts-RedoAction' : ['Ctrl+Y'],
+'EditMenu-Shortcuts-CutAction' : ['Ctrl+X'],
+'EditMenu-Shortcuts-CopyAction' : ['Ctrl+C'],
+'EditMenu-Shortcuts-PasteAction' : ['Ctrl+V'],
+'EditMenu-Shortcuts-DeleteAction' : ['Delete'],
+'EditMenu-Shortcuts-SelectAllAction' : ['Ctrl+A'],
+'EditMenu-Shortcuts-RestoreLayoutAction' : ['Shift+F1'],
+'EditMenu-Shortcuts-SaveLayoutAction' : ['Ctrl+F1'],
+'EditMenu-Shortcuts-PrefsWindowAction' : ['Ctrl+Alt+P'],
+'EditMenu-Shortcuts-PluginsWindowAction' : ['Ctrl+Shift+P'],
 }

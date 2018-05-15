@@ -25,3 +25,4 @@
 
 from .MainWindow import *
 from .PrefsWindow import *
+from .PluginsWindow import *
