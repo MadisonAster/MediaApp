@@ -30,7 +30,9 @@ import imageio
 import AppCore
 import DataStructures
 from MediaAppKnobs import *
-from .NodeConstructor import *
+from NodeConstructor import *
+#import NodeConstructor
+#print(dir(NodeConstructor))
 
 class Clip(ImageNode, AudioNode):
     def __init__(self, parent):

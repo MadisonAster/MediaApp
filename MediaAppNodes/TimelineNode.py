@@ -25,7 +25,7 @@
 
 import AppCore
 from MediaAppKnobs import *
-from .NodeConstructor import *
+from NodeConstructor import *
 
 class TimelineNode(ImageNode, AudioNode, WidgetLinkedNode):
     def __init__(self, parent):

@@ -29,7 +29,14 @@
 
 
 import os, sys, imp
+from pprint import pprint
+import importlib.util
+import importlib
 import AppCore
+
+NodeConstructor = imp.load_source('NodeConstructor', __file__.replace('\\','/').rsplit('/',1)[0]+'/NodeConstructor.py')
+#from .NodeConstructor import *
+sys.modules['NodeConstructor'] = NodeConstructor
 
 for BaseDirectory in AppCore['BaseDirectories']:
     for SubDirectory in AppCore.AppSettings['NodeDirectories']:
@@ -38,7 +45,50 @@ for BaseDirectory in AppCore['BaseDirectories']:
                 if file.rsplit('.',1)[-1] == 'py':
                     ThisModule = sys.modules[__name__]
                     FunctionName = file.rsplit('.',1)[0]
-                    exec('from .'+FunctionName+' import *') #TODO: make imp work
+                    #exec('from .'+FunctionName+' import *') #TODO: make imp work
+                    
+                    if FunctionName not in ['NodeConstructor', '__init__']:
+                        print('FunctionName', FunctionName)
+                        #spec = importlib.util.spec_from_file_location(FunctionName, BaseDirectory+SubDirectory+'/'+file)
+                        #module = importlib.util.module_from_spec(spec)
+                        
+                                                
+                        #module = importlib.import_module(FunctionName)
+
+                        #globals().update(
+                        #    {n: getattr(module, n) for n in module.__all__} if hasattr(module, '__all__') 
+                        #    else 
+                        #    {k: v for (k, v) in module.__dict__.items() if not k.startswith('_')
+                        #})
+                        
+                        pprint(dir(ThisModule))
+                        
+                        #print(spec.loader.exec_module(module))
+                        
+                        
+                        #exec('from .'+FunctionName+' import *') #TODO: make imp work
+                        
+                        
+                        module = imp.load_source(FunctionName, BaseDirectory+SubDirectory+'/'+file)
+                        #from NewModule import *
+                        
+                        print('dir', dir(module))
+                        for d in dir(module):
+                            dobj = type(getattr(module, d))
+                            print(d, dobj, isinstance(dobj, class))
+                            print(d, getattr(module, d).__module__)
+                        print('a;;', module.__module__)
+                        raise Exception('stop')
+                        
+                        for attrname in dir(module):
+                            if not attrname.startswith('_'):
+                                attr = getattr(module, attrname)
+                               
+                                print('attr', attr, type(getattr(module, attr)))
+                                setattr(ThisModule, attrname, attr)
+                    
+                    #foo.MyClass()
+                    
                     #imp.load_source(FunctionName, BaseDirectory+SubDirectory+'/'+file)
                     
 #from . import NodeConstructor
