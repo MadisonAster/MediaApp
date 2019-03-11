@@ -1,10 +1,10 @@
 #===============================================================================
-# @Author: Thomas McVay
+# @Author: Madison Aster
 # @ModuleDescription: 
 # @License:
 #    MediaApp Library - Python Package framework for developing robust Media 
 #                       Applications with PySide Library
-#    Copyright (C) 2013 Thomas McVay
+#    Copyright (C) 2013 Madison Aster
 #    
 #    This library is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU Lesser General Public

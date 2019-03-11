@@ -1,5 +1,5 @@
 #===============================================================================
-# @Author: Thomas McVay
+# @Author: Madison Aster
 # @ModuleDescription: Application Level settings that can be overridden by the wrapper
 #                     App by copying this file from the Media App directory to the App
 #                     Level directory and customizing it.
@@ -22,7 +22,7 @@ from Qt import QtCore, QtGui
 Data = {
 'AppTitle' : 'MediaApp',
 'AppIcon' : AppCore['CoreDirectory']+'/'+'MediaApp.ico',
-'AppID' : 'ThomasMcVay.MediaApp.Framework.v0.1',
+'AppID' : 'MadisonAster.MediaApp.Framework.v0.1',
 'FocusPolicy' : QtCore.Qt.ClickFocus,
 
 'IconDirectories' : ['/Icons', '/MediaAppIcons'],

@@ -1,5 +1,5 @@
 #===============================================================================
-# @Author: Thomas McVay
+# @Author: Madison Aster
 # @ModuleDescription: User End Preferences that can be edited and overridden via the 
 #                     Preferences Menu. Default prefs can be overridden by wrapper
 #                     Apps by copying this file from the MediaApp directory to the
