@@ -52,12 +52,16 @@ class BrowserBin(QtWidgets.QWidget):
                 
         self.fileTree.itemExpanded.connect(self.ScanItem)
         
-        
         self.FilePath.setValue('C:/')
-        
+    def RemoveAllItems(self):
+        root = self.fileTree.invisibleRootItem()
+        for i in reversed(range(root.childCount())):
+            root.removeChild(root.child(i))
+            
     def PathChanged(self, newvalue):
         self.RootPath = newvalue
         
+        self.RemoveAllItems()
         items = []
         for root, dirs, files in os.walk(self.RootPath):
             for dir in dirs:
@@ -82,7 +86,6 @@ class BrowserBin(QtWidgets.QWidget):
         for treeitem in treestack:
             itempath += '/'+treeitem
         
-        items = []
         for root, dirs, files in os.walk(itempath):
             for dir in dirs:
                 newitem = QtWidgets.QTreeWidgetItem(None, [dir, '-', time.ctime(os.path.getmtime(root+'/'+dir))])
