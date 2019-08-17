@@ -43,9 +43,9 @@ Data = {
 'NodeNamePadding' : 3,
 
 'App-Window' : QtGui.QColor(50,50,50),
-#'App-Background' : QtGui.QColor(0,50,0), IGNORED
+'App-Background' : QtGui.QColor(50,50,50), #IGNORED
 'App-WindowText' : QtGui.QColor(255,255,255),
-#'App-Foreground' : QtGui.QColor(0,50,0), IGNORED
+'App-Foreground' : QtGui.QColor(255,255,255), #IGNORED
 'App-Base' : QtGui.QColor(50,50,50),
 'App-AlternateBase' : QtGui.QColor(50,50,50),
 'App-ToolTipBase' : QtGui.QColor(50,50,50),
@@ -63,6 +63,7 @@ Data = {
 'App-HighlightedText' : QtGui.QColor(50,50,50),
 'App-Link' : QtGui.QColor(50,50,50),
 'App-LinkVisited' : QtGui.QColor(50,50,50),
+'App-NoRole' : QtGui.QColor(50,50,50),
 
 'GraphWidget-Shortcuts-openNodes' : ['Enter'],
 'GraphWidget-Shortcuts-marqMode' : ['LeftButton'],

@@ -272,17 +272,19 @@ class Core(dict):
     
     def getPalette(self, widgetName):
         palette = QtGui.QPalette()
+        
         palette.setColor(QtGui.QPalette.Window, self.AppPrefs[widgetName+'-Window'])
-        #palette.setColor(QtGui.QPalette.Background, self.AppPrefs[widgetName+'-Background']) IGNORED
+        palette.setColor(QtGui.QPalette.Background, self.AppPrefs[widgetName+'-Background']) #IGNORED
         palette.setColor(QtGui.QPalette.WindowText, self.AppPrefs[widgetName+'-WindowText'])
-        #palette.setColor(QtGui.QPalette.Foreground, self.AppPrefs[widgetName+'-Foreground']) IGNORED
+        palette.setColor(QtGui.QPalette.Foreground, self.AppPrefs[widgetName+'-Foreground']) #IGNORED
         palette.setColor(QtGui.QPalette.Base, self.AppPrefs[widgetName+'-Base'])
         palette.setColor(QtGui.QPalette.AlternateBase, self.AppPrefs[widgetName+'-AlternateBase'])
         palette.setColor(QtGui.QPalette.ToolTipBase, self.AppPrefs[widgetName+'-ToolTipBase'])
         palette.setColor(QtGui.QPalette.ToolTipText, self.AppPrefs[widgetName+'-ToolTipText'])
         palette.setColor(QtGui.QPalette.Text, self.AppPrefs[widgetName+'-Text'])
+        
         palette.setColor(QtGui.QPalette.Button, self.AppPrefs[widgetName+'-Button'])
-        palette.setColor(QtGui.QPalette.ButtonText, self.AppPrefs[widgetName+'-ButtonText'])
+        #palette.setColor(QtGui.QPalette.ButtonText, self.AppPrefs[widgetName+'-ButtonText'])
         palette.setColor(QtGui.QPalette.BrightText, self.AppPrefs[widgetName+'-BrightText'])
         palette.setColor(QtGui.QPalette.Light, self.AppPrefs[widgetName+'-Light'])
         palette.setColor(QtGui.QPalette.Midlight, self.AppPrefs[widgetName+'-Midlight'])
@@ -293,6 +295,8 @@ class Core(dict):
         palette.setColor(QtGui.QPalette.HighlightedText, self.AppPrefs[widgetName+'-HighlightedText'])
         palette.setColor(QtGui.QPalette.Link, self.AppPrefs[widgetName+'-Link'])
         palette.setColor(QtGui.QPalette.LinkVisited, self.AppPrefs[widgetName+'-LinkVisited'])
+        palette.setColor(QtGui.QPalette.NoRole, self.AppPrefs[widgetName+'-NoRole'])
+        
         return palette
     def generateStyleSheet(self):
         palette = self.App.palette()
@@ -337,6 +341,7 @@ class Core(dict):
         stylesheet += 'QToolBar{background: '+Window+'; spacing: 3px;}\n'
         #stylesheet += "QScrollBar::add-line:vertical { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0  rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),  stop:1 rgb(32, 47, 130)); height: px; subcontrol-position: bottom; subcontrol-origin: margin;}"
         
+        stylesheet += 'QHeaderView::section {background: '+Button+';}'
         return stylesheet
     def getEventName(self, event):
         eventType = str(event.type())
