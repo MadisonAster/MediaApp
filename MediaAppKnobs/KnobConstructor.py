@@ -28,6 +28,7 @@ from Qt import QtGui, QtCore, QtWidgets
 from . import KnobElements
 
 class Knob(QtWidgets.QWidget):
+    ValueChanged = QtCore.Signal(str)
     def __init__(self):
         self.name = KnobElements.KnobLabel()
         super(Knob, self).__init__()
@@ -50,21 +51,14 @@ class Knob(QtWidgets.QWidget):
         
         self.setLayout(self.vertLayout)
         
-        def none(): pass
-        self.changed = none
-        
     def update(self):
         if hasattr(self, 'parent'):
             if not callable(self.parent):
                 self.parent.update()
-    def setChanged(self, callable):
-        self.changed = callable
-        
+    
     def showName(self, value):
         if value is True:
             self.name.show()
         else:
             self.name.hide()
-        
-    def ValueChanged(self):
-        self.changed()
+    

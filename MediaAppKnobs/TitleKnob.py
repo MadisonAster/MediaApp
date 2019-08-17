@@ -72,9 +72,6 @@ class TitleKnob(Knob):
         self.StrWidget.setValue(value)
     def getValue(self):
         return self.StrWidget.getValue()
-    def setChanged(self, callable):
-        self.changed = callable
-        self.StrWidget.textChanged.connect(self.changed)
     def closeWidget(self):
         self.parent.close()
        

@@ -87,6 +87,4 @@ class ColorKnob(QtWidgets.QWidget):
         self.button.setIcon(MediaAppIcons.IconFromColor(self.QColor))
     def sizeHint(self):
         return QtCore.QSize(64,64)
-        
-    def setChanged(self, callable):
-        self.changed = callable
+    

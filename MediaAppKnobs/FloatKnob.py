@@ -42,6 +42,3 @@ class FloatKnob(Knob):
         self.FloatWidget.setValue(value)
     def getValue(self):
         return self.FloatWidget.getValue()
-    def setChanged(self, callable):
-        self.changed = callable
-        self.FloatWidget.textChanged.connect(self.changed)

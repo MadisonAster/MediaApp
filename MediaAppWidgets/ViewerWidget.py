@@ -80,7 +80,7 @@ class ViewerWidget(QtWidgets.QWidget, NodeLinkedWidget):
         self.DimensionSwitcher = MediaAppKnobs.ComboKnob(['2D View','3D View'])
         
         self.DimensionSwitcher.showName(False)
-        self.DimensionSwitcher.setChanged(self.ChangeDimensions)
+        self.DimensionSwitcher.ValueChanged.connect(self.ChangeDimensions)
         self.topToolBar.addWidget(self.DimensionSwitcher)
         
         self.topToolBar.addWidget(MediaAppKnobs.Spacer())

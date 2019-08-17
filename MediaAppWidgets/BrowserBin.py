@@ -38,6 +38,7 @@ class BrowserBin(QtWidgets.QWidget):
         self.setLayout(self.binLayout)
         
         self.FilePath = MediaAppKnobs.FileKnob('C:/', name = '')
+        self.FilePath.ValueChanged.connect(self.PathChanged)
         self.binLayout.addWidget(self.FilePath)
         
         self.fileTree = QtWidgets.QTreeWidget()
@@ -67,5 +68,6 @@ class BrowserBin(QtWidgets.QWidget):
         self.binLayout.addLayout(self.buttonLayout)
         
         
-        
+    def PathChanged(self, newvalue):
+        print('PathChanged!', newvalue)
         

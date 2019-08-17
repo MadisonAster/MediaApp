@@ -60,8 +60,9 @@ class FileKnob(Knob):
     def fileBrowse(self):
         path = QtWidgets.QFileDialog.getExistingDirectory(self, "Open File", self.PathWidget.getValue())
         if path:
+            path = path.replace('\\','/')
             self.PathWidget.setValue(path)
-        
+            self.ValueChanged.emit(path)
     #FLAW: Maybe this does not belong here
     def getEvaluatedPath(self, *args):
         if len(args) is 1:

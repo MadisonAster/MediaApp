@@ -44,6 +44,3 @@ class IntKnob(Knob):
         self.IntWidget.setValue(value)
     def getValue(self):
         return self.IntWidget.getValue()
-    def setChanged(self, callable):
-        self.changed = callable
-        self.IntWidget.textChanged.connect(self.changed)
