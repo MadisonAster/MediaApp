@@ -55,6 +55,7 @@ class FileKnob(Knob):
         
     def setValue(self, value):
         self.PathWidget.setValue(value)
+        self.ValueChanged.emit(value)
     def getValue(self):
         return self.PathWidget.getValue()
 

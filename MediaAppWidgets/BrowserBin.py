@@ -69,7 +69,7 @@ class BrowserBin(QtWidgets.QWidget):
         self.fileTree.itemExpanded.connect(self.ScanItem)
         
         
-        self.PathChanged('C:/')
+        self.FilePath.setValue('C:/')
         
     def PathChanged(self, newvalue):
         self.RootPath = newvalue

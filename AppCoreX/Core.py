@@ -342,6 +342,8 @@ class Core(dict):
         #stylesheet += "QScrollBar::add-line:vertical { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0  rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),  stop:1 rgb(32, 47, 130)); height: px; subcontrol-position: bottom; subcontrol-origin: margin;}"
         
         stylesheet += 'QHeaderView::section {background: '+Button+'; color: '+ButtonText+';}'
+        #stylesheet += 'QTreeView::branch {background: '+ButtonText+'; color: '+ButtonText+';}'
+        #stylesheet += 'QTreeView::branch {color: '+ButtonText+';}'
         return stylesheet
     def getEventName(self, event):
         eventType = str(event.type())
