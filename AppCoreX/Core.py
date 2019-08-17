@@ -284,7 +284,7 @@ class Core(dict):
         palette.setColor(QtGui.QPalette.Text, self.AppPrefs[widgetName+'-Text'])
         
         palette.setColor(QtGui.QPalette.Button, self.AppPrefs[widgetName+'-Button'])
-        #palette.setColor(QtGui.QPalette.ButtonText, self.AppPrefs[widgetName+'-ButtonText'])
+        palette.setColor(QtGui.QPalette.ButtonText, self.AppPrefs[widgetName+'-ButtonText'])
         palette.setColor(QtGui.QPalette.BrightText, self.AppPrefs[widgetName+'-BrightText'])
         palette.setColor(QtGui.QPalette.Light, self.AppPrefs[widgetName+'-Light'])
         palette.setColor(QtGui.QPalette.Midlight, self.AppPrefs[widgetName+'-Midlight'])
@@ -341,7 +341,7 @@ class Core(dict):
         stylesheet += 'QToolBar{background: '+Window+'; spacing: 3px;}\n'
         #stylesheet += "QScrollBar::add-line:vertical { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop: 0  rgb(32, 47, 130), stop: 0.5 rgb(32, 47, 130),  stop:1 rgb(32, 47, 130)); height: px; subcontrol-position: bottom; subcontrol-origin: margin;}"
         
-        stylesheet += 'QHeaderView::section {background: '+Button+';}'
+        stylesheet += 'QHeaderView::section {background: '+Button+'; color: '+ButtonText+';}'
         return stylesheet
     def getEventName(self, event):
         eventType = str(event.type())
