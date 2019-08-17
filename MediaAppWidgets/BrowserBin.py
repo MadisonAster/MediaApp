@@ -49,23 +49,7 @@ class BrowserBin(QtWidgets.QWidget):
         self.fileTree.header().resizeSection(0, 300)
         
         self.binLayout.addWidget(self.fileTree)
-        
-        self.buttonLayout = QtWidgets.QHBoxLayout()
-        
-        Import_Button = QtWidgets.QPushButton("Import",self)
-        ChangeName_Button = QtWidgets.QPushButton("ChangeName",self)
-        ChangePath_Button = QtWidgets.QPushButton("ChangePath",self)
-        SellectAssociated_Button = QtWidgets.QPushButton("SellectAssociated",self)
-        Remove_Button = QtWidgets.QPushButton("Remove",self)
-        
-        self.buttonLayout.addWidget(Import_Button)
-        self.buttonLayout.addWidget(ChangeName_Button)
-        self.buttonLayout.addWidget(ChangePath_Button)
-        self.buttonLayout.addWidget(SellectAssociated_Button)
-        self.buttonLayout.addWidget(Remove_Button)
-        
-        self.binLayout.addLayout(self.buttonLayout)
-        
+                
         self.fileTree.itemExpanded.connect(self.ScanItem)
         
         
