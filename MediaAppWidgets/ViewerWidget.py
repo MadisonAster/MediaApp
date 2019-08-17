@@ -39,7 +39,7 @@ from .AbstractGraphArea import AbstractGraphArea
 
 class ViewerWidget(QtWidgets.QWidget, NodeLinkedWidget):
     def __init__(self):
-        super(ViewerWidget, self).__init__()
+        super(ViewerWidget, self).__init__(objectName='ViewerWidget', accessibleName='ViewerWidget')
         AppCore.LoadUI(self)
         #print('Spacer', self.CentralLayout)
         

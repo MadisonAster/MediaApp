@@ -29,7 +29,7 @@ import AppCore
 
 class DockingBin(QtWidgets.QMainWindow):
     def __init__(self):
-        super(DockingBin, self).__init__()
+        super(DockingBin, self).__init__(objectName='DockingBin', accessibleName='DockingBin')
         self.setDockOptions(self.DockOptions(False))
         self.setAnimated(True)
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
@@ -102,7 +102,7 @@ class DockingBin(QtWidgets.QMainWindow):
         
 class PropertiesBin(QtWidgets.QMainWindow):
     def __init__(self):
-        super(PropertiesBin, self).__init__()
+        super(PropertiesBin, self).__init__(objectName='PropertiesBin', accessibleName='PropertiesBin')
         self.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         
         self.className = self.__class__.__name__

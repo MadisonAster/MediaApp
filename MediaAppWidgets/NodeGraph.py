@@ -30,7 +30,7 @@ from .GraphWidget import *
 
 class NodeGraph(GraphWidget):
     def __init__(self):
-        super(NodeGraph, self).__init__()
+        super(NodeGraph, self).__init__(objectName='NodeGraph', accessibleName='NodeGraph')
 
         
         

@@ -37,7 +37,7 @@ from .GraphWidget import *
 
 class TimelineWidget(GraphWidget, NodeLinkedWidget):
     def __init__(self):
-        super(TimelineWidget, self).__init__()
+        super(TimelineWidget, self).__init__(objectName='TimelineWidget', accessibleName='TimelineWidget')
         self.setLinkedNode(AppCore.NodeGraph.createNode('TimelineNode'))
         self.setFocusPolicy(AppCore.AppSettings['FocusPolicy'])
         

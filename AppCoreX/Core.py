@@ -327,6 +327,11 @@ class Core(dict):
         #stylesheet += 'QDockWidget::title {background: '+WindowText+';}\n'
         
         #stylesheet += '[objectName="BrowserBin"] {background: '+WindowText+';}\n'
+        #stylesheet += '[objectName="PropertiesBin"] {background: '+WindowText+';}\n'
+        #stylesheet += '[objectName="DockingBin"] {background: '+WindowText+';}\n'
+        #stylesheet += '[objectName="ViewerWidget"] {background: '+WindowText+';}\n'
+        #stylesheet += '[objectName="NodeGraph"] {background: '+WindowText+';}\n'
+        #stylesheet += '[objectName="TimelineWidget"] {background: '+WindowText+';}\n'
         
         stylesheet += 'QMessageBox {background: '+Window+'; color: '+WindowText+';}\n'
         stylesheet += 'QMenuBar {background: '+Window+'; color: '+WindowText+';}\n'

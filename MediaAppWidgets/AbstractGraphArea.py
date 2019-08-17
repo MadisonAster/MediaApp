@@ -117,12 +117,12 @@ class touchList(list):
 
 class AbstractGraphArea(QtWidgets.QWidget):
     ###Initialize Class###
-    def __init__(self):
+    def __init__(self, objectName='', accessibleName=''):
         self.dropThreshhold = datetime.timedelta(1.0/24/60/60*0.02)
         self.dropRange = 30
         self.touchEventList = []
         
-        super(AbstractGraphArea, self).__init__()
+        super(AbstractGraphArea, self).__init__(objectName=objectName, accessibleName=accessibleName)
         self.className = self.__class__.__name__
         
         #QWidget Settings

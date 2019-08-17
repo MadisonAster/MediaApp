@@ -28,7 +28,7 @@ from Qt import QtGui, QtCore
 import AppCore
 
 class NodeOwningObject(object):
-    def __init__(self):
+    def __init__(self, objectName='', accessibleName=''):
         super(NodeOwningObject, self).__init__()
         
         #TEST: see if using this duplicate dictionary is actually faster than AppCore.getChildrenOf(self)

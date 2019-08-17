@@ -32,8 +32,8 @@ from .AbstractGraphArea import AbstractGraphArea
    
 class GraphWidget(NodeOwningObject, AbstractGraphArea):
     ###Initialize Class###
-    def __init__(self):
-        super(GraphWidget, self).__init__()
+    def __init__(self, objectName='', accessibleName=''):
+        super(GraphWidget, self).__init__(objectName=objectName, accessibleName=accessibleName)
         self.className = self.__class__.__name__
 
         self.modes.append('marqMode')
