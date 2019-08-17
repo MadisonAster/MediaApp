@@ -25,7 +25,7 @@
 
 import re
 
-from Qt import QtGui, QtCore
+from Qt import QtGui, QtCore, QtWidgets
 
 import AppCore
 from .KnobConstructor import Knob
@@ -36,7 +36,7 @@ class FileKnob(Knob):
     urlDropped = QtCore.Signal()
     def __init__(self, value, parent = None, name = 'FileKnob'):
         super(FileKnob, self).__init__()
-        self.setSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         
         self.name.setText(name)
         self.parent = parent
@@ -58,7 +58,7 @@ class FileKnob(Knob):
         return self.PathWidget.getValue()
 
     def fileBrowse(self):
-        path = QtGui.QFileDialog.getExistingDirectory(self, "Open File", self.PathWidget.getValue())
+        path = QtWidgets.QFileDialog.getExistingDirectory(self, "Open File", self.PathWidget.getValue())
         if path:
             self.PathWidget.setValue(path)
         

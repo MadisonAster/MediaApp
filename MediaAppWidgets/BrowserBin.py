@@ -26,14 +26,19 @@
 from Qt import QtGui, QtCore, QtWidgets
     
 import AppCore
+#import MediaAppIcons
+import MediaAppKnobs
 
 class BrowserBin(QtWidgets.QWidget):
     def __init__(self):
         super(BrowserBin, self).__init__()
-        #self.setAccessibleName('BrowserBin')  #override visible name here
+        self.setAccessibleName('BrowserBin')  #override visible name here
         ##################################
         self.binLayout = QtWidgets.QVBoxLayout()
         self.setLayout(self.binLayout)
+        
+        self.FilePath = MediaAppKnobs.FileKnob('C:/', name = '')
+        self.binLayout.addWidget(self.FilePath)
         
         self.fileTree = QtWidgets.QTreeWidget()
         self.fileTree.setColumnCount(3)
