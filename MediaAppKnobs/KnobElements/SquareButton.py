@@ -29,9 +29,14 @@ class SquareButton(QtWidgets.QPushButton):
     def __init__(self, *args):
         if type(args[0]) is str:
             text = args[0]
+            super(SquareButton, self).__init__(text)
+        elif type(args[0]) is QtGui.QIcon:
+            icon = args[0]
+            text = ''
+            super(SquareButton, self).__init__(icon, text)
         else:
             text = ''
-        super(SquareButton, self).__init__(text)
+            super(SquareButton, self).__init__(text)
         self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
     def sizeHint(self):
         return QtCore.QSize(24,24)

@@ -28,6 +28,7 @@ import re
 from Qt import QtGui, QtCore, QtWidgets
 
 import AppCore
+import MediaAppIcons
 from .KnobConstructor import Knob
 from . import KnobElements
 
@@ -45,7 +46,7 @@ class FileKnob(Knob):
         self.PathWidget = KnobElements.PathWidget()
         self.knobLayout.addWidget(self.PathWidget)
 
-        self.browseButton = KnobElements.SquareButton('B')
+        self.browseButton = KnobElements.SquareButton(MediaAppIcons.Folder1())
         self.browseButton.setAutoFillBackground(True)
         self.browseButton.clicked.connect(self.fileBrowse)
         self.knobLayout.addWidget(self.browseButton)

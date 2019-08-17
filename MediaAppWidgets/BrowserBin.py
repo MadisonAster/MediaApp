@@ -47,6 +47,7 @@ class BrowserBin(QtWidgets.QWidget):
         self.fileTree.setColumnCount(3)
         self.fileTree.setHeaderLabels(['Name','Size','Modified'])
         
+        
         self.binLayout.addWidget(self.fileTree)
         
         self.buttonLayout = QtWidgets.QHBoxLayout()
