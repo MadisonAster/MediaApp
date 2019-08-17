@@ -41,7 +41,6 @@ sys.modules['NodeConstructor'] = NodeConstructor
 for BaseDirectory in AppCore['BaseDirectories']:
     for SubDirectory in AppCore.AppSettings['NodeDirectories']:
         if os.path.isdir(BaseDirectory+SubDirectory):
-            print('looping', BaseDirectory+SubDirectory)
             for file in os.listdir(BaseDirectory+SubDirectory):
                 if file.rsplit('.',1)[-1] == 'py':
                     ThisModule = sys.modules[__name__]
@@ -49,7 +48,6 @@ for BaseDirectory in AppCore['BaseDirectories']:
                     #exec('from .'+FunctionName+' import *') #TODO: make imp work
                     
                     if FunctionName not in ['NodeConstructor', '__init__']:
-                        print('FunctionName', FunctionName)
                         #spec = importlib.util.spec_from_file_location(FunctionName, BaseDirectory+SubDirectory+'/'+file)
                         #module = importlib.util.module_from_spec(spec)
                         
@@ -69,8 +67,6 @@ for BaseDirectory in AppCore['BaseDirectories']:
                         
                         #exec('from .'+FunctionName+' import *') #TODO: make imp work
                         
-                        print(AppCore.AppSettings['NodeDirectories'])
-                        print('hey', BaseDirectory+SubDirectory+'/'+file)
                         module = imp.load_source(FunctionName, BaseDirectory+SubDirectory+'/'+file)
                         #from NewModule import *
                         
