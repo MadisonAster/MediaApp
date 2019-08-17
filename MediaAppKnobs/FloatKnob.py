@@ -23,7 +23,7 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
-from Qt import QtGui, QtCore
+from Qt import QtGui, QtCore, QtWidgets
 
 from .KnobConstructor import Knob
 from . import KnobElements
@@ -31,6 +31,7 @@ from . import KnobElements
 class FloatKnob(Knob):
     def __init__(self, value, name = 'FloatKnob'):
         super(FloatKnob, self).__init__()
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
         
         self.FloatWidget = KnobElements.FloatWidget()
         self.knobLayout.addWidget(self.FloatWidget)

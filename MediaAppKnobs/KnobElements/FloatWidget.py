@@ -29,9 +29,11 @@ class FloatWidget(QtWidgets.QLineEdit):
     def __init__(self):
         super(FloatWidget, self).__init__()
         
-        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+        self.setAlignment(QtCore.Qt.AlignLeft)
     def setValue(self, value):
         self.setText(str(value))
+        self.textChanged.emit
         self.update()
     def getValue(self):
         return float(self.text())

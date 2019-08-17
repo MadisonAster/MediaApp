@@ -75,7 +75,7 @@ class ColorKnob(Knob):
     def getValue(self):
         return self.QColor
     def showDialog(self):
-        newColor = QtGui.QColorDialog.getColor(self.QColor)
+        newColor = QtWidgets.QColorDialog.getColor(self.QColor)
         if newColor.isValid():
             self.QColor = newColor
         self.setIcon()
