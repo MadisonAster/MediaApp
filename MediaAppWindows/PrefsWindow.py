@@ -65,7 +65,7 @@ class EnumeratedPrefs(QtWidgets.QWidget):
         self.panelLayout = QtWidgets.QVBoxLayout()
         self.setLayout(self.panelLayout)
         
-        self.knobs = []
+        self.knobs = {}
         
         for key in AppCore.AppPrefs:
             if type(AppCore.AppPrefs[key]) is str:
@@ -82,6 +82,7 @@ class EnumeratedPrefs(QtWidgets.QWidget):
                 #TODO: QPen, QBrush, QFont
                 #print type(AppCore.AppPrefs[key]).__name__ 
                 continue
+            print('adding pref', key, type(self[key]), self[key])
             self[key].name.labelSize = 250
             self.panelLayout.addWidget(self[key])
     def __delitem__(self, key):
@@ -90,24 +91,18 @@ class EnumeratedPrefs(QtWidgets.QWidget):
                 del self.knobs[i]
     def __setitem__(self, key, value):
         if 'knob' in type(value).__name__.lower():
-            if self[key] != None:
-                del self[key]       #BUG widgets don't get destroyed when we do a simple delete
-            #Node subclass has assigned knob the name key, so we tell the knob that here.   
-            value.name.setText(key)
-            self.knobs.append(value)
+            self.knobs[key] = value
         else:
             self[key].setValue(value)
-        #self.show()
     def __getitem__(self, key):
-        for knob in self.knobs:
-            if knob.name.text() == key:
-                return knob
+        if key in self.knobs.keys():
+            return self.knobs[key]
         else:
-            return None
+            return self[key]
             
     def sizeHint(self):
         YHint = 0
-        for knob in self.knobs:
+        for knob in self.knobs.values():
             YHint += knob.sizeHint().height()+20
         return QtCore.QSize(800,YHint)
         
