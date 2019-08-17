@@ -38,14 +38,14 @@ class BrowserBin(QtWidgets.QWidget):
         self.binLayout = QtWidgets.QVBoxLayout()
         self.setLayout(self.binLayout)
         
-        self.RootPath = 'C:/'
+        self.RootPath = ''
         self.FilePath = MediaAppKnobs.FileKnob(self.RootPath, name = 'RootPath')
         self.FilePath.ValueChanged.connect(self.PathChanged)
         self.binLayout.addWidget(self.FilePath)
         
         self.fileTree = QtWidgets.QTreeWidget()
         self.fileTree.setColumnCount(3)
-        self.fileTree.setHeaderLabels(['Name','Size','Modified']) 
+        self.fileTree.setHeaderLabels(['Name','Size','Modified'])
         
         self.binLayout.addWidget(self.fileTree)
         
@@ -65,9 +65,11 @@ class BrowserBin(QtWidgets.QWidget):
         
         self.binLayout.addLayout(self.buttonLayout)
         
+        self.fileTree.itemExpanded.connect(self.ScanItem)
+        
+        self.PathChanged('C:/')
         
     def PathChanged(self, newvalue):
-        print('PathChanged!', newvalue)
         self.RootPath = newvalue
         
         items = []
@@ -75,6 +77,7 @@ class BrowserBin(QtWidgets.QWidget):
             for dir in dirs:
                 newitem = QtWidgets.QTreeWidgetItem(None, [dir, '-', time.ctime(os.path.getmtime(root+'/'+dir))])
                 newitem.setIcon(0, MediaAppIcons.Folder1())
+                newitem.setChildIndicatorPolicy(QtWidgets.QTreeWidgetItem.ShowIndicator)
                 items.append(newitem)
             for file in files:
                 newitem = QtWidgets.QTreeWidgetItem(None, [file, str(os.path.getsize(root+'/'+file)/1000)+' KB', time.ctime(os.path.getmtime(root+'/'+file))])
@@ -82,3 +85,26 @@ class BrowserBin(QtWidgets.QWidget):
                 items.append(newitem)
             break
         self.fileTree.addTopLevelItems(items)
+        
+    def ScanItem(self, item):
+        itempath = self.RootPath
+        treestack = [item.text(0)]
+        parentitem = item.parent()
+        while type(parentitem) != type(None):
+            treestack.insert(0,parentitem.text(0))
+            parentitem = parentitem.parent()
+        for treeitem in treestack:
+            itempath += '/'+treeitem
+        
+        items = []
+        for root, dirs, files in os.walk(itempath):
+            for dir in dirs:
+                newitem = QtWidgets.QTreeWidgetItem(None, [dir, '-', time.ctime(os.path.getmtime(root+'/'+dir))])
+                newitem.setIcon(0, MediaAppIcons.Folder1())
+                newitem.setChildIndicatorPolicy(QtWidgets.QTreeWidgetItem.ShowIndicator)
+                item.addChild(newitem)
+            for file in files:
+                newitem = QtWidgets.QTreeWidgetItem(None, [file, str(os.path.getsize(root+'/'+file)/1000)+' KB', time.ctime(os.path.getmtime(root+'/'+file))])
+                newitem.setIcon(0, MediaAppIcons.File1())
+                item.addChild(newitem)
+            break
