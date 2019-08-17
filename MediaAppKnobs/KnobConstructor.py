@@ -32,6 +32,7 @@ class Knob(QtWidgets.QWidget):
     def __init__(self):
         self.name = KnobElements.KnobLabel()
         super(Knob, self).__init__()
+        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
         
         #self.setToolTip('Here lies a tooltip, barren and empty')
         #self.setHidden(False)
@@ -42,13 +43,13 @@ class Knob(QtWidgets.QWidget):
         self.vertLayout = QtWidgets.QVBoxLayout()
         self.vertLayout.setContentsMargins(0,0,0,0)
         self.vertLayout.setSpacing(0)
-        self.vertLayout.addWidget(self.name)
         
         self.knobLayout = QtWidgets.QHBoxLayout()
-        self.knobLayout.setContentsMargins(3,0,3,0)
+        self.knobLayout.setAlignment(QtCore.Qt.AlignVCenter)
+        self.knobLayout.setContentsMargins(0,0,0,0)
         self.knobLayout.setSpacing(0)
+        self.knobLayout.addWidget(self.name)
         self.vertLayout.addLayout(self.knobLayout)
-        
         self.setLayout(self.vertLayout)
         
     def update(self):

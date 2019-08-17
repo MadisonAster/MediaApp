@@ -32,8 +32,7 @@ import MediaAppKnobs
 
 class BrowserBin(QtWidgets.QWidget):
     def __init__(self):
-        super(BrowserBin, self).__init__()
-        self.setAccessibleName('BrowserBin')  #override visible name here
+        super(BrowserBin, self).__init__(objectName='BrowserBin', accessibleName='BrowserBin')
         ##################################
         self.binLayout = QtWidgets.QVBoxLayout()
         self.setLayout(self.binLayout)

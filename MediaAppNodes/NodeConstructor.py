@@ -258,27 +258,29 @@ class NodeConstructor(object):
         #for widget in self.widget().panelLayout.findChildren(object):
         #    self.widget().panelLayout.removeWidget(widget)
         LineList = []
-        LineLayout = QtWidgets.QHBoxLayout()
-        LineLayout.setContentsMargins(0,0,0,0)
-        LineLayout.setSpacing(0)
+        #LineLayout = QtWidgets.QHBoxLayout()
+        #LineLayout.setContentsMargins(0,0,0,0)
+        #LineLayout.setSpacing(0)
         for knob in self:
             if type(knob) is not TitleKnob:
                 if knob.shown is True:
                     if knob not in self.widget().panelLayout.findChildren(object):
-                        if knob.newline is True:
-                            if self.hasStretch(LineLayout) is False:
-                                LineLayout.addWidget(Spacer())
-                            LineList.append(LineLayout)
-                            LineLayout = QtWidgets.QHBoxLayout()
-                            LineLayout.setContentsMargins(0,0,0,0)
-                            LineLayout.setSpacing(0)
+                        #if knob.newline is True:
+                            #if self.hasStretch(LineLayout) is False:
+                            #    LineLayout.addWidget(Spacer())
+                        LineLayout = QtWidgets.QHBoxLayout()
+                        LineLayout.setContentsMargins(0,0,0,0)
+                        LineLayout.setSpacing(0)
+                        
                         LineLayout.addWidget(knob)
-        if self.hasStretch(LineLayout) is False:            
+                        LineList.append(LineLayout)
+        if self.hasStretch(LineLayout) is False:
             LineLayout.addWidget(Spacer())
         LineList.append(LineLayout)
         
         for layout in LineList:
             self.widget().panelLayout.addLayout(layout)
+        self.widget().panelLayout.addWidget(Spacer())
     def hasStretch(self, layout):
         for index in range(layout.count()):
             if layout.itemAt(index).widget().sizePolicy().horizontalPolicy() == QtWidgets.QSizePolicy.MinimumExpanding:
@@ -297,13 +299,14 @@ class NodeConstructor(object):
         
     def setCurrentInputIndex(self, index):
         self.currentInput = index
+
 class PropertiesWidget(QtWidgets.QWidget):
     def __init__(self):
         super(PropertiesWidget, self).__init__()
         #self.setAccessibleName('PropertiesWidget')   #override visible name here or elsewhere
         ##################################
-        self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Fixed)
-        #QtWidgets.QSizePolicy.MinimumExpanding
+        #self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Fixed)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         #self.setMaximumSize(200,200)
         
         self.panelLayout = QtWidgets.QVBoxLayout()
@@ -312,7 +315,8 @@ class PropertiesWidget(QtWidgets.QWidget):
     def addKnob(widget):
         self.panelLayout.addWidget(widget)
     def sizeHint(self):
-        return QtCore.QSize(100,400)
+        return QtCore.QSize(400,100)
+
 class PropertiesDockWidget(QtWidgets.QDockWidget):
     def __init__(self):
         super(PropertiesDockWidget, self).__init__()
@@ -333,6 +337,7 @@ class PropertiesDockWidget(QtWidgets.QDockWidget):
         AppCore.PropertiesBin.unDockThisWidget(self)
     def focusInEvent(self, event):
         AppCore.setActiveNode(self)
+
 class WidgetLinkedNode(NodeConstructor, PropertiesDockWidget):
     def __init__(self, parent):
         super(WidgetLinkedNode, self).__init__(parent)
@@ -344,7 +349,6 @@ class WidgetLinkedNode(NodeConstructor, PropertiesDockWidget):
     def getLinkedWidget(self):
         return self.LinkedWidget        
 
-        
 class GraphNode(WidgetLinkedNode):
     def __init__(self, parent):
         super(GraphNode, self).__init__(parent)
@@ -373,6 +377,7 @@ class GraphNode(WidgetLinkedNode):
         #FLAW: add this to appPrefs/appSettings somehow
         self.color1 = QtGui.QColor(238,238,238)
         self.color2 = QtGui.QColor(122,122,122)
+
 class TimelineNode(WidgetLinkedNode):
     def __init__(self, parent):
         super(TimelineNode, self).__init__(parent)
@@ -408,7 +413,6 @@ class TimelineNode(WidgetLinkedNode):
         
         self.polyShape = [[0,0],[value,0],[value,self.parent.YPixelsPerUnit],[0,self.parent.YPixelsPerUnit]]
         self.mapNodeShape()
-        
 
 class ImageNode(GraphNode):
     def __init__(self, parent):
@@ -426,15 +430,15 @@ class ImageNode(GraphNode):
             return AppCore.generateBlack()
         else:
             return self.getInput().getImage(*args)
+
 class AudioNode(GraphNode):
     def __init__(self, parent):
         super(AudioNode, self).__init__(parent)
+
 class GeometryNode(GraphNode):
     def __init__(self, parent):
         super(GeometryNode, self).__init__(parent)
+
 class ArrayDataNode(GraphNode):
     def __init__(self, parent):
         super(ArrayDataNode, self).__init__(parent)
-        
-
-        

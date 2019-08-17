@@ -31,9 +31,10 @@ from . import KnobElements
 class FloatKnob(Knob):
     def __init__(self, value, name = 'FloatKnob'):
         super(FloatKnob, self).__init__()
-        self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
+        #self.setSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
         
         self.FloatWidget = KnobElements.FloatWidget()
+        self.knobLayout.addWidget(KnobElements.Spacer())
         self.knobLayout.addWidget(self.FloatWidget)
         
         self.name.setText(name)

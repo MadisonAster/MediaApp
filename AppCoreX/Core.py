@@ -323,8 +323,11 @@ class Core(dict):
         stylesheet = 'QPushButton {background: '+Button+'; color: '+ButtonText+';}\n'
         stylesheet += 'QLineEdit {background: '+Mid+'; color: '+ButtonText+'; border: '+Shadow+';}\n'
         stylesheet += 'QComboBox {background: '+Button+'; color: '+ButtonText+'; border: '+Shadow+';}\n'
-        stylesheet += 'QDockWidget {border: '+Shadow+';}\n'
-        stylesheet += 'QDockWidget::title {background: '+Dark+';}\n'
+        #stylesheet += 'QDockWidget {border: '+WindowText+';}\n'
+        #stylesheet += 'QDockWidget::title {background: '+WindowText+';}\n'
+        
+        #stylesheet += '[objectName="BrowserBin"] {background: '+WindowText+';}\n'
+        
         stylesheet += 'QMessageBox {background: '+Window+'; color: '+WindowText+';}\n'
         stylesheet += 'QMenuBar {background: '+Window+'; color: '+WindowText+';}\n'
         stylesheet += 'QMenuBar::item {background: '+Window+';}\n'
@@ -344,6 +347,8 @@ class Core(dict):
         stylesheet += 'QHeaderView::section {background: '+Button+'; color: '+ButtonText+';}'
         #stylesheet += 'QTreeView::branch {background: '+ButtonText+'; color: '+ButtonText+';}'
         #stylesheet += 'QTreeView::branch {color: '+ButtonText+';}'
+        
+        #stylesheet += 'PropertiesWidget {background: '+ButtonText+'; border: '+Shadow+';}'
         return stylesheet
     def getEventName(self, event):
         eventType = str(event.type())

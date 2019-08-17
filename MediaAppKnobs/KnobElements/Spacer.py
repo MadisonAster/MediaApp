@@ -28,6 +28,6 @@ from Qt import QtGui, QtCore, QtWidgets
 class Spacer(QtWidgets.QWidget):
     def __init__(self):
         super(Spacer, self).__init__()
-        self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
     def sizeHint(self):
         return QtCore.QSize(0,0)

@@ -41,11 +41,14 @@ class KnobLabel(QtWidgets.QLabel):
         font.setPointSize(font.pointSize()-3)
         self.setFont(font)
         
-        #self.setSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
-        #self.setAlignment(QtCore.Qt.AlignRight)
-        #self.labelSize = 100
-    #def sizeHint(self):
-    #    return QtCore.QSize(self.labelSize,18)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.setContentsMargins(0,0,10,0)
+        #self.setSpacing(0)
+        self.setAlignment(QtCore.Qt.AlignVCenter)
+        self.setAlignment(QtCore.Qt.AlignRight)
+        self.labelSize = 10
+    def sizeHint(self):
+        return QtCore.QSize(self.labelSize,18)
        
        
        

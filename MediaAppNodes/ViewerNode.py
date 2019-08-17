@@ -37,6 +37,11 @@ class ViewerNode(ImageNode):
         #TODO: create ImageMath package, tie these to some math
         self['gain'] = FloatKnob(0)
         self['gamma'] = FloatKnob(0)
+        self['FloatTest'] = FloatKnob(10.0)
+        self['IntTest'] = IntKnob(0)
+        self['ColorTest'] = ColorKnob()
+        self['StrTest'] = StrKnob('bleh')
+        self['ComboTest'] = ComboKnob(['lol','hello'])
 
         self.attachKnobs()
         
