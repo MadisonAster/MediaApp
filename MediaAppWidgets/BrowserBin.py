@@ -23,10 +23,11 @@
 #    GNU Lesser General Public License and other license details.
 #===============================================================================
 
+import os, time
 from Qt import QtGui, QtCore, QtWidgets
     
 import AppCore
-#import MediaAppIcons
+import MediaAppIcons
 import MediaAppKnobs
 
 class BrowserBin(QtWidgets.QWidget):
@@ -37,18 +38,15 @@ class BrowserBin(QtWidgets.QWidget):
         self.binLayout = QtWidgets.QVBoxLayout()
         self.setLayout(self.binLayout)
         
-        self.FilePath = MediaAppKnobs.FileKnob('C:/', name = '')
+        self.RootPath = 'C:/'
+        self.FilePath = MediaAppKnobs.FileKnob(self.RootPath, name = 'RootPath')
         self.FilePath.ValueChanged.connect(self.PathChanged)
         self.binLayout.addWidget(self.FilePath)
         
         self.fileTree = QtWidgets.QTreeWidget()
         self.fileTree.setColumnCount(3)
-        self.fileTree.setHeaderLabels(['Name','Path','Size','Date']) 
+        self.fileTree.setHeaderLabels(['Name','Size','Modified']) 
         
-        items = []
-        for i in range(10):
-            items.append(QtWidgets.QTreeWidgetItem(None, ['item_'+str(i),'W:/item_'+str(i),'0kb','142312']))
-        self.fileTree.addTopLevelItems(items)
         self.binLayout.addWidget(self.fileTree)
         
         self.buttonLayout = QtWidgets.QHBoxLayout()
@@ -70,4 +68,17 @@ class BrowserBin(QtWidgets.QWidget):
         
     def PathChanged(self, newvalue):
         print('PathChanged!', newvalue)
+        self.RootPath = newvalue
         
+        items = []
+        for root, dirs, files in os.walk(self.RootPath):
+            for dir in dirs:
+                newitem = QtWidgets.QTreeWidgetItem(None, [dir, '-', time.ctime(os.path.getmtime(root+'/'+dir))])
+                newitem.setIcon(0, MediaAppIcons.Folder1())
+                items.append(newitem)
+            for file in files:
+                newitem = QtWidgets.QTreeWidgetItem(None, [file, str(os.path.getsize(root+'/'+file)/1000)+' KB', time.ctime(os.path.getmtime(root+'/'+file))])
+                newitem.setIcon(0, MediaAppIcons.File1())
+                items.append(newitem)
+            break
+        self.fileTree.addTopLevelItems(items)
