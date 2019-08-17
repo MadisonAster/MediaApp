@@ -25,7 +25,7 @@
 import os
 
 from Qt import QtGui, QtCore
-import imageio
+#import imageio
 
 import AppCore
 import DataStructures
@@ -72,9 +72,9 @@ class Clip(ImageNode, AudioNode):
         
         if os.path.isfile(imagePath):
             #print('#######imagePath', imagePath, end = "")
-            image = imageio.imread(imagePath)
+            #image = imageio.imread(imagePath)
             #print(image)
-            image = imageio.core.util.image_as_uint8(image)
+            #image = imageio.core.util.image_as_uint8(image)
             
             
             #imageString = image.tobytes()

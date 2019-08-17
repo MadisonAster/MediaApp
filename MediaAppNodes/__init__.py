@@ -30,8 +30,8 @@
 
 import os, sys, imp
 from pprint import pprint
-import importlib.util
-import importlib
+#import importlib.util
+#import importlib
 import AppCore
 
 NodeConstructor = imp.load_source('NodeConstructor', __file__.replace('\\','/').rsplit('/',1)[0]+'/NodeConstructor.py')
@@ -41,6 +41,7 @@ sys.modules['NodeConstructor'] = NodeConstructor
 for BaseDirectory in AppCore['BaseDirectories']:
     for SubDirectory in AppCore.AppSettings['NodeDirectories']:
         if os.path.isdir(BaseDirectory+SubDirectory):
+            print('looping', BaseDirectory+SubDirectory)
             for file in os.listdir(BaseDirectory+SubDirectory):
                 if file.rsplit('.',1)[-1] == 'py':
                     ThisModule = sys.modules[__name__]
@@ -61,30 +62,31 @@ for BaseDirectory in AppCore['BaseDirectories']:
                         #    {k: v for (k, v) in module.__dict__.items() if not k.startswith('_')
                         #})
                         
-                        pprint(dir(ThisModule))
+                        #pprint(dir(ThisModule))
                         
                         #print(spec.loader.exec_module(module))
                         
                         
                         #exec('from .'+FunctionName+' import *') #TODO: make imp work
                         
-                        
+                        print(AppCore.AppSettings['NodeDirectories'])
+                        print('hey', BaseDirectory+SubDirectory+'/'+file)
                         module = imp.load_source(FunctionName, BaseDirectory+SubDirectory+'/'+file)
                         #from NewModule import *
                         
-                        print('dir', dir(module))
+                        #print('dir', dir(module))
                         for d in dir(module):
                             dobj = type(getattr(module, d))
-                            print(d, dobj, isinstance(dobj, class))
-                            print(d, getattr(module, d).__module__)
-                        print('a;;', module.__module__)
-                        raise Exception('stop')
+                            #print(d, dobj, isinstance(dobj, class))
+                            #print(d, getattr(module, d).__module__)
+                        #print('a;;', module.__module__)
+                        #raise Exception('stop')
                         
                         for attrname in dir(module):
-                            if not attrname.startswith('_'):
+                            if not attrname.startswith('_') and attrname not in dir(ThisModule):
                                 attr = getattr(module, attrname)
                                
-                                print('attr', attr, type(getattr(module, attr)))
+                                #print('attr', attr, type(getattr(module, attr)))
                                 setattr(ThisModule, attrname, attr)
                     
                     #foo.MyClass()

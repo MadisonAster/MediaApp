@@ -29,8 +29,6 @@ import ctypes
 
 from Qt import QtGui, QtCore, QtWidgets, QtCompat
 
-import imageio
-
 class Core(dict):
     def __init__(self, argString = '', CoreRun = False):
         super(Core, self).__init__()
