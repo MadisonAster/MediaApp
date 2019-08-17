@@ -26,13 +26,13 @@
 from Qt import QtGui, QtCore, QtWidgets
 
 import AppCore
-from . import KnobConstructor
+from .KnobConstructor import Knob
 from . import KnobElements
 from .FloatKnob import FloatKnob
 
 import MediaAppIcons
 
-class ColorKnob(QtWidgets.QWidget):
+class ColorKnob(Knob):
     def __init__(self, *args, **kwargs):
         if 'name' in kwargs.keys():
             name = kwargs['name']
@@ -47,7 +47,6 @@ class ColorKnob(QtWidgets.QWidget):
         self.name.setText(name)
         self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         
-        self.knobLayout = QtWidgets.QHBoxLayout()
         self.knobLayout.addWidget(self.name)
         
         self.button = QtWidgets.QPushButton()
